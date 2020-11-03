@@ -24,9 +24,9 @@ class _ItemExpensesPersonState extends State<ItemExpensesPerson> {
               children: [
                 //Ngày tháng
                 Container(
-                  width: 65,
+                  width: 60,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 5),
+                    padding: const EdgeInsets.only(left: 0),
                     child: Container(
                       height: 60,
                       width: 60,
@@ -69,19 +69,24 @@ class _ItemExpensesPersonState extends State<ItemExpensesPerson> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 30,right: 0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Loại", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
-                                  Text("Nội dung", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 5),
-                                    child: Text("Giá tiền", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
-                                  )
-                                ],),
-                            ),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                    width:70,
+                                    alignment: Alignment.center,
+                                    child: Text("Loại", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),)),
+                                Container(
+                                    width: 70,
+                                    alignment: Alignment.center,
+                                    child: Text("Nội dung", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),)),
+                                Container(
+                                    width: 70,
+                                    alignment: Alignment.center,
+                                    child: Text("Giá tiền", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),)),
+                              ],),
+
                             rowImformations("icon-an-uong.png", "Ăn uống", "Đi chợ", "100k"),
                             rowImformations("icon-mua-sam.png", "Mua sắm", "Quạt", "200k"),
                             rowImformations("icon-suc-khoe.png", "Sức khỏe", "thuốc ho", "50k"),
@@ -95,7 +100,15 @@ class _ItemExpensesPersonState extends State<ItemExpensesPerson> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("TÔNG CHI: 350k",style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 16),),
-                            Text("Xem chi tiết",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,decorationStyle: TextDecorationStyle.dashed,color: Colors.blue),)
+                            Container(
+                                decoration: BoxDecoration(
+                                    border: Border(bottom: BorderSide(width: 1, color: Colors.blue))
+                                ),
+                                child: InkWell(
+                                    onTap: (){
+                                      print("xem chi tiết");
+                                    },
+                                    child: Text("Xem chi tiết",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,decorationStyle: TextDecorationStyle.dashed,color: Colors.blue),)))
                           ],),
                       )
                     ],),
@@ -109,28 +122,32 @@ class _ItemExpensesPersonState extends State<ItemExpensesPerson> {
   }
 
   Widget rowImformations(icon, nameIcon, content, price) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(children: [
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(
+          width: 70,
+          child: Row(children: [
             Container(
                 height: 20,
                 width: 20,
                 child: Image.asset(icon,fit: BoxFit.fill,)),
-            Padding(
-              padding: const EdgeInsets.only(left: 2),
-              child: Text(nameIcon,style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
-            )
+            Text(nameIcon,style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),
           ],),
-          Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: Text(content, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
-          ),
-          Text(price, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold,color: Colors.red),)
-        ],),
-    );
+        ),
+
+        Container(
+          width: 70,
+          alignment: Alignment.center,
+          child: Text(content, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),
+        ),
+        Container(
+          width: 70,
+          alignment: Alignment.center,
+          child: Text(price, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold,color: Colors.red),),
+        ),
+
+      ],);
   }
 
 }

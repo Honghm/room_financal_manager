@@ -1,16 +1,5 @@
 import 'package:flutter/material.dart';
 
-// class BottomBar extends StatelessWidget {
-//   final Function(int) onIconPresedCallback;
-//   BottomBar({Key key, this.onIconPresedCallback}): super(key: key);
-//   int _selectedIndex = 1;
-//   @override
-//   Widget build(BuildContext context) {
-//
-//
-//   }
-// }
-
 class BottomBar extends StatefulWidget {
   final Function(int) onIconPresedCallback;
   BottomBar({Key key, this.onIconPresedCallback}): super(key: key);

@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
   void onBottomIconPressed(int index) {
-    print(index);
+    // print(index);
     switch (index) {
       case 1:
         setState(() {

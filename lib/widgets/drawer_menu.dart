@@ -22,11 +22,33 @@ class _DrawerMenuState extends State<DrawerMenu> {
                 end: Alignment.bottomCenter,
               ),
             ),
-            accountName: Text(
-              "Hoàng Minh Hồng",
-              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+
+            accountEmail: Column(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      "Minh Hồng",
+                      style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+
+                Row(
+                  children: [
+                    Text("ID: 123456", style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.normal)),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Icon(Icons.phone, size: 16,),
+                    Text("0377846295", style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.normal)),
+                  ],
+                ),
+              ],
             ),
-            accountEmail: Text("17520526@gm.uit.edu.vn", style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.normal)),
+
+
             currentAccountPicture: GestureDetector(
               child: ClipOval(
                   child: Container(
@@ -38,8 +60,92 @@ class _DrawerMenuState extends State<DrawerMenu> {
             ),
 
           ),
+          //Trang cá nhân
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, '/personal');
+            },
+            child: ListTile(
+              leading: Container(
+                height:50,
+                width: 50,
+                child: Icon(
+                  Icons.account_box,
+                  color: Colors.black,
+                ),
+              ),
+              title: Text(
+                "Trang cá nhân",
+                style: TextStyle(fontSize: 18, color: Color(0xff323643)),
+              ),
+            ),
+          ),
+
+          //Cài đặt
+          InkWell(
+            onTap: () {
+
+            },
+            child: ListTile(
+              leading: Container(
+                height:50,
+                width: 50,
+                child: Icon(
+                  Icons.settings,
+                  color: Colors.black,
+                ),
+              ),
+              title: Text(
+                "Cài đặt",
+                style: TextStyle(fontSize: 18, color: Color(0xff323643)),
+              ),
+            ),
+          ),
+
+          //Hỗ trợ
+          InkWell(
+            onTap: () {
+
+            },
+            child: ListTile(
+              leading: Container(
+                height:50,
+                width: 50,
+                child: Icon(
+                  Icons.help,
+                  color: Colors.black,
+                ),
+              ),
+              title: Text(
+                "Hỗ trợ",
+                style: TextStyle(fontSize: 18, color: Color(0xff323643)),
+              ),
+            ),
+          ),
 
 
+          //Thông tin liên hệ
+          InkWell(
+            onTap: () {
+
+            },
+            child: ListTile(
+              leading: Container(
+                height:50,
+                width: 50,
+                child: Icon(
+                  Icons.info,
+                  color: Colors.black,
+                ),
+              ),
+              title: Text(
+                "Thông tin liên hệ",
+                style: TextStyle(fontSize: 18, color: Color(0xff323643)),
+              ),
+            ),
+          ),
+
+          //Đăng xuất
           InkWell(
             onTap: () {
               Navigator.pushReplacementNamed(context, '/login');
@@ -59,6 +165,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
               ),
             ),
           ),
+
         ],
       ),
     );
