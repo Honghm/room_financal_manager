@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
 import 'package:room_financal_manager/screens/home_page.dart';
+
+// GoogleSignIn _googleSignIn = GoogleSignIn(
+//     scopes: <String>[
+//       'email',
+//     ]
+// );
 
 class LoginPage extends StatefulWidget {
   @override
@@ -7,6 +14,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  // GoogleSignInAccount _currentUser;
+  //
+  // Future<void> _handleSignIn() async{
+  //   try{
+  //     await _googleSignIn.signIn();
+  //   }catch(error){
+  //     print(error);
+  //   }
+  // }
+
   final _key = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _accountController = TextEditingController();
@@ -131,7 +149,9 @@ class _LoginPageState extends State<LoginPage> {
                         child: Image.asset("assets/iconfb.png",fit: BoxFit.fill,))
                 ),
                 FlatButton(
-                    onPressed: (){},
+                    onPressed: (){
+                      // _handleSignIn();
+                    },
                     child: Container(
                       height: 50,
                         width: 50,
@@ -146,4 +166,19 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
+  //     setState(() {
+  //       _currentUser = account;
+  //     });
+  //     if (_currentUser != null)
+  //       Navigator.push(context,
+  //         MaterialPageRoute(builder: (context) => HomePage()));
+  //   });
+  // }
 }
+
