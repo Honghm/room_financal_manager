@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:room_financal_manager/model/expendituresGroup.dart';
+import 'package:room_financal_manager/providers/group_providers.dart';
 
 class ItemExpensesGroup extends StatefulWidget {
   @override
@@ -6,13 +9,27 @@ class ItemExpensesGroup extends StatefulWidget {
 }
 
 class _ItemExpensesGroupState extends State<ItemExpensesGroup> {
+  List<ExpendituresGroup> expGroup = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  loadData();
+  }
+Future<void> loadData() async {
+  expGroup = await Provider.of<GroupProviders>(context,listen: false).getExpenditures();
+
+  print("run here ");
+  print(expGroup[0].noiDung);
+}
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    return Container(
+    final expenditures = Provider.of<GroupProviders>(context);
+    return  Container(
       child:   Padding(
-          padding: const EdgeInsets.only(left: 10,right: 10),
+          padding: const EdgeInsets.only(left: 10,right: 10,top: 20),
           child: Container(
             height: 200,
             width: width,
@@ -93,9 +110,8 @@ class _ItemExpensesGroupState extends State<ItemExpensesGroup> {
                                     child: Text("Người mua", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
                               ],),
 
-                            rowImformations("icon-an-uong.png", "Ăn uống", "Đi chợ", "100k","Minh Hồng"),
-                            rowImformations("icon-mua-sam.png", "Mua sắm", "Quạt", "200k", "Cẩm Tuyên"),
-                            rowImformations("icon-suc-khoe.png", "Sức khỏe", "thuốc ho", "50k", "Diệu Chi"),
+                            //rowImformations(expenditures.expGroup.iconLoai, expenditures.expGroup.tenLoai, expenditures.expGroup.noiDung, expenditures.expGroup.giaTien,expenditures.expGroup.idUserBuy),
+
                           ],),
                       ),
                       Container(
@@ -107,13 +123,14 @@ class _ItemExpensesGroupState extends State<ItemExpensesGroup> {
                           children: [
                             Text("TÔNG CHI: 350k",style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 16),),
                             Container(
-                              decoration: BoxDecoration(
-                                border: Border(bottom: BorderSide(width: 1, color: Colors.blue))
-                              ),
+                                decoration: BoxDecoration(
+                                    border: Border(bottom: BorderSide(width: 1, color: Colors.blue))
+                                ),
                                 child: InkWell(
-                                  onTap: (){
-                                    print("xem chi tiết");
-                                  },
+                                    onTap: (){
+
+
+                                    },
                                     child: Text("Xem chi tiết",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,decorationStyle: TextDecorationStyle.dashed,color: Colors.blue),)))
                           ],),
                       )
@@ -135,7 +152,7 @@ class _ItemExpensesGroupState extends State<ItemExpensesGroup> {
             Container(
                 height: 20,
                 width: 20,
-                child: Image.asset(icon,fit: BoxFit.fill,)),
+                child: Image.network(icon,fit: BoxFit.fill,)),
             Text(nameIcon,style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),),
           ],),
         ),

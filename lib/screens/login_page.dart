@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_widgets/responsive_widgets.dart';
+import 'package:room_financal_manager/providers/group_providers.dart';
 import 'package:room_financal_manager/screens/home_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final expenditures = Provider.of<GroupProviders>(context);
     ResponsiveWidgets.init(context,
       height: 1920, // Optional
       width: 1080, // Optional
@@ -119,6 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius:
                           BorderRadius.all(Radius.circular(25))),
                         onPressed: (){
+                          expenditures.getExpenditures();
                           Navigator.push(
                               context,
                               MaterialPageRoute(

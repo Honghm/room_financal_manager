@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:room_financal_manager/providers/group_providers.dart';
 import 'package:room_financal_manager/widgets/item_expenses_group.dart';
 import 'package:room_financal_manager/widgets/top_bar.dart';
 
@@ -10,6 +12,8 @@ class GroupManager extends StatefulWidget {
 class _GroupManagerState extends State<GroupManager> {
   @override
   Widget build(BuildContext context) {
+
+
     return Container(
       height:  MediaQuery.of(context).size.height,
       color: Color(0xFFCDCCCC),
@@ -17,17 +21,21 @@ class _GroupManagerState extends State<GroupManager> {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 50),
-            child: ListView(
-              children: [
-                SizedBox(height: 10,),
-                ItemExpensesGroup(),
-                SizedBox(height: 10,),
-                ItemExpensesGroup(),
-                SizedBox(height: 10,),
-                ItemExpensesGroup(),
-                SizedBox(height: 30,),
-
-              ],
+            child: ListView.builder(
+              itemCount: 2,
+              itemBuilder: (_, index){
+                return ItemExpensesGroup();
+              }
+              // children: [
+              //   SizedBox(height: 10,),
+              //
+              //   SizedBox(height: 10,),
+              //   ItemExpensesGroup(),
+              //   SizedBox(height: 10,),
+              //   ItemExpensesGroup(),
+              //   SizedBox(height: 30,),
+              //
+              // ],
 
             ),
           ),
