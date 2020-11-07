@@ -1,5 +1,10 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_widgets/responsive_widgets.dart';
+import 'package:room_financal_manager/config/initialization.dart';
+import 'package:room_financal_manager/providers/user_provider.dart';
+import 'package:room_financal_manager/widgets/loading.dart';
 import 'package:room_financal_manager/screens/home_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context);
     ResponsiveWidgets.init(context,
       height: 1920, // Optional
       width: 1080, // Optional
@@ -27,8 +33,8 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         key: _key,
         body: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
+          child: ContainerResponsive(
+              height: ScreenUtil.screenHeight,
             decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
@@ -143,7 +149,9 @@ class _LoginPageState extends State<LoginPage> {
                           child: Image.asset("assets/iconfb.png",fit: BoxFit.fill,))
                   ),
                   FlatButton(
-                      onPressed: (){},
+                      onPressed: () async {
+                        user.googleSignIn.disconnect();
+                        await user.loginWithGoogle(context, _key);},
                       child: Container(
                         height: 50,
                           width: 50,

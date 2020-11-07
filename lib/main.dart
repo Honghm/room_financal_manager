@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:room_financal_manager/providers/user_provider.dart';
 import 'package:room_financal_manager/screens/home_page.dart';
 import 'package:room_financal_manager/screens/login_page.dart';
 import 'package:room_financal_manager/screens/personal_page.dart';
 
 void main() {
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+      MultiProvider(providers: [
+        ChangeNotifierProvider.value(value: UserProvider()),
+
+      ],
+          child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
