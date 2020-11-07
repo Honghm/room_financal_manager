@@ -5,15 +5,19 @@ class ItemExpensesPerson extends StatefulWidget {
   _ItemExpensesPersonState createState() => _ItemExpensesPersonState();
 }
 
+
 class _ItemExpensesPersonState extends State<ItemExpensesPerson> {
+
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return Container(
       child:   Padding(
           padding: const EdgeInsets.only(left: 10,right: 10),
           child: Container(
             height: 200,
-            width: MediaQuery.of(context).size.height,
+            width: width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: Colors.white,
@@ -24,38 +28,35 @@ class _ItemExpensesPersonState extends State<ItemExpensesPerson> {
               children: [
                 //Ngày tháng
                 Container(
-                  width: 60,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 0),
-                    child: Container(
-                      height: 60,
-                      width: 60,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.white,
-                          border: Border.all(color: Colors.black)
-                      ),
-                      child: Column(children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 2),
-                          child: RichText(
-                            text: TextSpan(
-                                text: "Thứ",
-                                style: TextStyle(
-                                    color:Colors.black, fontSize: 14),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text: "2",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 22,fontWeight: FontWeight.bold))
-                                ]),
-                          ),
-                        ),
-                        Text("3/8",style: TextStyle(fontSize: 14),),
-                        Text("2020",style: TextStyle(fontSize: 14),)
-                      ],),
+                  width: width/6,
+                  child:Container(
+                    height: width/6,
+                    width: width/6,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(width/12),
+                        color: Colors.white,
+                        border: Border.all(color: Colors.black)
                     ),
+                    child: Column(children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: RichText(
+                          text: TextSpan(
+                              text: "Thứ",
+                              style: TextStyle(
+                                  color:Colors.black, fontSize: 14),
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text: "2",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 22,fontWeight: FontWeight.bold))
+                              ]),
+                        ),
+                      ),
+                      Text("3/8",style: TextStyle(fontSize: 14),),
+                      Text("2020",style: TextStyle(fontSize: 14),)
+                    ],),
                   ),
                 ),
                 Container(
@@ -74,15 +75,15 @@ class _ItemExpensesPersonState extends State<ItemExpensesPerson> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
-                                    width:70,
+                                    width:width/5,
                                     alignment: Alignment.center,
                                     child: Text("Loại", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),)),
                                 Container(
-                                    width: 70,
+                                    width: width/5,
                                     alignment: Alignment.center,
                                     child: Text("Nội dung", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),)),
                                 Container(
-                                    width: 70,
+                                    width: width/5,
                                     alignment: Alignment.center,
                                     child: Text("Giá tiền", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),)),
                               ],),
@@ -126,7 +127,7 @@ class _ItemExpensesPersonState extends State<ItemExpensesPerson> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          width: 70,
+          width: 75,
           child: Row(children: [
             Container(
                 height: 20,

@@ -8,12 +8,14 @@ class ItemExpensesGroup extends StatefulWidget {
 class _ItemExpensesGroupState extends State<ItemExpensesGroup> {
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return Container(
       child:   Padding(
           padding: const EdgeInsets.only(left: 10,right: 10),
           child: Container(
             height: 200,
-            width: MediaQuery.of(context).size.height,
+            width: width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: Colors.white,
@@ -24,14 +26,14 @@ class _ItemExpensesGroupState extends State<ItemExpensesGroup> {
               children: [
                 //Ngày tháng
                 Container(
-                  width: 60,
+                  width: width/6,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 0),
                     child: Container(
-                      height: 60,
-                      width: 60,
+                      height: width/6,
+                      width: width/6,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(width/12),
                           color: Colors.white,
                           border: Border.all(color: Colors.black)
                       ),
@@ -74,19 +76,19 @@ class _ItemExpensesGroupState extends State<ItemExpensesGroup> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
-                                    width:60,
+                                    width:width/7,
                                     alignment: Alignment.center,
                                     child: Text("Loại", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
                                 Container(
-                                    width: 60,
+                                    width: width/7,
                                     alignment: Alignment.center,
                                     child: Text("Nội dung", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
                                 Container(
-                                    width: 60,
+                                    width: width/7,
                                     alignment: Alignment.center,
                                     child: Text("Giá tiền", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
                                 Container(
-                                    width: 60,
+                                    width: width/7,
                                     alignment: Alignment.center,
                                     child: Text("Người mua", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
                               ],),
@@ -128,7 +130,7 @@ class _ItemExpensesGroupState extends State<ItemExpensesGroup> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          width: 60,
+          width: 65,
           child: Row(children: [
             Container(
                 height: 20,
