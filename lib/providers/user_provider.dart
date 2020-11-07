@@ -61,7 +61,6 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
   //--------------------Đăng Nhập-----------------------------
 
   Future<bool> signIn(String account, String password, BuildContext context,
@@ -85,11 +84,10 @@ class UserProvider with ChangeNotifier {
                 .collection('users')
                 .where("account", isEqualTo: account)
                 .snapshots()
-                .listen((data) =>
-                data.docs.forEach((doc) {
-                  _userData = UserData.formSnapShot(doc);
-                  notifyListeners();
-                }));
+                .listen((data) => data.docs.forEach((doc) {
+                      _userData = UserData.formSnapShot(doc);
+                      notifyListeners();
+                    }));
             Navigator.pushNamed(context, '/main');
           } else {
             _key.currentState.showSnackBar(SnackBar(
@@ -99,14 +97,14 @@ class UserProvider with ChangeNotifier {
         });
       } else {
         _key.currentState.showSnackBar(SnackBar(
-            content: Text(
-                "Đăng nhập không thành công!Tài khoản không tồn tại")));
+            content:
+                Text("Đăng nhập không thành công!Tài khoản không tồn tại")));
       }
     });
   }
 
-  Future<bool> loginWithGoogle(BuildContext context,
-      GlobalKey<ScaffoldState> _key) async {
+  Future<bool> loginWithGoogle(
+      BuildContext context, GlobalKey<ScaffoldState> _key) async {
     try {
       loginGoogle = true;
       await Firebase.initializeApp();
@@ -129,11 +127,8 @@ class UserProvider with ChangeNotifier {
               .then((user) {
             _isMailExist = false;
             notifyListeners();
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        LoginWithGoogle()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => LoginWithGoogle()));
             _status = Status.Unauthenticated;
             notifyListeners();
           });
@@ -148,13 +143,12 @@ class UserProvider with ChangeNotifier {
                 .collection('users')
                 .where("account", isEqualTo: account.email)
                 .snapshots()
-                .listen((data) =>
-                data.docs.forEach((doc) {
-                  _userData = UserData.formSnapShot(doc);
-                  notifyListeners();
-                  _isMailExist = true;
-                  notifyListeners();
-                }));
+                .listen((data) => data.docs.forEach((doc) {
+                      _userData = UserData.formSnapShot(doc);
+                      notifyListeners();
+                      _isMailExist = true;
+                      notifyListeners();
+                    }));
             Navigator.pushNamed(context, '/main');
           });
         }

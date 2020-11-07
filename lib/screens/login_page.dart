@@ -5,6 +5,7 @@ import 'package:responsive_widgets/responsive_widgets.dart';
 import 'package:room_financal_manager/config/initialization.dart';
 import 'package:room_financal_manager/providers/user_provider.dart';
 import 'package:room_financal_manager/widgets/loading.dart';
+import 'package:room_financal_manager/providers/group_providers.dart';
 import 'package:room_financal_manager/screens/home_page.dart';
 
 // GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -37,6 +38,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context);
+    final expenditures = Provider.of<GroupProviders>(context);
     ResponsiveWidgets.init(
       context,
       height: 1920, // Optional
@@ -142,6 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(25))),
                       onPressed: () {
+                        expenditures.getExpenditures();
                         Navigator.push(
                             context,
                             MaterialPageRoute(
