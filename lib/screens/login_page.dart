@@ -189,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 10,
                 ),
-                Text("Bạn chưa có tài khoản?Đăng ký tại đây!"),
+                Text("Bạn chưa có tài khoản? Đăng ký tại đây!"),
 
               ],
             ),
