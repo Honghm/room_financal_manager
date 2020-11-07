@@ -45,14 +45,12 @@ class UserProvider with ChangeNotifier {
   GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['profile', 'email']);
 
   GoogleSignInAccount account;
-
-  // UserProvider.initialize() : _auth = FirebaseAuth.instance {
-  //
-  //   _auth.authStateChanges().listen(_onStateChanged);
-  // }
+  UserProvider.initialize() : _auth = FirebaseAuth.instance  {
+    _auth.authStateChanges().listen(_onStateChanged);
+  }
 
   Future<void> _onStateChanged(User user) async {
-    await Firebase.initializeApp();
+
     if (user == null) {
       _status = Status.Unauthenticated;
     } else {
@@ -65,7 +63,11 @@ class UserProvider with ChangeNotifier {
 
   Future<bool> signIn(String account, String password, BuildContext context,
       GlobalKey<ScaffoldState> _key) async {
+<<<<<<< HEAD
     await
+=======
+
+>>>>>>> 13ff08d2dab626cf96012eed0df04ab2a8bae8f2
     FirebaseFirestore.instance
         .collection('users')
         .where("account", isEqualTo: account)
@@ -107,7 +109,6 @@ class UserProvider with ChangeNotifier {
       BuildContext context, GlobalKey<ScaffoldState> _key) async {
     try {
       loginGoogle = true;
-      await Firebase.initializeApp();
       notifyListeners();
       _status = Status.Authenticating;
       notifyListeners();

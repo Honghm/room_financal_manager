@@ -8,12 +8,20 @@ import 'package:room_financal_manager/widgets/loading.dart';
 import 'package:room_financal_manager/providers/group_providers.dart';
 import 'package:room_financal_manager/screens/home_page.dart';
 
+// GoogleSignIn _googleSignIn = GoogleSignIn(
+//     scopes: <String>[
+//       'email',
+//     ]
+// );
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+
   final _key = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _accountController = TextEditingController();
@@ -36,8 +44,8 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         key: _key,
         body: SingleChildScrollView(
-          child: ContainerResponsive(
-            height: ScreenUtil.screenHeight,
+          child: Container(
+            height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
                 gradient: LinearGradient(
               colors: [Color(0xFF42AF3B), Color(0xFF17B6A0)],
@@ -185,4 +193,5 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
 }
