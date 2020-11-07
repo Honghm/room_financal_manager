@@ -12,8 +12,6 @@ class GroupManager extends StatefulWidget {
 class _GroupManagerState extends State<GroupManager> {
   @override
   Widget build(BuildContext context) {
-
-
     return Container(
       height:  MediaQuery.of(context).size.height,
       color: Color(0xFFCDCCCC),
