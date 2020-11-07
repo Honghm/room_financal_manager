@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:room_financal_manager/model/expendituresGroup.dart';
+import 'file:///D:/My%20Code/Code%20Android/DoAn2/room_financal_manager/lib/models/expendituresGroup.dart';
 
 class GroupProviders with ChangeNotifier {
   List<ExpendituresGroup> expGroup = [];

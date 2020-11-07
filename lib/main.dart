@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:room_financal_manager/providers/group_providers.dart';
@@ -6,10 +7,11 @@ import 'package:room_financal_manager/screens/home_page.dart';
 import 'package:room_financal_manager/screens/login_page.dart';
 import 'package:room_financal_manager/screens/personal_page.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider.value(value: UserProvider()),
+    ChangeNotifierProvider.value(value: UserProvider.initialize()),
     ChangeNotifierProvider.value(value: GroupProviders()),
   ], child: MyApp()));
 }

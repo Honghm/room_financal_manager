@@ -20,15 +20,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // GoogleSignInAccount _currentUser;
-  //
-  // Future<void> _handleSignIn() async{
-  //   try{
-  //     await _googleSignIn.signIn();
-  //   }catch(error){
-  //     print(error);
-  //   }
-  // }
+
 
   final _key = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
@@ -52,8 +44,8 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         key: _key,
         body: SingleChildScrollView(
-          child: ContainerResponsive(
-            height: ScreenUtil.screenHeight,
+          child: Container(
+            height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
                 gradient: LinearGradient(
               colors: [Color(0xFF42AF3B), Color(0xFF17B6A0)],
@@ -202,17 +194,4 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
-  //     setState(() {
-  //       _currentUser = account;
-  //     });
-  //     if (_currentUser != null)
-  //       Navigator.push(context,
-  //         MaterialPageRoute(builder: (context) => HomePage()));
-  //   });
-  // }
 }
