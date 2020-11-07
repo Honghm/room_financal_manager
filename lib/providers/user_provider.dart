@@ -41,7 +41,7 @@ class UserProvider with ChangeNotifier {
   }
 
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  Firebase.initializeApp();
   GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['profile', 'email']);
 
   GoogleSignInAccount account;
@@ -65,7 +65,7 @@ class UserProvider with ChangeNotifier {
 
   Future<bool> signIn(String account, String password, BuildContext context,
       GlobalKey<ScaffoldState> _key) async {
-    await Firebase.initializeApp();
+    await
     FirebaseFirestore.instance
         .collection('users')
         .where("account", isEqualTo: account)

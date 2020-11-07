@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:room_financal_manager/model/expendituresGroup.dart';
+import 'file:///D:/Code/room_financal_manager/lib/models/expendituresGroup.dart';
 import 'package:room_financal_manager/providers/group_providers.dart';
 
 class ItemExpensesGroup extends StatefulWidget {
