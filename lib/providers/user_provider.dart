@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:room_financal_manager/config/initialization.dart';
 import 'package:room_financal_manager/models/user.dart';
 import 'package:room_financal_manager/screens/login_with_google.dart';
+import 'package:room_financal_manager/providers/user_provider.dart';
 
 class UserProvider with ChangeNotifier {
   FirebaseAuth _auth;
@@ -41,7 +42,6 @@ class UserProvider with ChangeNotifier {
   }
 
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['profile', 'email']);
 
   GoogleSignInAccount account;
@@ -63,7 +63,6 @@ class UserProvider with ChangeNotifier {
 
   Future<bool> signIn(String account, String password, BuildContext context,
       GlobalKey<ScaffoldState> _key) async {
-
     FirebaseFirestore.instance
         .collection('users')
         .where("account", isEqualTo: account)
