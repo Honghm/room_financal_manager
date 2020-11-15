@@ -41,8 +41,6 @@ class UserProvider with ChangeNotifier {
     _loginGoogle = value;
   }
 
-  final SecureStorage secureStorage = new SecureStorage();
-
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['profile', 'email']);
 
@@ -127,7 +125,6 @@ class UserProvider with ChangeNotifier {
         //           _isMailExist = true;
         //           notifyListeners();
         //         }));
-        // secureStorage.writeSecureData('email', _user.email);
         Navigator.pushNamed(context, '/home');
       }).catchError((e){
         print("Error: $e");
@@ -179,26 +176,5 @@ class UserProvider with ChangeNotifier {
       notifyListeners();
       return false;
     }
-  }
-}
-
-//--------------------Lưu Đăng Nhập-----------------------------
-
-class SecureStorage {
-  final _storage = FlutterSecureStorage();
-
-  Future writeSecureData(String key, String value) async {
-    var writeData = await _storage.write(key: key, value: value);
-    return writeData;
-  }
-
-  Future readSecureData(String key) async {
-    var readData = await _storage.read(key: key);
-    return readData;
-  }
-
-  Future deleteSecureData(String key) async {
-    var deleteData = await _storage.delete(key: key);
-    return deleteData;
   }
 }

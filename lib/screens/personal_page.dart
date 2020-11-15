@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:room_financal_manager/services/authentication.dart';
 import 'package:room_financal_manager/widgets/drawer_menu.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,6 +11,7 @@ class PersonalPage extends StatefulWidget {
 
 class _PersonalPageState extends State<PersonalPage> {
   final _key = GlobalKey<ScaffoldState>();
+  Authentication authentication = Authentication();
 
   @override
   Widget build(BuildContext context) {
@@ -331,8 +333,10 @@ class _PersonalPageState extends State<PersonalPage> {
             height: 40,
             width: MediaQuery.of(context).size.width - 80,
             child: RaisedButton(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/login');
+              onPressed: () async {
+                await authentication.googleSignOut().whenComplete(() {
+                  Navigator.pushReplacementNamed(context, '/login');
+                });
               },
               color: Colors.white,
               child: Text(

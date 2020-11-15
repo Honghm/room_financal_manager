@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_widgets/responsive_widgets.dart';
 import 'package:room_financal_manager/config/initialization.dart';
 import 'package:room_financal_manager/providers/user_provider.dart';
+import 'package:room_financal_manager/services/authentication.dart';
 import 'package:room_financal_manager/widgets/loading.dart';
 import 'package:room_financal_manager/providers/group_providers.dart';
 import 'package:room_financal_manager/screens/home_page.dart';
@@ -21,7 +23,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final SecureStorage secureStorage = SecureStorage();
+  Authentication authentication = Authentication();
+
   final _key = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _accountController = TextEditingController();
@@ -171,7 +174,13 @@ class _LoginPageState extends State<LoginPage> {
                     FlatButton(
                         onPressed: () async {
                           user.googleSignIn.disconnect();
-                          await user.loginWithGoogle(context, _key);
+                          await authentication.googleSignIn().whenComplete(() {
+                            Navigator.pushReplacement(
+                                context,
+                                PageTransition(
+                                    child: LoginPage(),
+                                    type: PageTransitionType.bottomToTop));
+                          });
                         },
                         child: Container(
                             height: 50,
