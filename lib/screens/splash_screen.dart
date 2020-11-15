@@ -13,19 +13,15 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final SecureStorage secureStorage = SecureStorage();
   @override
   void initState() {
-    secureStorage.readSecureData('email').then((value) {
-      finalEmail = value;
-    });
     Timer(
-        Duration(seconds: 5),
+        Duration(seconds: 6),
         () => Navigator.pushReplacement(
             context,
             PageTransition(
-                child: finalEmail == null ? LoginPage() : HomePage(),
-                type: PageTransitionType.leftToRightWithFade)));
+                child: LoginPage(),
+                type: PageTransitionType.rightToLeftWithFade)));
     super.initState();
   }
 
