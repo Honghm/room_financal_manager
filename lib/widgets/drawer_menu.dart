@@ -14,51 +14,60 @@ class _DrawerMenuState extends State<DrawerMenu> {
           UserAccountsDrawerHeader(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  Color(0xFF42AF3B),
-                  Color(0xFF17B6A0)
-                ],
+                colors: [Color(0xFF42AF3B), Color(0xFF17B6A0)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
             ),
-
             accountEmail: Column(
               children: [
                 Row(
                   children: [
                     Text(
                       "Minh Hồng",
-                      style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
-
                 Row(
                   children: [
-                    Text("ID: 123456", style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.normal)),
+                    Text("ID: 123456",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal)),
                   ],
                 ),
                 Row(
                   children: [
-                    Icon(Icons.phone, size: 16,),
-                    Text("0377846295", style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.normal)),
+                    Icon(
+                      Icons.phone,
+                      size: 16,
+                    ),
+                    Text("0377846295",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal)),
                   ],
                 ),
               ],
             ),
-
-
             currentAccountPicture: GestureDetector(
               child: ClipOval(
                   child: Container(
                       width: 100,
                       height: 100,
                       color: Color(0xFFCDCCCC),
-                      child: Icon(Icons.person, size: 50,color: Colors.white,))
-              ),
+                      child: Icon(
+                        Icons.person,
+                        size: 50,
+                        color: Colors.white,
+                      ))),
             ),
-
           ),
           //Trang cá nhân
           InkWell(
@@ -67,7 +76,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
             },
             child: ListTile(
               leading: Container(
-                height:50,
+                height: 50,
                 width: 50,
                 child: Icon(
                   Icons.account_box,
@@ -83,12 +92,10 @@ class _DrawerMenuState extends State<DrawerMenu> {
 
           //Cài đặt
           InkWell(
-            onTap: () {
-
-            },
+            onTap: () {},
             child: ListTile(
               leading: Container(
-                height:50,
+                height: 50,
                 width: 50,
                 child: Icon(
                   Icons.settings,
@@ -104,12 +111,10 @@ class _DrawerMenuState extends State<DrawerMenu> {
 
           //Hỗ trợ
           InkWell(
-            onTap: () {
-
-            },
+            onTap: () {},
             child: ListTile(
               leading: Container(
-                height:50,
+                height: 50,
                 width: 50,
                 child: Icon(
                   Icons.help,
@@ -123,15 +128,12 @@ class _DrawerMenuState extends State<DrawerMenu> {
             ),
           ),
 
-
           //Thông tin liên hệ
           InkWell(
-            onTap: () {
-
-            },
+            onTap: () {},
             child: ListTile(
               leading: Container(
-                height:50,
+                height: 50,
                 width: 50,
                 child: Icon(
                   Icons.info,
@@ -152,7 +154,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
             },
             child: ListTile(
               leading: Container(
-                height:50,
+                height: 50,
                 width: 50,
                 child: Icon(
                   Icons.exit_to_app,
@@ -165,7 +167,6 @@ class _DrawerMenuState extends State<DrawerMenu> {
               ),
             ),
           ),
-
         ],
       ),
     );
