@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:room_financal_manager/models/expendituresGroup.dart';
 import 'package:room_financal_manager/providers/group_providers.dart';
 import 'package:room_financal_manager/widgets/item_expenses_group.dart';
 import 'package:room_financal_manager/widgets/top_bar.dart';
@@ -10,8 +11,26 @@ class GroupManager extends StatefulWidget {
 }
 
 class _GroupManagerState extends State<GroupManager> {
+
+  int lengthData = 0;
+  Map<String, String> listId = {};
+  List<Map<String, dynamic>> listKhoanChi = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadData();
+  }
+  Future<void> loadData() async {
+    listKhoanChi = await Provider.of<GroupProviders>(context,listen: false).getListKhoanChi();
+    setState(() {
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    // GroupProviders KhoanChi = Provider.of<GroupProviders>(context);
     return Container(
       height:  MediaQuery.of(context).size.height,
       color: Color(0xFFCDCCCC),
@@ -20,20 +39,10 @@ class _GroupManagerState extends State<GroupManager> {
           Padding(
             padding: const EdgeInsets.only(top: 50),
             child: ListView.builder(
-              itemCount: 2,
-              itemBuilder: (_, index){
-                return ItemExpensesGroup();
+              itemCount: (listKhoanChi != null)?listKhoanChi.length : 0,
+              itemBuilder: (value, index){
+                return ItemExpensesGroup(listKhoanChi[index]);
               }
-              // children: [
-              //   SizedBox(height: 10,),
-              //
-              //   SizedBox(height: 10,),
-              //   ItemExpensesGroup(),
-              //   SizedBox(height: 10,),
-              //   ItemExpensesGroup(),
-              //   SizedBox(height: 30,),
-              //
-              // ],
 
             ),
           ),

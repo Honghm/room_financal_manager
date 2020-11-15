@@ -4,34 +4,83 @@ import 'package:room_financal_manager/models/expendituresGroup.dart';
 import 'package:room_financal_manager/providers/group_providers.dart';
 
 class ItemExpensesGroup extends StatefulWidget {
+  // String idKhoanChi;
+  Map<String, dynamic> khoanChi;
+  ItemExpensesGroup(this.khoanChi );
   @override
   _ItemExpensesGroupState createState() => _ItemExpensesGroupState();
 }
 
 class _ItemExpensesGroupState extends State<ItemExpensesGroup> {
-  List<ExpendituresGroup> expGroup = [];
+  List<Widget> _rowItemKhoanChi = List();
+  List<ExpendituresGroup> listItem = [];
+  int tongTien = 0;
+  String ngayThang = "";
+  String nam = "";
+  String thu = "";
+  void _loadData() async {
+     _rowItemKhoanChi.clear();
+    widget.khoanChi["data"].forEach((id,item){
+      _rowItemKhoanChi.add(rowImformations(item["iconLoai"], item["tenLoai"], item["noiDung"],
+          item["giaTien"], item["nguoiMua"]));
+      tongTien += int.parse(item["giaTien"]);
+    });
+    getDate(widget.khoanChi["ngayMua"]);
+  }
+  void getDate(String date){
+    List<String> dates = [];
+    dates = date.split("/");
+
+    ngayThang = dates[0]+"/"+dates[1];
+    nam = dates[2];
+    double dd = double.parse(dates[0]);
+    double mm = double.parse(dates[1]);
+    double yyyy  =double.parse(dates[2]);
+    int JMD = ((dd  + ((153 * (mm + 12 * ((14 - mm) / 12) - 3) + 2) / 5) +
+        (365 * (yyyy + 4800 - ((14 - mm) / 12))) +
+        ((yyyy + 4800 - ((14 - mm) / 12)) / 4) -
+        ((yyyy + 4800 - ((14 - mm) / 12)) / 100) +
+        ((yyyy + 4800 - ((14 - mm) / 12)) / 400)  - 32045) % 7).toInt();
+    switch (JMD) {
+      case 0:
+        thu = "CN";
+        break;
+      case 1:
+        thu = "2";
+        break;
+      case 2:
+        thu = "3";
+        break;
+      case 3:
+        thu = "4";
+        break;
+      case 4:
+        thu = "5";
+        break;
+      case 5:
+        thu = "6";
+        break;
+      case 6:
+        thu = "7";
+        break;
+    }
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-  loadData();
+    _loadData();
   }
-Future<void> loadData() async {
-  expGroup = await Provider.of<GroupProviders>(context,listen: false).getExpenditures();
-
-  print("run here ");
-  print(expGroup[0].noiDung);
-}
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
+    double height = (_rowItemKhoanChi.length*30+70).toDouble();
     final width = MediaQuery.of(context).size.width;
-    final expenditures = Provider.of<GroupProviders>(context);
+
     return  Container(
       child:   Padding(
           padding: const EdgeInsets.only(left: 10,right: 10,top: 20),
           child: Container(
-            height: 200,
+            height: height,
             width: width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
@@ -59,20 +108,20 @@ Future<void> loadData() async {
                           padding: const EdgeInsets.only(top: 2),
                           child: RichText(
                             text: TextSpan(
-                                text: "Thứ",
+                                text: thu!="CN"?"Thứ":"",
                                 style: TextStyle(
                                     color:Colors.black, fontSize: 14),
                                 children: <TextSpan>[
                                   TextSpan(
-                                      text: "2",
+                                      text: thu,
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 22,fontWeight: FontWeight.bold))
                                 ]),
                           ),
                         ),
-                        Text("3/8",style: TextStyle(fontSize: 14),),
-                        Text("2020",style: TextStyle(fontSize: 14),)
+                        Text(ngayThang,style: TextStyle(fontSize: 14),),
+                        Text(nam,style: TextStyle(fontSize: 14),)
                       ],),
                     ),
                   ),
@@ -83,53 +132,53 @@ Future<void> loadData() async {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        height: 140,
                         width: MediaQuery.of(context).size.width - 100,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                    width:width/7,
-                                    alignment: Alignment.center,
-                                    child: Text("Loại", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
-                                Container(
-                                    width: width/7,
-                                    alignment: Alignment.center,
-                                    child: Text("Nội dung", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
-                                Container(
-                                    width: width/7,
-                                    alignment: Alignment.center,
-                                    child: Text("Giá tiền", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
-                                Container(
-                                    width: width/7,
-                                    alignment: Alignment.center,
-                                    child: Text("Người mua", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
-                              ],),
+                            Container(
+                              height: 30,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                      width:width/7,
+                                      alignment: Alignment.center,
+                                      child: Text("Loại", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
+                                  Container(
+                                      width: width/7,
+                                      alignment: Alignment.center,
+                                      child: Text("Nội dung", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
+                                  Container(
+                                      width: width/7,
+                                      alignment: Alignment.center,
+                                      child: Text("Giá tiền", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
+                                  Container(
+                                      width: width/7,
+                                      alignment: Alignment.center,
+                                      child: Text("Người mua", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
+                                ],),
+                            ),
 
-                            //rowImformations(expenditures.expGroup.iconLoai, expenditures.expGroup.tenLoai, expenditures.expGroup.noiDung, expenditures.expGroup.giaTien,expenditures.expGroup.idUserBuy),
+                            Column( children: _rowItemKhoanChi,),
 
                           ],),
                       ),
                       Container(
-                        height: 50,
+                        height: 30,
                         width: MediaQuery.of(context).size.width - 100,
                         padding: EdgeInsets.only(right: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("TÔNG CHI: 350k",style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 16),),
+                            Text("TÔNG CHI: ${tongTien.toString()}K",style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 16),),
                             Container(
                                 decoration: BoxDecoration(
                                     border: Border(bottom: BorderSide(width: 1, color: Colors.blue))
                                 ),
                                 child: InkWell(
                                     onTap: (){
-
-
                                     },
                                     child: Text("Xem chi tiết",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,decorationStyle: TextDecorationStyle.dashed,color: Colors.blue),)))
                           ],),
@@ -143,35 +192,38 @@ Future<void> loadData() async {
     );
   }
   Widget rowImformations(icon, nameIcon, content, price, personBuy) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          width: 65,
-          child: Row(children: [
-            Container(
-                height: 20,
-                width: 20,
-                child: Image.network(icon,fit: BoxFit.fill,)),
-            Text(nameIcon,style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),),
-          ],),
-        ),
+    return Container(
+      height: 30,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            width: 65,
+            child: Row(children: [
+              Container(
+                  height: 20,
+                  width: 20,
+                  child: Image.network(icon,fit: BoxFit.fill,)),
+              Text(nameIcon.toString(),style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),),
+            ],),
+          ),
 
-        Container(
-          width: 60,
-          alignment: Alignment.center,
-          child: Text(content, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),),
-        ),
-        Container(
-          width: 60,
-          alignment: Alignment.center,
-          child: Text(price, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold,color: Colors.red),),
-        ),
-        Container(
+          Container(
             width: 60,
             alignment: Alignment.center,
+            child: Text(content.toString(), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),),
+          ),
+          Container(
+            width: 60,
+            alignment: Alignment.center,
+            child: Text("${price.toString()}K", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold,color: Colors.red),),
+          ),
+          Container(
+              width: 60,
+              alignment: Alignment.center,
 
-            child: Text(personBuy, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold,color: Colors.black),))
-      ],);
+              child: Text(personBuy.toString(), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold,color: Colors.black),))
+        ],),
+    );
   }
 }
