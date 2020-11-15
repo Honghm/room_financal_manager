@@ -137,7 +137,6 @@ class _LoginPageState extends State<LoginPage> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(25))),
                     onPressed: () {
-                      expenditures.getExpenditures();
                       Navigator.push(
                           context,
                           MaterialPageRoute(
