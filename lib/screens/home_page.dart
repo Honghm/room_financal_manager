@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sliding_up_panel/sliding_up_panel_widget.dart';
 import 'package:room_financal_manager/screens/group_manager.dart';
 import 'package:room_financal_manager/screens/person_manager.dart';
 import 'package:room_financal_manager/widgets/bottom_bar.dart';
 import 'package:room_financal_manager/widgets/drawer_menu.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:room_financal_manager/widgets/them_KhoanChi_CaNhan.dart';
+import 'package:room_financal_manager/widgets/them_KhoanChi_Nhom.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,20 +15,30 @@ bool isPerson = true;
 bool isGroup = false;
 class _HomePageState extends State<HomePage> {
   final _key = GlobalKey<ScaffoldState>();
-  final double _initFabHeight = 120.0;
-  double _fabHeight;
-  double _panelHeightOpen;
-  double _panelHeightClosed = 95.0;
+
+  ScrollController scrollController;
+  SlidingUpPanelController panelController = SlidingUpPanelController();
+
   @override
   void initState(){
     super.initState();
+    scrollController = ScrollController();
+    scrollController.addListener(() {
+      if (scrollController.offset >=
+          scrollController.position.maxScrollExtent &&
+          !scrollController.position.outOfRange) {
+        panelController.expand();
+      } else if (scrollController.offset <=
+          scrollController.position.minScrollExtent &&
+          !scrollController.position.outOfRange) {
+        panelController.anchor();
+      } else {}
+    });
 
-    _fabHeight = _initFabHeight;
   }
 
   @override
   Widget build(BuildContext context) {
-    _panelHeightOpen = MediaQuery.of(context).size.height * .80;
     return Scaffold(
       key: _key,
       backgroundColor:   Color(0xFFCDCCCC),
@@ -39,7 +51,6 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Stack(
         children: [
-
           Container(
             height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
@@ -54,19 +65,38 @@ class _HomePageState extends State<HomePage> {
             ),
             child: isPerson?PersonManager():GroupManager(),
           ),
-          // SlidingUpPanel(
-          //   panel: Center(
-          //     child: Text("This is the sliding Widget"),
-          //   ),
-          //   body: Center(
-          //     child: Text("This is the Widget behind the sliding panel"),
-          //   ),
-          // ),
+
+          SlidingUpPanelWidget(
+
+            child: Container(
+
+              margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+              decoration: ShapeDecoration(
+                color: Colors.white,
+                shadows: [
+                  BoxShadow(
+                      blurRadius: 5.0,
+                      spreadRadius: 2.0,
+                      color: const Color(0x11000000))
+                ],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: isPerson?ThemKhoanChiCaNhan(panelController,scrollController):ThemKhoanChiNhom(panelController,scrollController),
+            ),
+            controlHeight: 0.0,
+            anchor: 0.4,
+            panelController: panelController,
+            enableOnTap: false, //Enable the onTap callback for control bar.
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor:  Color(0xFF76E65E),
-        onPressed: (){},
+        onPressed: (){
+          panelController.expand();
+        },
         child: Icon(Icons.add, size: 40,),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -75,7 +105,9 @@ class _HomePageState extends State<HomePage> {
       drawer: DrawerMenu(),
     );
   }
+
   void onBottomIconPressed(int index) {
+
     // print(index);
     switch (index) {
       case 1:

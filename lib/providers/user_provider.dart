@@ -116,6 +116,7 @@ class UserProvider with ChangeNotifier {
         accessToken: (await account.authentication).accessToken,
       ))
           .then((user) {
+            print("run here: login");
         // FirebaseFirestore.instance
         //     .collection('users')
         //     .where("account", isEqualTo: account.email)
@@ -128,6 +129,8 @@ class UserProvider with ChangeNotifier {
         //         }));
         // secureStorage.writeSecureData('email', _user.email);
         Navigator.pushNamed(context, '/home');
+      }).catchError((e){
+        print("Error: $e");
       });
 
       // FirebaseFirestore.instance
