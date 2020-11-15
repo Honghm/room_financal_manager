@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:responsive_widgets/responsive_widgets.dart';
 import 'package:room_financal_manager/config/initialization.dart';
 import 'package:room_financal_manager/providers/user_provider.dart';
-import 'package:room_financal_manager/widgets/loading.dart';
 
 import 'home_page.dart';
 
@@ -21,7 +20,8 @@ class _LoginWithGoogleState extends State<LoginWithGoogle> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context);
-    ResponsiveWidgets.init(context,
+    ResponsiveWidgets.init(
+      context,
       height: 1520, // Optional
       width: 720, // Optional
       allowFontScaling: true, // Optional

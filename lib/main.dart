@@ -6,6 +6,8 @@ import 'package:room_financal_manager/providers/user_provider.dart';
 import 'package:room_financal_manager/screens/home_page.dart';
 import 'package:room_financal_manager/screens/login_page.dart';
 import 'package:room_financal_manager/screens/personal_page.dart';
+import 'package:room_financal_manager/widgets/loading.dart';
+import 'package:room_financal_manager/screens/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,8 +23,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/login',
+      initialRoute: '/loading',
       routes: {
+        '/loading': (context) => SplashScreen(),
         '/login': (context) => LoginPage(),
         '/home': (context) => HomePage(),
         '/personal': (context) => PersonalPage(),

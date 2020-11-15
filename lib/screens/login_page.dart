@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,8 +21,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
-
+  final SecureStorage secureStorage = SecureStorage();
   final _key = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _accountController = TextEditingController();
@@ -34,16 +34,16 @@ class _LoginPageState extends State<LoginPage> {
 
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    return  Scaffold(
+    return Scaffold(
       key: _key,
       body: Container(
         height: height,
         decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFF42AF3B), Color(0xFF17B6A0)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            )),
+          colors: [Color(0xFF42AF3B), Color(0xFF17B6A0)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        )),
         child: ListView(
           children: [
             Column(
@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                 Column(
                   children: [
                     Container(
-                      height: height/2 - 30,
+                      height: height / 2 - 30,
                       width: width,
                       color: Colors.transparent,
                       child: Image.asset(
@@ -65,12 +65,12 @@ class _LoginPageState extends State<LoginPage> {
                     Container(
                       child: Text(
                         "Phần mềm hỗ trợ quản lý chi tiêu \n cá nhân, gia đình, phòng trọ...",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
                 ),
-
                 Padding(
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                   child: Column(
@@ -92,10 +92,8 @@ class _LoginPageState extends State<LoginPage> {
                           prefixIcon: Container(
                               width: 50, child: Icon(Icons.account_circle)),
                           border: OutlineInputBorder(
-                            borderSide:
-                            BorderSide(color: Colors.red, width: 2),
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(6)),
+                            borderSide: BorderSide(color: Colors.red, width: 2),
+                            borderRadius: BorderRadius.all(Radius.circular(6)),
                           ),
                         ),
                       ),
@@ -119,14 +117,13 @@ class _LoginPageState extends State<LoginPage> {
                                 width: 50, child: Icon(Icons.vpn_key)),
                             border: OutlineInputBorder(
                                 borderSide:
-                                BorderSide(color: Colors.orange, width: 2),
+                                    BorderSide(color: Colors.orange, width: 2),
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(6)))),
+                                    BorderRadius.all(Radius.circular(6)))),
                       ),
                     ],
                   ),
                 ),
-
                 SizedBox(
                   height: 10,
                 ),
@@ -138,10 +135,8 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.all(Radius.circular(25))),
                     onPressed: () {
                       expenditures.getExpenditures();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomePage()));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => HomePage()));
                     },
                     color: Colors.amberAccent,
                     child: Text(
@@ -153,7 +148,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 5,),
+                SizedBox(
+                  height: 5,
+                ),
                 Text(
                   "Hoặc",
                   style: TextStyle(
@@ -190,7 +187,6 @@ class _LoginPageState extends State<LoginPage> {
                   height: 10,
                 ),
                 Text("Bạn chưa có tài khoản? Đăng ký tại đây!"),
-
               ],
             ),
           ],
@@ -198,5 +194,4 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
 }

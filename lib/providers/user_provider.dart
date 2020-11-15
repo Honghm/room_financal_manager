@@ -6,7 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:room_financal_manager/config/initialization.dart';
 import 'package:room_financal_manager/models/user.dart';
 import 'package:room_financal_manager/screens/login_with_google.dart';
-import 'package:room_financal_manager/providers/user_provider.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserProvider with ChangeNotifier {
   FirebaseAuth _auth;
@@ -41,16 +41,17 @@ class UserProvider with ChangeNotifier {
     _loginGoogle = value;
   }
 
+  final SecureStorage secureStorage = new SecureStorage();
+
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['profile', 'email']);
 
   GoogleSignInAccount account;
-  UserProvider.initialize() : _auth = FirebaseAuth.instance  {
+  UserProvider.initialize() : _auth = FirebaseAuth.instance {
     _auth.authStateChanges().listen(_onStateChanged);
   }
 
   Future<void> _onStateChanged(User user) async {
-
     if (user == null) {
       _status = Status.Unauthenticated;
     } else {
@@ -109,51 +110,92 @@ class UserProvider with ChangeNotifier {
       notifyListeners();
       account = await googleSignIn.signIn();
       notifyListeners();
-      FirebaseFirestore.instance
-          .collection('users')
-          .where("account", isEqualTo: account.email)
-          .snapshots()
-          .listen((data) async {
-        if (data.docs.length == 0) {
-          await _auth
-              .signInWithCredential(GoogleAuthProvider.credential(
-            idToken: (await account.authentication).idToken,
-            accessToken: (await account.authentication).accessToken,
-          ))
-              .then((user) {
-            _isMailExist = false;
-            notifyListeners();
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => LoginWithGoogle()));
-            _status = Status.Unauthenticated;
-            notifyListeners();
-          });
-        } else {
-          await _auth
-              .signInWithCredential(GoogleAuthProvider.credential(
-            idToken: (await account.authentication).idToken,
-            accessToken: (await account.authentication).accessToken,
-          ))
-              .then((user) {
-            FirebaseFirestore.instance
-                .collection('users')
-                .where("account", isEqualTo: account.email)
-                .snapshots()
-                .listen((data) => data.docs.forEach((doc) {
-                      _userData = UserData.formSnapShot(doc);
-                      notifyListeners();
-                      _isMailExist = true;
-                      notifyListeners();
-                    }));
-            Navigator.pushNamed(context, '/main');
-          });
-        }
+      await _auth
+          .signInWithCredential(GoogleAuthProvider.credential(
+        idToken: (await account.authentication).idToken,
+        accessToken: (await account.authentication).accessToken,
+      ))
+          .then((user) {
+        // FirebaseFirestore.instance
+        //     .collection('users')
+        //     .where("account", isEqualTo: account.email)
+        //     .snapshots()
+        //     .listen((data) => data.docs.forEach((doc) {
+        //           _userData = UserData.formSnapShot(doc);
+        //           notifyListeners();
+        //           _isMailExist = true;
+        //           notifyListeners();
+        //         }));
+        // secureStorage.writeSecureData('email', _user.email);
+        Navigator.pushNamed(context, '/home');
       });
+
+      // FirebaseFirestore.instance
+      //     .collection('users')
+      //     .where("account", isEqualTo: account.email)
+      //     .snapshots()
+      //     .listen((data) async {
+      //   if (data.docs.length == 0) {
+      //     await _auth
+      //         .signInWithCredential(GoogleAuthProvider.credential(
+      //       idToken: (await account.authentication).idToken,
+      //       accessToken: (await account.authentication).accessToken,
+      //     ))
+      //         .then((user) {
+      //       _isMailExist = false;
+      //       notifyListeners();
+      //       Navigator.push(context,
+      //           MaterialPageRoute(builder: (context) => LoginWithGoogle()));
+      //       _status = Status.Unauthenticated;
+      //       notifyListeners();
+      //     });
+      //   } else {
+      //     await _auth
+      //         .signInWithCredential(GoogleAuthProvider.credential(
+      //       idToken: (await account.authentication).idToken,
+      //       accessToken: (await account.authentication).accessToken,
+      //     ))
+      //         .then((user) {
+      //       FirebaseFirestore.instance
+      //           .collection('users')
+      //           .where("account", isEqualTo: account.email)
+      //           .snapshots()
+      //           .listen((data) => data.docs.forEach((doc) {
+      //                 _userData = UserData.formSnapShot(doc);
+      //                 notifyListeners();
+      //                 _isMailExist = true;
+      //                 notifyListeners();
+      //               }));
+      //       Navigator.pushNamed(context, '/home');
+      //     });
+      //   }
+      // });
       return true;
     } catch (e) {
       _status = Status.Unauthenticated;
       notifyListeners();
       return false;
     }
+  }
+}
+
+//--------------------Lưu Đăng Nhập-----------------------------
+
+class SecureStorage {
+  final _storage = FlutterSecureStorage();
+
+  Future writeSecureData(String key, String value) async {
+    var writeData = await _storage.write(key: key, value: value);
+    return writeData;
+  }
+
+  Future readSecureData(String key) async {
+    var readData = await _storage.read(key: key);
+    return readData;
+  }
+
+  Future deleteSecureData(String key) async {
+    var deleteData = await _storage.delete(key: key);
+    return deleteData;
   }
 }
