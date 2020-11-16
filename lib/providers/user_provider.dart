@@ -6,11 +6,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:room_financal_manager/config/initialization.dart';
 import 'package:room_financal_manager/models/user.dart';
 import 'package:room_financal_manager/screens/login_with_google.dart';
-<<<<<<< HEAD
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-=======
 import 'package:room_financal_manager/providers/user_provider.dart';
->>>>>>> 116af0f... aa
 
 class UserProvider with ChangeNotifier {
   FirebaseAuth _auth;
