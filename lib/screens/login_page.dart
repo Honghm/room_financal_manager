@@ -91,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         style: TextStyle(fontSize: 16, color: Colors.black),
                         decoration: InputDecoration(
-                          labelText: "Tài khoản",
+                          labelText: "Số điện thoại",
                           prefixIcon: Container(
                               width: 50, child: Icon(Icons.account_circle)),
                           border: OutlineInputBorder(
@@ -149,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                ),
+                ), //Normal Login
                 SizedBox(
                   height: 5,
                 ),
@@ -173,6 +173,7 @@ class _LoginPageState extends State<LoginPage> {
                             ))),
                     FlatButton(
                         onPressed: () async {
+<<<<<<< HEAD
                           // user.googleSignIn.disconnect();
                           await authentication.googleSignIn().whenComplete(() {
                             print("run here");
@@ -182,6 +183,15 @@ class _LoginPageState extends State<LoginPage> {
                             //         child: LoginPage(),
                             //         type: PageTransitionType.bottomToTop));
                             Navigator.pushNamed(context, '/home');
+=======
+                          await authentication.googleSignIn().whenComplete(() {
+                            print("run here");
+                            Navigator.pushReplacement(
+                                context,
+                                PageTransition(
+                                    child: HomePage(),
+                                    type: PageTransitionType.bottomToTop));
+>>>>>>> TruongNam
                           });
                         },
                         child: Container(

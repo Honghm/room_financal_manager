@@ -60,25 +60,25 @@ class UserProvider with ChangeNotifier {
 
   //--------------------Đăng Nhập-----------------------------
 
-  Future<bool> signIn(String account, String password, BuildContext context,
+  Future<bool> signIn(String phone, String password, BuildContext context,
       GlobalKey<ScaffoldState> _key) async {
     FirebaseFirestore.instance
-        .collection('users')
-        .where("account", isEqualTo: account)
+        .collection('Users')
+        .where("account", isEqualTo: phone)
         .snapshots()
         .listen((data) {
       if (data.docs.length != 0) {
         print("đúng tài khoản");
         FirebaseFirestore.instance
-            .collection('users')
+            .collection('Users')
             .where("pass", isEqualTo: password)
             .snapshots()
             .listen((data) async {
           if (data.docs.length != 0) {
             print("đúng pass");
             FirebaseFirestore.instance
-                .collection('users')
-                .where("account", isEqualTo: account)
+                .collection('Users')
+                .where("account", isEqualTo: phone)
                 .snapshots()
                 .listen((data) => data.docs.forEach((doc) {
                       _userData = UserData.formSnapShot(doc);
