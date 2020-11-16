@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
 
   ScrollController scrollController;
   SlidingUpPanelController panelController = SlidingUpPanelController();
-
+ double _padding = 50;
   @override
   void initState(){
     super.initState();
@@ -39,6 +39,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       key: _key,
       backgroundColor:   Color(0xFFCDCCCC),
@@ -70,7 +71,7 @@ class _HomePageState extends State<HomePage> {
 
             child: Container(
 
-              margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+              margin: EdgeInsets.fromLTRB(10, _padding, 10, 0),
               decoration: ShapeDecoration(
                 color: Colors.white,
                 shadows: [
@@ -95,6 +96,9 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor:  Color(0xFF76E65E),
         onPressed: (){
+          setState(() {
+            _padding = 10;
+          });
           panelController.expand();
         },
         child: Icon(Icons.add, size: 40,),
