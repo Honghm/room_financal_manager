@@ -4,9 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_sliding_up_panel/sliding_up_panel_widget.dart';
 
 class ThemKhoanChiNhom extends StatefulWidget {
-  ScrollController scrollController;
-  SlidingUpPanelController panelController = SlidingUpPanelController();
-  ThemKhoanChiNhom(this.panelController, this.scrollController);
+  SlidingUpPanelController panelController;
+  ThemKhoanChiNhom(this.panelController);
 
   @override
   _ThemKhoanChiNhomState createState() => _ThemKhoanChiNhomState();
@@ -45,7 +44,6 @@ class _ThemKhoanChiNhomState extends State<ThemKhoanChiNhom> {
           child: Container(
             padding: EdgeInsets.only(left: 10,right: 10),
             child: ListView(
-              controller: widget.scrollController,
               physics: ClampingScrollPhysics(),
               children: [
                 Row(

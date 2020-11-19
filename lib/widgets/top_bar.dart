@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_widgets/responsive_widgets.dart';
 class TopBar extends StatefulWidget {
-  final Function(int) onIconPresedCallback;
-  TopBar({Key key, this.onIconPresedCallback}): super(key: key);
+  final Function(int) onButtonPresedCallback;
+  TopBar({Key key, this.onButtonPresedCallback}): super(key: key);
   @override
   _TopBarState createState() => _TopBarState();
 }
@@ -40,10 +40,13 @@ class _TopBarState extends State<TopBar> {
                             height: 40,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                                color: _selectedIndex==1?Color(0xff07E459):Colors.white,
+                                border: Border.all(
+                                    color: Color(0xff04FF2F)
+                                )
 
                             ),
-                            child: Text("Khoản thu")
+                            child: Text("Khoản thu",style: TextStyle(fontSize: 20,color: _selectedIndex==1?Colors.white:Colors.black,fontWeight: FontWeight.bold))
                         ),
                       ),
 
@@ -58,17 +61,20 @@ class _TopBarState extends State<TopBar> {
                     children: <Widget>[
                       InkWell(
                         onTap: () {
-                          _handlePressed(1);
+                          _handlePressed(2);
                         },
                         child: Container(
                             width: 100,
                             height: 40,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                                color: _selectedIndex==2?Color(0xff07E459):Colors.white,
+                                border: Border.all(
+                                    color: Color(0xff04FF2F)
+                                )
 
                             ),
-                            child: Text("Khoản chi")
+                            child: Text("Khoản chi",style: TextStyle(fontSize: 20,color: _selectedIndex==2?Colors.white:Colors.black,fontWeight: FontWeight.bold))
                         ),
                       ),
                     ],
@@ -83,17 +89,19 @@ class _TopBarState extends State<TopBar> {
                     children: <Widget>[
                       InkWell(
                         onTap: () {
-                          _handlePressed(1);
+                          _handlePressed(3);
                         },
                         child: Container(
                             width: 100,
                             height: 40,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Colors.white,
-
+                              color: _selectedIndex==3?Color(0xff07E459):Colors.white,
+                              border: Border.all(
+                                color: Color(0xff04FF2F)
+                              )
                             ),
-                            child: Text("Thống kê")
+                            child: Text("Thống kê", style: TextStyle(fontSize: 20,color: _selectedIndex==3?Colors.white:Colors.black,fontWeight: FontWeight.bold),)
                         ),
                       ),
                     ],
@@ -104,7 +112,7 @@ class _TopBarState extends State<TopBar> {
     );
   }
   void _handlePressed(int index) {
-    widget.onIconPresedCallback(index);
+    widget.onButtonPresedCallback(index);
     setState(() {
       _selectedIndex = index;
     });

@@ -2,13 +2,22 @@ import 'package:flutter/material.dart';
 
 class BottomBar extends StatefulWidget {
   final Function(int) onIconPresedCallback;
-  BottomBar({Key key, this.onIconPresedCallback}): super(key: key);
+  int initSelected;
+  BottomBar({Key key, this.onIconPresedCallback, this.initSelected}): super(key: key);
   @override
   _BottomBarState createState() => _BottomBarState();
 }
 
 class _BottomBarState extends State<BottomBar> {
-  int _selectedIndex = 2;
+  int _selectedIndex = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      _selectedIndex = widget.initSelected;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(

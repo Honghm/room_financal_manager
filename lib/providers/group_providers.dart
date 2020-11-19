@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:room_financal_manager/config/initialization.dart';
 import 'package:room_financal_manager/models/expendituresGroup.dart';
 
 class GroupProviders with ChangeNotifier {
@@ -10,13 +11,19 @@ class GroupProviders with ChangeNotifier {
   String _ngay;
   String _nam;
   int _lenghtKhoanChi = 0;
-
+ Status _status = Status.Loaded;
   int get lenghtKhoanChi => _lenghtKhoanChi;
   List<Map<String, dynamic>> listItemKhoanChi = [];
   List<ExpendituresGroup> list = [];
+  Status get status => _status;
 
+  set status(Status value) {
+    _status = value;
+  }
   Future<List<ExpendituresGroup>> getItemKhoanChi(String id) async {
     try{
+      _status = Status.Loading;
+      notifyListeners();
       await FirebaseFirestore.instance
           .collection('Groups/Penhouse/expenditures').doc(id)
           .get().then((item) {
@@ -29,31 +36,69 @@ class GroupProviders with ChangeNotifier {
         notifyListeners();
         getDate(item.data()["ngayMua"]);
         notifyListeners();
-        return list;
+
       });
+      _status = Status.Loaded;
+      notifyListeners();
+      return list;
     }catch(e){
 
     }
   }
-  Future<List<Map<String, dynamic>>> getListKhoanChi() async {
-    Map<String,String> listId = {};
-    List<Map<String, dynamic>> listKhoanChi = [];
+
+
+
+  Map<String,String> listId = {};
+  Future<List<Map<String, dynamic>>> getListKhoanChi(String idGroup) async {
+
+      List<Map<String, dynamic>> listKhoanChi = [];
     try {
       await FirebaseFirestore.instance
-          .collection('Groups/Penhouse/expenditures').get().then((value) {
+          .collection('Groups/${idGroup}/expenditures').get().then((value) {
             for(int i = 0; i<value.docs.length;i++){
               listKhoanChi.add(value.docs[i].data());
               getDate(value.docs[i].data()["ngayMua"]);
             }
-            notifyListeners();
       });
-      return listKhoanChi;
     }
     catch (e) {
       print(e);
     }
+      return listKhoanChi;
+  }
+  Future<String> getNameById(String id) async {
+  String name = "";
+  try{
+    await FirebaseFirestore.instance.collection("Users").doc(id).get().then((value) {
+      name = value.data()["name"];
+      return name;
+    });
+  }catch(e){
+    print(e);
+  }
+  return name;
   }
 
+  Future<List<Map<String, dynamic>>> getListGroup() async{
+    List<Map<String, dynamic>> listGroup = [];
+      try{
+        // _status = Status.Loading;
+        // notifyListeners();
+        await FirebaseFirestore.instance.collection("Groups").get().then((data) {
+          data.docs.forEach((item) {
+            print("run here: ${item.data()}");
+            listGroup.add(item.data());
+          });
+          notifyListeners();
+        });
+        // _status = Status.Loaded;
+        // notifyListeners();
+        // print("run here 1: ${listGroup[0]}");
+        return listGroup;
+      }catch(e){
+        print("error: $e");
+      }
+  }
   String get nam => _nam;
 
   String get ngay => _ngay;

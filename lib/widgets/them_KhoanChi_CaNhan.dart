@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sliding_up_panel/sliding_up_panel_widget.dart';
 
 class ThemKhoanChiCaNhan extends StatefulWidget {
-  ScrollController scrollController;
-  SlidingUpPanelController panelController = SlidingUpPanelController();
-  ThemKhoanChiCaNhan(this.panelController, this.scrollController);
+
+  SlidingUpPanelController panelController;
+  ThemKhoanChiCaNhan(this.panelController);
   @override
   _ThemKhoanChiCaNhanState createState() => _ThemKhoanChiCaNhanState();
 }
@@ -26,7 +26,7 @@ class _ThemKhoanChiCaNhanState extends State<ThemKhoanChiCaNhan> {
           child: Container(
             padding: EdgeInsets.only(left: 10,right: 10),
             child: ListView(
-              controller: widget.scrollController,
+              //controller: widget.scrollController,
               physics: ClampingScrollPhysics(),
               children: [
                 Row(

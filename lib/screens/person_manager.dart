@@ -41,13 +41,30 @@ class _PersonManagerState extends State<PersonManager> {
 
               ),
             ),
-            TopBar(onIconPresedCallback: onBottomIconPressed,),
+            TopBar(onButtonPresedCallback: onTopButtonPressed,),
           ],
         ),
       ),
     );
   }
   void onBottomIconPressed(int index) {
+    // print(index);
+    // switch (index) {
+    //   case 1:
+    //     setState(() {
+    //       isGroup = true;
+    //       isPerson =false;
+    //     });
+    //     break;
+    //   case 2:
+    //     setState(() {
+    //       isGroup = false;
+    //       isPerson =true;
+    //     });
+    //     break;
+    // }
+  }
+  void onTopButtonPressed(int index) {
     // print(index);
     // switch (index) {
     //   case 1:

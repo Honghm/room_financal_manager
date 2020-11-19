@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:room_financal_manager/screens/create_group.dart';
 import 'package:room_financal_manager/services/authentication.dart';
 import 'package:room_financal_manager/services/storage.dart';
 import 'package:room_financal_manager/widgets/drawer_menu.dart';
@@ -216,7 +218,13 @@ class _PersonalPageState extends State<PersonalPage> {
                   height: 10,
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            child: CreateGroup(),
+                            type: PageTransitionType.bottomToTop));
+                  },
                   child: Row(
                     children: [
                       Container(
