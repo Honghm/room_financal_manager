@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:room_financal_manager/providers/user_provider.dart';
+import 'package:room_financal_manager/services/authentication.dart';
+import 'package:room_financal_manager/services/storage.dart';
 
 class DrawerMenu extends StatefulWidget {
   @override
@@ -6,8 +10,13 @@ class DrawerMenu extends StatefulWidget {
 }
 
 class _DrawerMenuState extends State<DrawerMenu> {
+  SecureStorage secureStorage = SecureStorage();
+  final _key = GlobalKey<ScaffoldState>();
+  Authentication authentication = Authentication();
+
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context);
     return Drawer(
       child: ListView(
         children: [
@@ -149,7 +158,8 @@ class _DrawerMenuState extends State<DrawerMenu> {
 
           //Đăng xuất
           InkWell(
-            onTap: () {
+            onTap: () async {
+              user.signOut();
               Navigator.pushReplacementNamed(context, '/login');
             },
             child: ListTile(

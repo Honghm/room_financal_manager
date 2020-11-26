@@ -4,6 +4,8 @@ import 'package:room_financal_manager/services/storage.dart';
 import 'package:room_financal_manager/widgets/drawer_menu.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:room_financal_manager/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class PersonalPage extends StatefulWidget {
   @override
@@ -13,10 +15,10 @@ class PersonalPage extends StatefulWidget {
 class _PersonalPageState extends State<PersonalPage> {
   SecureStorage secureStorage = SecureStorage();
   final _key = GlobalKey<ScaffoldState>();
-  Authentication authentication = Authentication();
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context);
     return Scaffold(
       key: _key,
       appBar: AppBar(
@@ -336,11 +338,8 @@ class _PersonalPageState extends State<PersonalPage> {
             width: MediaQuery.of(context).size.width - 80,
             child: RaisedButton(
               onPressed: () async {
-                await authentication.googleSignOut().whenComplete(() {
-                  secureStorage.deleteSecureData('email');
-                }).whenComplete(() {
-                  Navigator.pushReplacementNamed(context, '/login');
-                });
+                user.signOut();
+                Navigator.pushReplacementNamed(context, '/login');
               },
               color: Colors.white,
               child: Text(

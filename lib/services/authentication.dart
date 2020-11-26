@@ -16,9 +16,7 @@ class Authentication {
         accessToken: googleSignInAuthentication.accessToken,
         idToken: googleSignInAuthentication.idToken);
     final UserCredential userCredential =
-        await _firebaseAuth.signInWithCredential(authCredential).then((value){
-          
-        });
+        await _firebaseAuth.signInWithCredential(authCredential);
     final User user = userCredential.user;
     assert(user.displayName != null);
     assert(user.email != null);

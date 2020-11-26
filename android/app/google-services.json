@@ -15,19 +15,19 @@
       },
       "oauth_client": [
         {
+          "client_id": "679615292250-i682d9fsmthehictomtiobaoi22fdn69.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.honghm.room_financal_manager",
+            "certificate_hash": "a51d9ce9f6439dceae1b946abe0048e4870f1cc7"
+          }
+        },
+        {
           "client_id": "679615292250-cc5porajhsf3mftoe0u2195cdt8vq0gs.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.honghm.room_financal_manager",
             "certificate_hash": "1217a0137b0101427be9608cd9fe6607b2f35bf5"
-          }
-        },
-        {
-          "client_id": "679615292250-lrokhmv5fcl0r6j7pc0vvt3qif2op1jv.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.honghm.room_financal_manager",
-            "certificate_hash": "a51d9ce9f6439dceae1b946abe0048e4870f1cc7"
           }
         },
         {

@@ -3,14 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserData {
   static const ID = 'uid';
   static const NAME = 'name';
-  static const ACCOUNT = 'account';
   static const PHONE = 'phone';
   static const PASS = 'pass';
   static const URL_AVT = 'url_avt';
   static const URL_COVER = 'url_cover';
   String _id;
   String _name;
-  String _account;
   String _phone;
   String _pass;
   String _urlAvt;
@@ -40,21 +38,13 @@ class UserData {
 
   String get phone => _phone;
 
-
   UserData.formSnapShot(DocumentSnapshot snapshot) {
     Map data = snapshot.data();
     _id = data[ID];
     _name = data[NAME];
-    _account = data[ACCOUNT];
     _phone = data[PHONE];
     _urlAvt = data[URL_AVT];
     _urlCover = data[URL_COVER];
-  }
-
-  String get account => _account;
-
-  set account(String value) {
-    _account = value;
   }
 
   set phone(String value) {
@@ -64,5 +54,4 @@ class UserData {
   set pass(String value) {
     _pass = value;
   }
-
 }

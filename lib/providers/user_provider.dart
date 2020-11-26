@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:room_financal_manager/config/initialization.dart';
 import 'package:room_financal_manager/models/user.dart';
-import 'package:room_financal_manager/screens/login_with_google.dart';
+import 'package:room_financal_manager/screens/register_page.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:room_financal_manager/providers/user_provider.dart';
 
 class UserProvider with ChangeNotifier {
   FirebaseAuth _auth;
@@ -65,7 +64,7 @@ class UserProvider with ChangeNotifier {
       GlobalKey<ScaffoldState> _key) async {
     FirebaseFirestore.instance
         .collection('Users')
-        .where("account", isEqualTo: phone)
+        .where("phone", isEqualTo: phone)
         .snapshots()
         .listen((data) {
       if (data.docs.length != 0) {
@@ -79,13 +78,13 @@ class UserProvider with ChangeNotifier {
             print("đúng pass");
             FirebaseFirestore.instance
                 .collection('Users')
-                .where("account", isEqualTo: phone)
+                .where("phone", isEqualTo: phone)
                 .snapshots()
                 .listen((data) => data.docs.forEach((doc) {
                       _userData = UserData.formSnapShot(doc);
                       notifyListeners();
                     }));
-            Navigator.pushNamed(context, '/main');
+            Navigator.pushNamed(context, '/home');
           } else {
             _key.currentState.showSnackBar(SnackBar(
                 content: Text(
@@ -109,69 +108,102 @@ class UserProvider with ChangeNotifier {
       notifyListeners();
       account = await googleSignIn.signIn();
       notifyListeners();
-      await _auth
-          .signInWithCredential(GoogleAuthProvider.credential(
-        idToken: (await account.authentication).idToken,
-        accessToken: (await account.authentication).accessToken,
-      ))
-          .then((user) {
-        // FirebaseFirestore.instance
-        //     .collection('users')
-        //     .where("account", isEqualTo: account.email)
-        //     .snapshots()
-        //     .listen((data) => data.docs.forEach((doc) {
-        //           _userData = UserData.formSnapShot(doc);
-        //           notifyListeners();
-        //           _isMailExist = true;
-        //           notifyListeners();
-        //         }));
-        Navigator.pushNamed(context, '/home');
+      FirebaseFirestore.instance
+          .collection('Users')
+          .where("email", isEqualTo: account.email)
+          .snapshots()
+          .listen((data) async {
+        if (data.docs.length == 0) {
+          await _auth
+              .signInWithCredential(GoogleAuthProvider.credential(
+            idToken: (await account.authentication).idToken,
+            accessToken: (await account.authentication).accessToken,
+          ))
+              .then((user) {
+            _isMailExist = false;
+            notifyListeners();
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => LoginWithGoogle()));
+            _status = Status.Unauthenticated;
+            notifyListeners();
+          });
+        } else {
+          await _auth
+              .signInWithCredential(GoogleAuthProvider.credential(
+            idToken: (await account.authentication).idToken,
+            accessToken: (await account.authentication).accessToken,
+          ))
+              .then((user) {
+            FirebaseFirestore.instance
+                .collection('Users')
+                .where("email", isEqualTo: account.email)
+                .snapshots()
+                .listen((data) => data.docs.forEach((doc) {
+                      _userData = UserData.formSnapShot(doc);
+                      notifyListeners();
+                      _isMailExist = true;
+                      notifyListeners();
+                    }));
+            Navigator.pushNamed(context, '/home');
+          });
+        }
       });
-
-      // FirebaseFirestore.instance
-      //     .collection('users')
-      //     .where("account", isEqualTo: account.email)
-      //     .snapshots()
-      //     .listen((data) async {
-      //   if (data.docs.length == 0) {
-      //     await _auth
-      //         .signInWithCredential(GoogleAuthProvider.credential(
-      //       idToken: (await account.authentication).idToken,
-      //       accessToken: (await account.authentication).accessToken,
-      //     ))
-      //         .then((user) {
-      //       _isMailExist = false;
-      //       notifyListeners();
-      //       Navigator.push(context,
-      //           MaterialPageRoute(builder: (context) => LoginWithGoogle()));
-      //       _status = Status.Unauthenticated;
-      //       notifyListeners();
-      //     });
-      //   } else {
-      //     await _auth
-      //         .signInWithCredential(GoogleAuthProvider.credential(
-      //       idToken: (await account.authentication).idToken,
-      //       accessToken: (await account.authentication).accessToken,
-      //     ))
-      //         .then((user) {
-      //       FirebaseFirestore.instance
-      //           .collection('users')
-      //           .where("account", isEqualTo: account.email)
-      //           .snapshots()
-      //           .listen((data) => data.docs.forEach((doc) {
-      //                 _userData = UserData.formSnapShot(doc);
-      //                 notifyListeners();
-      //                 _isMailExist = true;
-      //                 notifyListeners();
-      //               }));
-      //       Navigator.pushNamed(context, '/home');
-      //     });
-      //   }
-      // });
       return true;
     } catch (e) {
       _status = Status.Unauthenticated;
       notifyListeners();
+      return false;
+    }
+  }
+
+  //-------------------------------Đăng xuất--------------------------------------
+  Future signOut() async {
+    _auth.signOut();
+
+    _status = Status.Unauthenticated;
+    notifyListeners();
+    return Future.delayed(Duration.zero);
+  }
+
+  //-------------------Đăng Ký-------------------------------------
+
+  Future<bool> signUp(
+      String name, String email, String password, String phone) async {
+    try {
+      _status = Status.Authenticating;
+      notifyListeners();
+      await _auth.signInAnonymously().then((user) {
+        _firestore.collection('Users').doc(user.user.uid).set({
+          'name': name,
+          'email': email,
+          'pass': password,
+          'uid': user.user.uid,
+          'phone': phone,
+        });
+      });
+      return true;
+    } catch (e) {
+      _status = Status.Unauthenticated;
+      notifyListeners();
+      //print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> signUp_Google(String name, String email, String phone,
+      String weight, String height, String gender, String footstep) async {
+    try {
+      _firestore.collection('Users').doc(account.id).set({
+        'name': name,
+        'email': email,
+        'uid': account.id,
+        'phone': phone,
+      });
+      return true;
+    } catch (e) {
+      _status = Status.Unauthenticated;
+      notifyListeners();
+      //print(e.toString());
       return false;
     }
   }

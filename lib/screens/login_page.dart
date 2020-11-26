@@ -7,7 +7,6 @@ import 'package:responsive_widgets/responsive_widgets.dart';
 import 'package:room_financal_manager/config/initialization.dart';
 import 'package:room_financal_manager/providers/user_provider.dart';
 import 'package:room_financal_manager/services/authentication.dart';
-import 'package:room_financal_manager/widgets/loading.dart';
 import 'package:room_financal_manager/providers/group_providers.dart';
 import 'package:room_financal_manager/screens/home_page.dart';
 
@@ -23,12 +22,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  Authentication authentication = Authentication();
-
   final _key = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _accountController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
+  int login;
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +80,10 @@ class _LoginPageState extends State<LoginPage> {
                         height: 10,
                       ),
                       TextFormField(
-                        controller: _accountController,
+                        controller: _phoneController,
                         validator: (value) {
                           if (value.isEmpty) {
-                            return 'Yêu cầu nhập tài khoản';
+                            return 'Yêu cầu nhập số điện thoại';
                           }
                           return null;
                         },
@@ -136,9 +134,11 @@ class _LoginPageState extends State<LoginPage> {
                   child: RaisedButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(25))),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => HomePage()));
+                    onPressed: () async {
+                      if (_formKey.currentState.validate()) {
+                        await user.signIn(_phoneController.text,
+                            _passController.text, context, _key);
+                      }
                     },
                     color: Colors.amberAccent,
                     child: Text(
@@ -173,14 +173,8 @@ class _LoginPageState extends State<LoginPage> {
                             ))),
                     FlatButton(
                         onPressed: () async {
-                          await authentication.googleSignIn().whenComplete(() {
-                            print("run here");
-                            Navigator.pushReplacement(
-                                context,
-                                PageTransition(
-                                    child: HomePage(),
-                                    type: PageTransitionType.bottomToTop));
-                          });
+                          //user.googleSignIn.disconnect();
+                          await user.loginWithGoogle(context, _key);
                         },
                         child: Container(
                             height: 50,
