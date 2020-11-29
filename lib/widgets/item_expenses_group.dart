@@ -1,35 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:room_financal_manager/models/expendituresGroup.dart';
+import 'package:room_financal_manager/models/KhoanChiNhom.dart';
+
 import 'package:room_financal_manager/providers/group_providers.dart';
 
 class ItemExpensesGroup extends StatefulWidget {
   // String idKhoanChi;
   Map<String, dynamic> khoanChi;
-  ItemExpensesGroup(this.khoanChi );
+  List<ItemKhoanChiNhom> dsItem;
+  String ngayMua;
+  ItemExpensesGroup({this.khoanChi, this.dsItem, this.ngayMua });
   @override
   _ItemExpensesGroupState createState() => _ItemExpensesGroupState();
 }
 
 class _ItemExpensesGroupState extends State<ItemExpensesGroup> {
   List<Widget> _rowItemKhoanChi = List();
-  List<ExpendituresGroup> listItem = [];
+
   int tongTien = 0;
   String ngayThang = "";
   String nam = "";
   String thu = "";
   void _loadData() async {
      _rowItemKhoanChi.clear();
-    widget.khoanChi["data"].forEach((id,item){
-      _rowItemKhoanChi.add(rowImformations(item["iconLoai"], item["tenLoai"], item["noiDung"],
-          item["giaTien"], item["nguoiMua"]));
-      tongTien += int.parse(item["giaTien"]);
-    });
-    getDate(widget.khoanChi["ngayMua"]);
+     widget.dsItem.forEach((item) {
+       _rowItemKhoanChi.add(rowImformations(item.iconLoai, item.tenLoai, item.noiDung,
+           item.giaTien, item.nguoiMua));
+       tongTien += int.parse(item.giaTien);
+     });
+    getDate(widget.ngayMua);
+    // widget.khoanChi["data"].forEach((id,item){
+    //   _rowItemKhoanChi.add(rowImformations(item["iconLoai"], item["tenLoai"], item["noiDung"],
+    //       item["giaTien"], item["nguoiMua"]));
+    //   tongTien += int.parse(item["giaTien"]);
+    // });
+    // getDate(widget.khoanChi["ngayMua"]);
   }
   void getDate(String date){
     List<String> dates = [];
-    dates = date.split("/");
+    dates = date.split("_");
 
     ngayThang = dates[0]+"/"+dates[1];
     nam = dates[2];
@@ -42,25 +51,25 @@ class _ItemExpensesGroupState extends State<ItemExpensesGroup> {
         ((yyyy + 4800 - ((14 - mm) / 12)) / 100) +
         ((yyyy + 4800 - ((14 - mm) / 12)) / 400)  - 32045) % 7).toInt();
     switch (JMD) {
-      case 0:
+      case 6:
         thu = "CN";
         break;
-      case 1:
+      case 0:
         thu = "2";
         break;
-      case 2:
+      case 1:
         thu = "3";
         break;
-      case 3:
+      case 2:
         thu = "4";
         break;
-      case 4:
+      case 3:
         thu = "5";
         break;
-      case 5:
+      case 4:
         thu = "6";
         break;
-      case 6:
+      case 5:
         thu = "7";
         break;
     }

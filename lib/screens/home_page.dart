@@ -31,7 +31,8 @@ class _HomePageState extends State<HomePage> {
   }
   Widget changeContainer(state){
     switch(state){
-      case 1: return _listGroup(groups);
+      // case 1: return _listGroup(groups);
+      case 1: return GroupManager();
       case 2: return PersonManager();
     }
     return Container();
@@ -44,14 +45,23 @@ class _HomePageState extends State<HomePage> {
   }
   @override
   Widget build(BuildContext context) {
-
+    GroupProviders _groups = Provider.of<GroupProviders>(context);
     return Scaffold(
       key: _key,
       backgroundColor:   Color(0xFFCDCCCC),
       appBar: AppBar(
         backgroundColor: Color(0xFF42AF3B),
-        leading: IconButton(icon: Icon(Icons.menu, color: Colors.black,), onPressed: (){
-          _key.currentState.openDrawer();
+        leading: IconButton(icon:_state == 2?Icon(Icons.menu, color: Colors.black,): (_groups.listGroupShow?Icon(Icons.menu, color: Colors.black,):Icon(Icons.arrow_back_rounded, color: Colors.white,)), onPressed: (){
+          if(_state==2){
+            _key.currentState.openDrawer();
+          }else{
+            if(_groups.listGroupShow)
+              _key.currentState.openDrawer();
+            else {
+              _groups.listGroupShow = true;
+              // Navigator.pop(context);
+            }
+          }
         }),
         title: Text(_state==2?"QUẢN LÝ CHI TIÊU CÁ NHÂN":"QUẢN LÝ CHI TIÊU NHÓM",style: TextStyle(color: Colors.white,fontSize: 22, fontWeight: FontWeight.bold),),
       ),
@@ -84,7 +94,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
-      bottomNavigationBar: BottomBar(onIconPresedCallback: onBottomIconPressed,initSelected: 2,),
+      bottomNavigationBar: BottomBar(onIconPressedCallback: onBottomIconPressed,initSelected: 2,),
       drawer: DrawerMenu(),
     );
   }
@@ -105,85 +115,85 @@ class _HomePageState extends State<HomePage> {
         break;
     }
   }
-  Widget _listGroup(List<Map<String, dynamic>> data)  {
-
-    return Container(
-      height:  MediaQuery.of(context).size.height,
-      color: Color(0xFFCDCCCC),
-      child: Stack(
-        children: [
-          Container(
-            padding: EdgeInsets.only(left: 10,right: 10),
-            height: 50,
-           child: Row(
-             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-             children: [
-               Container(height: 2,width:MediaQuery.of(context).size.width/2-100, color: Colors.black,),
-             Text("NHÓM CỦA BẠN", style: TextStyle(color: Colors.black, fontSize: 20,fontWeight: FontWeight.bold),),
-               Container(height: 2,width:MediaQuery.of(context).size.width/2-100, color: Colors.black,),
-           ],),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 50,left: 10,right: 10),
-            child: data==null?Text("Hiện bạn không có nhóm nào!"):ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (_, index){
-                  // print("name group: ${data[index]["name"]}");
-                  return InkWell(
-                    onTap: (){
-                      // setState(() {
-                      //   _state = 3;
-                      //   groupId = data[index]["id"];
-                      // });
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => GroupManager(data[index]["id"])));
-                    },
-                    child: Container(
-                      height: 100,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white,
-                      ),
-                      margin: EdgeInsets.only(bottom: 10),
-                      child: Row(children: [
-                        Container(
-                          height: 80,
-                          width: 80,
-                          margin: EdgeInsets.only(left: 10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(40),
-                            border: Border.all(color: Colors.black),
-                            color: Color(0xFFCDCCCC),
-                          ),
-                          child: data[index]["avatar"]==""? Icon(Icons.people,size: 50,color: Colors.white,):ClipOval(
-                            child: SizedBox(
-                                height: 80,
-                                width: 80,
-                                child: Image.network(data[index]["avatar"], fit: BoxFit.fill,)),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 10, top: 10,bottom: 10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(data[index]["name"].toString(), style: TextStyle(color: Colors.red, fontSize: 25,fontWeight: FontWeight.bold),),
-                              Text("- Số thành viên: ${data[index]["member"].length}", style: TextStyle(color: Colors.black, fontSize: 18,fontWeight: FontWeight.bold),),
-                              Text("- Quỹ hiện có: ${data[index]["group_funds"].toString()} vnđ", style: TextStyle(color: Colors.black, fontSize: 18,fontWeight: FontWeight.bold),),
-                            ],
-                          ),
-                        )
-                      ],),
-                    ),
-                  );
-                }
-            ),
-          ),
-
-        ],
-      ),
-    );
-  }
+  // Widget _listGroup(List<Map<String, dynamic>> data)  {
+  //
+  //   return Container(
+  //     height:  MediaQuery.of(context).size.height,
+  //     color: Color(0xFFCDCCCC),
+  //     child: Stack(
+  //       children: [
+  //         Container(
+  //           padding: EdgeInsets.only(left: 10,right: 10),
+  //           height: 50,
+  //          child: Row(
+  //            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //            children: [
+  //              Container(height: 2,width:MediaQuery.of(context).size.width/2-100, color: Colors.black,),
+  //            Text("NHÓM CỦA BẠN", style: TextStyle(color: Colors.black, fontSize: 20,fontWeight: FontWeight.bold),),
+  //              Container(height: 2,width:MediaQuery.of(context).size.width/2-100, color: Colors.black,),
+  //          ],),
+  //         ),
+  //         Padding(
+  //           padding: EdgeInsets.only(top: 50,left: 10,right: 10),
+  //           child: data==null?Text("Hiện bạn không có nhóm nào!"):ListView.builder(
+  //               itemCount: data.length,
+  //               itemBuilder: (_, index){
+  //                 // print("name group: ${data[index]["name"]}");
+  //                 return InkWell(
+  //                   onTap: (){
+  //                     // setState(() {
+  //                     //   _state = 3;
+  //                     //   groupId = data[index]["id"];
+  //                     // });
+  //                     Navigator.push(context,
+  //                         MaterialPageRoute(builder: (context) => GroupManager(data[index]["id"])));
+  //                   },
+  //                   child: Container(
+  //                     height: 100,
+  //                     decoration: BoxDecoration(
+  //                       borderRadius: BorderRadius.circular(20),
+  //                       color: Colors.white,
+  //                     ),
+  //                     margin: EdgeInsets.only(bottom: 10),
+  //                     child: Row(children: [
+  //                       Container(
+  //                         height: 80,
+  //                         width: 80,
+  //                         margin: EdgeInsets.only(left: 10),
+  //                         decoration: BoxDecoration(
+  //                           borderRadius: BorderRadius.circular(40),
+  //                           border: Border.all(color: Colors.black),
+  //                           color: Color(0xFFCDCCCC),
+  //                         ),
+  //                         child: data[index]["avatar"]==""? Icon(Icons.people,size: 50,color: Colors.white,):ClipOval(
+  //                           child: SizedBox(
+  //                               height: 80,
+  //                               width: 80,
+  //                               child: Image.network(data[index]["avatar"], fit: BoxFit.fill,)),
+  //                         ),
+  //                       ),
+  //                       Container(
+  //                         margin: EdgeInsets.only(left: 10, top: 10,bottom: 10),
+  //                         child: Column(
+  //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                           crossAxisAlignment: CrossAxisAlignment.start,
+  //                           children: [
+  //                             Text(data[index]["name"].toString(), style: TextStyle(color: Colors.red, fontSize: 25,fontWeight: FontWeight.bold),),
+  //                             Text("- Số thành viên: ${data[index]["member"].length}", style: TextStyle(color: Colors.black, fontSize: 18,fontWeight: FontWeight.bold),),
+  //                             Text("- Quỹ hiện có: ${data[index]["group_funds"].toString()} vnđ", style: TextStyle(color: Colors.black, fontSize: 18,fontWeight: FontWeight.bold),),
+  //                           ],
+  //                         ),
+  //                       )
+  //                     ],),
+  //                   ),
+  //                 );
+  //               }
+  //           ),
+  //         ),
+  //
+  //       ],
+  //     ),
+  //   );
+  // }
 
 }

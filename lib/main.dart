@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:room_financal_manager/providers/group_providers.dart';
 import 'package:room_financal_manager/providers/user_provider.dart';
@@ -31,6 +33,17 @@ class MyApp extends StatelessWidget {
         '/personal': (context) => PersonalPage(),
       },
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        DefaultCupertinoLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      locale: Locale('vi', 'VN'),
+      supportedLocales: [
+        const Locale('en', 'US'), // English
+        const Locale('vi', 'VN'), //Việt Nam
+      ],
       home: LoginPage(),
     );
   }

@@ -36,7 +36,10 @@ dependencies:
   flutter_spinkit: ^4.1.2
   page_transition: ^1.1.7+2
   flutter_sliding_up_panel: ^1.1.0+1
-
+  flutter_localizations:
+    sdk: flutter
+  flutter_rounded_date_picker: 1.0.5
+  smart_select: ^4.3.2
 
 
   # The following adds the Cupertino Icons font to your application.

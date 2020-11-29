@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_widgets/responsive_widgets.dart';
 class TopBar extends StatefulWidget {
-  final Function(int) onButtonPresedCallback;
-  TopBar({Key key, this.onButtonPresedCallback}): super(key: key);
+  Function(int) onButtonPressedCallback;
+  String title1;
+  String title2;
+  String title3;
+  int initSelected;
+  TopBar(this.title1,this.title2, this.title3,{Key key, this.onButtonPressedCallback, this.initSelected}): super(key: key);
   @override
   _TopBarState createState() => _TopBarState();
 }
 
 class _TopBarState extends State<TopBar> {
-  int _selectedIndex = 2;
+  int _selectedIndex = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      _selectedIndex = widget.initSelected;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     ResponsiveWidgets.init(context,
@@ -46,7 +58,7 @@ class _TopBarState extends State<TopBar> {
                                 )
 
                             ),
-                            child: Text("Khoản thu",style: TextStyle(fontSize: 20,color: _selectedIndex==1?Colors.white:Colors.black,fontWeight: FontWeight.bold))
+                            child: Text(widget.title1,style: TextStyle(fontSize: 20,color: _selectedIndex==1?Colors.white:Colors.black,fontWeight: FontWeight.bold))
                         ),
                       ),
 
@@ -74,7 +86,7 @@ class _TopBarState extends State<TopBar> {
                                 )
 
                             ),
-                            child: Text("Khoản chi",style: TextStyle(fontSize: 20,color: _selectedIndex==2?Colors.white:Colors.black,fontWeight: FontWeight.bold))
+                            child: Text(widget.title2,style: TextStyle(fontSize: 20,color: _selectedIndex==2?Colors.white:Colors.black,fontWeight: FontWeight.bold))
                         ),
                       ),
                     ],
@@ -101,7 +113,7 @@ class _TopBarState extends State<TopBar> {
                                 color: Color(0xff04FF2F)
                               )
                             ),
-                            child: Text("Thống kê", style: TextStyle(fontSize: 20,color: _selectedIndex==3?Colors.white:Colors.black,fontWeight: FontWeight.bold),)
+                            child: Text(widget.title3, style: TextStyle(fontSize: 20,color: _selectedIndex==3?Colors.white:Colors.black,fontWeight: FontWeight.bold),)
                         ),
                       ),
                     ],
@@ -112,7 +124,7 @@ class _TopBarState extends State<TopBar> {
     );
   }
   void _handlePressed(int index) {
-    widget.onButtonPresedCallback(index);
+    widget.onButtonPressedCallback(index);
     setState(() {
       _selectedIndex = index;
     });

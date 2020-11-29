@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sliding_up_panel/sliding_up_panel_widget.dart';
+import 'package:provider/provider.dart';
+import 'package:room_financal_manager/providers/group_providers.dart';
 import 'package:room_financal_manager/widgets/them_KhoanChi_Nhom.dart';
-
 import 'them_KhoanChi_CaNhan.dart';
 
 class SlideUpPanel extends StatefulWidget {
   SlidingUpPanelController panelController;
   int state;
-  SlideUpPanel(this.panelController, {this.state});
+
+  SlideUpPanel(this.panelController, {this.state,});
   @override
   _SlideUpPanelState createState() => _SlideUpPanelState();
 }
@@ -17,12 +19,23 @@ class _SlideUpPanelState extends State<SlideUpPanel> {
   Widget changeScreen(){
     switch(widget.state){
       case 1:
-        return ThemKhoanChiCaNhan(widget.panelController);
-      case 3:
         return ThemKhoanChiNhom(widget.panelController);
+      case 2:
+        return ThemKhoanChiCaNhan(widget.panelController);
+
     }
     return null;
   }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // if(widget.idGroup!="")
+    //   loadData();
+  }
+  // Future<void> loadData() async {
+  //   await Provider.of<GroupProviders>(context,listen: false).getListMember(widget.idGroup);
+  // }
   @override
   Widget build(BuildContext context) {
     return SlidingUpPanelWidget(

@@ -41,7 +41,7 @@ class _PersonManagerState extends State<PersonManager> {
 
               ),
             ),
-            TopBar(onButtonPresedCallback: onTopButtonPressed,),
+            TopBar("Khoản thu", "Khoản chi", "Thống kê",onButtonPressedCallback: onTopButtonPressed,),
           ],
         ),
       ),
