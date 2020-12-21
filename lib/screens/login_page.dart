@@ -6,16 +6,13 @@ import 'package:provider/provider.dart';
 import 'package:responsive_widgets/responsive_widgets.dart';
 import 'package:room_financal_manager/config/initialization.dart';
 import 'package:room_financal_manager/providers/user_provider.dart';
+import 'package:room_financal_manager/screens/register_page.dart';
 import 'package:room_financal_manager/services/authentication.dart';
 import 'package:room_financal_manager/widgets/loading.dart';
 import 'package:room_financal_manager/providers/group_providers.dart';
 import 'package:room_financal_manager/screens/home_page.dart';
 
-// GoogleSignIn _googleSignIn = GoogleSignIn(
-//     scopes: <String>[
-//       'email',
-//     ]
-// );
+
 
 class LoginPage extends StatefulWidget {
   @override
@@ -27,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final _key = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _accountController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
 
   @override
@@ -82,7 +79,8 @@ class _LoginPageState extends State<LoginPage> {
                         height: 10,
                       ),
                       TextFormField(
-                        controller: _accountController,
+                        controller: _phoneNumberController,
+                        keyboardType: TextInputType.phone,
                         validator: (value) {
                           if (value.isEmpty) {
                             return 'Yêu cầu nhập tài khoản';
@@ -93,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                         decoration: InputDecoration(
                           labelText: "Số điện thoại",
                           prefixIcon: Container(
-                              width: 50, child: Icon(Icons.account_circle)),
+                              width: 50, child: Icon(Icons.phone)),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.red, width: 2),
                             borderRadius: BorderRadius.all(Radius.circular(6)),
@@ -137,8 +135,8 @@ class _LoginPageState extends State<LoginPage> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(25))),
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => HomePage()));
+                     //user.signIn(_phoneNumberController.text, _passController.text, context, _key);
+                     user.signIn("0377846295", "123456789", context, _key);
                     },
                     color: Colors.amberAccent,
                     child: Text(
@@ -196,7 +194,30 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 10,
                 ),
-                Text("Bạn chưa có tài khoản? Đăng ký tại đây!"),
+                Container(
+                  alignment: Alignment.center,
+                  child:  RichText(
+                    text: TextSpan(
+                        text: "Bạn chưa có tài khoản? ",
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black),
+                        children: <TextSpan>[
+                          TextSpan(
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            RegisterPage()));
+                              },
+                            text: "Đăng ký tại đây!",
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.blue[900]),
+                          )
+                        ]
+                    ),
+                  ),
+                ),
+                //Text("Bạn chưa có tài khoản? Đăng ký tại đây!"),
               ],
             ),
           ],

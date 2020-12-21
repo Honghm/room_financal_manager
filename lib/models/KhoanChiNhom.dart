@@ -17,7 +17,7 @@ ItemKhoanChiNhom.fromJson(Map<String, dynamic> parsedJson){
     tenLoai = parsedJson["tenLoai"];
     noiDung = parsedJson["noiDung"];
     nguoiMua = parsedJson["nguoiMua"];
-
+    giaTien = parsedJson["giaTien"];
 
     List<String> list = [];
     if (parsedJson["nguoiThamGia"] != null) {
@@ -38,4 +38,9 @@ class KhoanChiNhom {
   String id;
   String ngayMua;
   List<ItemKhoanChiNhom> listItemKhoanChi = [];
+  KhoanChiNhom.setData(String _id, String _ngayMua,  List<ItemKhoanChiNhom> _ds){
+    id = _id;
+    ngayMua = _ngayMua;
+    listItemKhoanChi = _ds;
+  }
 }

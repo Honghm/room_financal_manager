@@ -3,7 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:room_financal_manager/providers/caNhan_providers.dart';
 import 'package:room_financal_manager/providers/group_providers.dart';
+import 'package:room_financal_manager/providers/home_provider.dart';
 import 'package:room_financal_manager/providers/user_provider.dart';
 import 'package:room_financal_manager/screens/home_page.dart';
 import 'package:room_financal_manager/screens/login_page.dart';
@@ -17,6 +20,8 @@ Future<void> main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider.value(value: UserProvider.initialize()),
     ChangeNotifierProvider.value(value: GroupProviders()),
+    ChangeNotifierProvider.value(value: CaNhanProviders()),
+    ChangeNotifierProvider.value(value: HomeProviders()),
   ], child: MyApp()));
 }
 
@@ -38,12 +43,18 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         DefaultCupertinoLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
+        RefreshLocalizations.delegate,
       ],
       locale: Locale('vi', 'VN'),
       supportedLocales: [
         const Locale('en', 'US'), // English
         const Locale('vi', 'VN'), //Việt Nam
       ],
+      // localeResolutionCallback:
+      //     (Locale locale, Iterable<Locale> supportedLocales) {
+      //   //print("change language");
+      //   return locale;
+      // },
       home: LoginPage(),
     );
   }

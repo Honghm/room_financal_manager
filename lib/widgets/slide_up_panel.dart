@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sliding_up_panel/sliding_up_panel_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:room_financal_manager/providers/group_providers.dart';
-import 'package:room_financal_manager/widgets/them_KhoanChi_Nhom.dart';
-import 'them_KhoanChi_CaNhan.dart';
+import 'package:room_financal_manager/providers/home_provider.dart';
+import 'file:///D:/My%20Code/Code%20Android/DoAn2/room_financal_manager/lib/widgets/Nhom/create_group.dart';
+import 'file:///D:/My%20Code/Code%20Android/DoAn2/room_financal_manager/lib/widgets/Nhom/them_KhoanChi_Nhom.dart';
+import 'CaNhan/them_KhoanChi_CaNhan.dart';
 
 class SlideUpPanel extends StatefulWidget {
   SlidingUpPanelController panelController;
   int state;
-
-  SlideUpPanel(this.panelController, {this.state,});
+  SlideUpPanel(this.panelController, {this.state});
   @override
   _SlideUpPanelState createState() => _SlideUpPanelState();
 }
@@ -17,12 +18,18 @@ class SlideUpPanel extends StatefulWidget {
 class _SlideUpPanelState extends State<SlideUpPanel> {
   double _padding = 50;
   Widget changeScreen(){
-    switch(widget.state){
-      case 1:
-        return ThemKhoanChiNhom(widget.panelController);
-      case 2:
-        return ThemKhoanChiCaNhan(widget.panelController);
 
+    switch(widget.state){
+      case 4:
+        return ThemKhoanChiNhom(widget.panelController,);
+      case 1:
+        return ThemKhoanChiCaNhan(widget.panelController);
+      case 7:
+        return CreateGroup(panelController: widget.panelController);
+      default: {
+        widget.panelController.hide();
+       return null;
+      }
     }
     return null;
   }
@@ -33,11 +40,11 @@ class _SlideUpPanelState extends State<SlideUpPanel> {
     // if(widget.idGroup!="")
     //   loadData();
   }
-  // Future<void> loadData() async {
-  //   await Provider.of<GroupProviders>(context,listen: false).getListMember(widget.idGroup);
-  // }
+
   @override
   Widget build(BuildContext context) {
+    HomeProviders _home = Provider.of<HomeProviders>(context);
+
     return SlidingUpPanelWidget(
       onStatusChanged: (value){
         if(value == SlidingUpPanelStatus.hidden){
@@ -62,7 +69,7 @@ class _SlideUpPanelState extends State<SlideUpPanel> {
                 color: const Color(0x11000000))
           ],
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(20),
           ),
         ),
         child: changeScreen(),

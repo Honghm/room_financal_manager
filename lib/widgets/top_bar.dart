@@ -17,9 +17,26 @@ class _TopBarState extends State<TopBar> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    setState(() {
-      _selectedIndex = widget.initSelected;
-    });
+    switch(widget.initSelected){
+      case 1:case 4:
+      setState(() {
+        _selectedIndex = 2;
+      });
+      break;
+      case 2:case 5:
+        setState(() {
+          _selectedIndex = 1;
+        });
+        break;
+      case 3:case 6:
+        setState(() {
+          _selectedIndex = 3;
+        });
+        break;
+    }
+
+
+
   }
   @override
   Widget build(BuildContext context) {
