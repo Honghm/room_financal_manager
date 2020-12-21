@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:responsive_widgets/responsive_widgets.dart';
 import 'package:room_financal_manager/config/initialization.dart';
 import 'package:room_financal_manager/models/KhoanChiCaNhan.dart';
@@ -10,6 +11,8 @@ import 'package:room_financal_manager/providers/home_provider.dart';
 import 'package:room_financal_manager/screens/quanLyChiTieuCaNhan/KhoanThu.dart';
 import 'package:room_financal_manager/screens/quanLyChiTieuCaNhan/khoanChi.dart';
 import 'package:room_financal_manager/screens/quanLyChiTieuCaNhan/thongKe.dart';
+import 'package:room_financal_manager/widgets/ThongKe/bar_chart.dart';
+import 'package:room_financal_manager/widgets/ThongKe/info_card.dart';
 import 'file:///D:/My%20Code/Code%20Android/DoAn2/room_financal_manager/lib/widgets/CaNhan/item_expenses_person.dart';
 import 'package:room_financal_manager/widgets/top_bar.dart';
 
@@ -21,6 +24,7 @@ class PersonManager extends StatefulWidget {
 class _PersonManagerState extends State<PersonManager> {
   List<KhoanChiCaNhan> dsKhoanChi = [];
   List<KhoanThuCaNhan> dsKhoanThu = [];
+  List<Widget> listInfoCard = List();
   int _page  = 2;
   @override
   void initState() {
@@ -39,8 +43,20 @@ class _PersonManagerState extends State<PersonManager> {
         dsKhoanThu =  Provider.of<CaNhanProviders>(context,listen: false).dsKhoanThuCaNhan;
       });
     }
-
+    Provider.of<HomeProviders>(context,listen: false).getListLoaiKhoanChi();
   }
+
+  loadListInfoCard() {
+    listInfoCard.clear();
+    Provider.of<HomeProviders>(context, listen: false).dsLoaiKhoanChi.forEach((item) {
+      listInfoCard.add(InfoCard(
+        title: item.name,
+        icon: item.icon,
+        effectedNum: 75,
+        press: () {},));
+    });
+  }
+
   Widget _changePage(int page, status){
     switch(page){
       case 2:
@@ -48,7 +64,7 @@ class _PersonManagerState extends State<PersonManager> {
       case 1:
         return KhoanChi(dsKhoanChi: dsKhoanChi);
       case 3:
-        return ThongKe();
+       return ThongKe(listInfoCard);
     }
   }
   @override
@@ -97,7 +113,7 @@ class _PersonManagerState extends State<PersonManager> {
         break;
       case 3:
         Provider.of<HomeProviders>(context, listen: false).screen = 3;
-
+        loadListInfoCard();
         break;
     }
   }

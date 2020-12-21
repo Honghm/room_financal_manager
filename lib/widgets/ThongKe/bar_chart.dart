@@ -1,4 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BarChartSample2 extends StatefulWidget {
@@ -7,7 +8,7 @@ class BarChartSample2 extends StatefulWidget {
 }
 
 class BarChartSample2State extends State<BarChartSample2> {
-  final Color leftBarColor = const Color(0xff53fdd7);
+  final Color leftBarColor = Colors.green;
   final Color rightBarColor = const Color(0xffff5182);
   final double width = 7;
 
@@ -49,7 +50,7 @@ class BarChartSample2State extends State<BarChartSample2> {
       child: Card(
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        color: const Color(0xff2c4260),
+        color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -57,27 +58,19 @@ class BarChartSample2State extends State<BarChartSample2> {
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  makeTransactionsIcon(),
-                  const SizedBox(
-                    width: 38,
-                  ),
-                  const Text(
-                    'Transactions',
-                    style: TextStyle(color: Colors.white, fontSize: 22),
-                  ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-                  const Text(
-                    'state',
-                    style: TextStyle(color: Color(0xff77839a), fontSize: 16),
-                  ),
-                ],
+              SizedBox(height: 10,),
+              Center(
+                child: Text(
+                  'THỐNG KÊ CHI TIÊU',
+                  style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(height: 10,),
+              Center(
+                child: Text(
+                  'Từ ngày 21/12 - 27/12',
+                  style: TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.bold),
+                ),
               ),
               const SizedBox(
                 height: 38,
@@ -135,24 +128,24 @@ class BarChartSample2State extends State<BarChartSample2> {
                         bottomTitles: SideTitles(
                           showTitles: true,
                           getTextStyles: (value) => const TextStyle(
-                              color: Color(0xff7589a2), fontWeight: FontWeight.bold, fontSize: 14),
+                              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
                           margin: 20,
                           getTitles: (double value) {
                             switch (value.toInt()) {
                               case 0:
-                                return 'Mn';
+                                return 'T2';
                               case 1:
-                                return 'Te';
+                                return 'T3';
                               case 2:
-                                return 'Wd';
+                                return 'T4';
                               case 3:
-                                return 'Tu';
+                                return 'T5';
                               case 4:
-                                return 'Fr';
+                                return 'T6';
                               case 5:
-                                return 'St';
+                                return 'T7';
                               case 6:
-                                return 'Sn';
+                                return 'CN';
                               default:
                                 return '';
                             }
@@ -161,16 +154,16 @@ class BarChartSample2State extends State<BarChartSample2> {
                         leftTitles: SideTitles(
                           showTitles: true,
                           getTextStyles: (value) => const TextStyle(
-                              color: Color(0xff7589a2), fontWeight: FontWeight.bold, fontSize: 14),
+                              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
                           margin: 32,
                           reservedSize: 14,
                           getTitles: (value) {
                             if (value == 0) {
-                              return '1K';
+                              return '100K';
                             } else if (value == 10) {
-                              return '5K';
+                              return '500K';
                             } else if (value == 19) {
-                              return '10K';
+                              return '1TR';
                             } else {
                               return '';
                             }

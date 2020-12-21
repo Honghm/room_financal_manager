@@ -18,7 +18,7 @@ class LineReportChart extends StatelessWidget {
               dotData: FlDotData(show: false),
               belowBarData: BarAreaData(show: false),
               colors: [Colors.blue[400]],
-              barWidth: 4,
+              barWidth: 2,
             ),
           ],
         ),

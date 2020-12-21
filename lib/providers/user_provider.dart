@@ -142,10 +142,12 @@ Future<void> registerAccount({String displayName, String phoneNumber, String pas
      });
      Random random = new Random();
      int id = random.nextInt(100000) + 100000;
+     ///Bắt đầu đăng ký
      while(checkID(id.toString(),displayName,phoneNumber,password,context)){
       id = random.nextInt(100000) + 100000;
       checkID(id.toString(),displayName,phoneNumber,password,context);
      }
+     ///Đăng ký thành công
      success();
    }catch(e){
      return;

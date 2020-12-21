@@ -235,7 +235,7 @@ class _GroupManagerState extends State<GroupManager> {
            onRefresh: _onRefresh,
          );
         case 6:
-          return ThongKe();
+          return Container();
       }
   }
   @override
