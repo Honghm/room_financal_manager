@@ -10,10 +10,10 @@ import 'package:room_financal_manager/providers/home_provider.dart';
 import 'package:room_financal_manager/providers/user_provider.dart';
 import 'package:room_financal_manager/screens/home_page.dart';
 import 'package:room_financal_manager/screens/login_page.dart';
+import 'package:room_financal_manager/screens/login_with_facebook.dart';
 import 'package:room_financal_manager/screens/personal_page.dart';
-import 'package:room_financal_manager/widgets/loading.dart';
 import 'package:room_financal_manager/screens/splash_screen.dart';
-
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -50,12 +50,12 @@ class MyApp extends StatelessWidget {
         const Locale('en', 'US'), // English
         const Locale('vi', 'VN'), //Việt Nam
       ],
-      // localeResolutionCallback:
-      //     (Locale locale, Iterable<Locale> supportedLocales) {
-      //   //print("change language");
-      //   return locale;
-      // },
-      home: LoginPage(),
+
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: HomePage(),
     );
   }
 }

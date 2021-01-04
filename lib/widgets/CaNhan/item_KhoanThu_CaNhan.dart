@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:room_financal_manager/models/KhoanChiCaNhan.dart';
 import 'package:room_financal_manager/models/KhoanThuCaNhan.dart';
+import 'file:///D:/My%20Code/Code%20Android/DoAn2/room_financal_manager/lib/screens/quanLyChiTieuCaNhan/xemChiTiet_KhoanThuCaNhan.dart';
 
 class ItemRevenuePerson extends StatefulWidget {
   Map<String, dynamic> khoanThu;
   List<ItemKhoanThuCaNhan> dsItem;
-  String ngayMua;
-  ItemRevenuePerson({this.khoanThu, this.dsItem, this.ngayMua });
+  String ngayThu;
+  ItemRevenuePerson({this.khoanThu, this.dsItem, this.ngayThu });
   @override
   _ItemRevenuePersonState createState() => _ItemRevenuePersonState();
 }
@@ -14,7 +15,7 @@ class ItemRevenuePerson extends StatefulWidget {
 
 class _ItemRevenuePersonState extends State<ItemRevenuePerson> {
   List<Widget> _rowItemKhoanThu = List();
-  int tongTien = 0;
+  double tongTien = 0;
   String ngayThang = "";
   String nam = "";
   String thu = "";
@@ -29,9 +30,9 @@ class _ItemRevenuePersonState extends State<ItemRevenuePerson> {
     _rowItemKhoanThu.clear();
     widget.dsItem.forEach((item) {
       _rowItemKhoanThu.add(rowImformations(item.noiDung, item.soTien));
-      tongTien += int.parse(item.soTien);
+      tongTien += double.parse(item.soTien);
     });
-    getDate(widget.ngayMua);
+    getDate(widget.ngayThu);
 
   }
   void getDate(String date){
@@ -160,14 +161,16 @@ class _ItemRevenuePersonState extends State<ItemRevenuePerson> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("TÔNG THU: ${tongTien.toString()}K",style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 16),),
+                            Text(tongTien>=1000?"TÔNG THU: ${(tongTien/1000).toString()}TR":"TÔNG THU: ${tongTien.toString()}K",
+                              style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 16),),
                             Container(
                                 decoration: BoxDecoration(
                                     border: Border(bottom: BorderSide(width: 1, color: Colors.blue))
                                 ),
                                 child: InkWell(
-                                    onTap: (){
-                                      print("xem chi tiết");
+                                    onTap: (){Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) => XemChiTietKhoanThuCaNhan(dateTime: widget.ngayThu,dsItem: widget.dsItem,tongTien: tongTien)));
+
                                     },
                                     child: Text("Xem chi tiết",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,decorationStyle: TextDecorationStyle.dashed,color: Colors.blue),)))
                           ],),
@@ -196,7 +199,8 @@ class _ItemRevenuePersonState extends State<ItemRevenuePerson> {
           Container(
             width: 70,
             alignment: Alignment.center,
-            child: Text(price, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold,color: Colors.red),),
+            child: Text(double.parse(price.toString())>=1000?"${(double.parse(price.toString())/1000).toString()}TR":"${price}K",
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold,color: Colors.red),),
           ),
 
         ],),

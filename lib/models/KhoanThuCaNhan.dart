@@ -4,6 +4,7 @@ class ItemKhoanThuCaNhan {
   String id;
   String noiDung;
   String soTien;
+  String hoaDon;
   String ghiChu;
 
   ItemKhoanThuCaNhan.fromJson(Map<String, dynamic> parsedJson){
@@ -11,6 +12,7 @@ class ItemKhoanThuCaNhan {
       id = parsedJson["id"];
       noiDung = parsedJson["noiDung"];
       ghiChu = parsedJson["ghiChu"];
+      hoaDon = parsedJson["hoaDon"];
       soTien = parsedJson["soTien"];
 
     }catch(e){
@@ -21,11 +23,11 @@ class ItemKhoanThuCaNhan {
 
 class KhoanThuCaNhan {
   String id;
-  String ngayMua;
-  List<ItemKhoanThuCaNhan> listItemKhoanChi = [];
-  KhoanThuCaNhan.setData(String _id, String _ngayMua,  List<ItemKhoanThuCaNhan> _ds){
+  String ngayLap;
+  List<ItemKhoanThuCaNhan> listItemKhoanThu = [];
+  KhoanThuCaNhan.setData(String _id, String _ngayLap,  List<ItemKhoanThuCaNhan> _ds){
     id = _id;
-    ngayMua = _ngayMua;
-    listItemKhoanChi = _ds;
+    ngayLap = _ngayLap;
+    listItemKhoanThu = _ds;
   }
 }

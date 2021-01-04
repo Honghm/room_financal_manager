@@ -2,15 +2,13 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:room_financal_manager/config/initialization.dart';
 import 'package:room_financal_manager/models/user.dart';
-import 'package:room_financal_manager/screens/home_page.dart';
-import 'package:room_financal_manager/screens/login_with_google.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:room_financal_manager/widgets/verity_number.dart';
+import 'package:room_financal_manager/screens/register_page.dart';
+
 
 class UserProvider with ChangeNotifier {
   FirebaseAuth _auth;
@@ -67,59 +65,49 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  //--------------------Đăng Nhập-----------------------------
+  ///--------------------Đăng Nhập Thường-----------------------------
 
-  Future<bool> signIn(String phone, String password, BuildContext context,
-      GlobalKey<ScaffoldState> _key) async {
-    FirebaseFirestore.instance
-        .collection('Users')
-        .where("phoneNumber", isEqualTo: phone)
-        .snapshots()
-        .listen((data) {
-      if (data.docs.length != 0) {
-        FirebaseFirestore.instance
-            .collection('Users')
-            .where("password", isEqualTo: password)
-            .snapshots()
-            .listen((data) async {
-          if (data.docs.length != 0) {
-           FirebaseFirestore.instance
-                .collection('Users')
-                .where("phoneNumber", isEqualTo: phone)
-                .get().then((data) {
-                 data.docs.forEach((item) {
-                   _userData = UserData.formSnapShot(item);
-                   notifyListeners();
-                 });
-           }).then((value) {
-             Navigator.pushReplacement(context,   MaterialPageRoute(
-               builder: (context) => HomePage(user: _userData,)
-             ));
-           });
-          } else {
-            _key.currentState.showSnackBar(SnackBar(
-                content: Text(
-                    "Đăng nhập không thành công! Tài khoản hoặc mật khẩu không đúng")));
-          }
-        });
-      } else {
-        _key.currentState.showSnackBar(SnackBar(
-            content:
-                Text("Đăng nhập không thành công!Tài khoản không tồn tại")));
+  Future<bool> signIn(  GlobalKey<ScaffoldState> _key, {String phone, String password, BuildContext context, Function success}) async {
+    _status = Status.Loading;
+    notifyListeners();
+    FirebaseFirestore.instance.collection("Users").get().then((data){
+      for(int i = 0; i<data.size;i++){
+        if( data.docs[i].data()["phoneNumber"]==phone&& data.docs[i].data()["password"]==password){
+          _userData = UserData.formSnapShot(data.docs[i]);
+          notifyListeners();
+          success(context, _userData);
+        }
       }
+    }).then((value) {
+
+      if(userData==null){
+        _status = Status.Authenticated;
+        notifyListeners();
+        _key.currentState.showSnackBar(SnackBar(
+            content: Text(
+                "Đăng nhập không thành công! Tài khoản hoặc mật khẩu không đúng")));
+      }else{
+        _status = Status.Loaded;
+        notifyListeners();
+      }
+
+
     });
+
   }
 
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
 
- bool checkID(String id, String displayName, String phoneNumber, String password, BuildContext context){
+  ///-------------Kiểm tra ID đã tồn tại hay chưa?--------------
+ bool checkID(String id, String displayName,String email, String phoneNumber, String password, BuildContext context){
    FirebaseFirestore.instance.collection("Users").doc(id.toString()).get().then((value) {
      if(value.data() == null){
        _firestore.collection('Users').doc(id).set({
          'uid': id,
          'displayName': displayName,
+         'email':email,
          'phoneNumber': phoneNumber,
          'password': password,
          'avatar':"",
@@ -131,7 +119,9 @@ class UserProvider with ChangeNotifier {
    });
    return false;
  }
-Future<void> registerAccount({String displayName, String phoneNumber, String password,Function success, BuildContext context}) async{
+
+ ///-------------Đăng ký tài khoản-------------
+Future<void> registerAccount({String displayName,String email, String phoneNumber, String password,Function success, BuildContext context}) async{
    try{
      await FirebaseFirestore.instance
          .collection('Users').get().then((value) {
@@ -143,9 +133,9 @@ Future<void> registerAccount({String displayName, String phoneNumber, String pas
      Random random = new Random();
      int id = random.nextInt(100000) + 100000;
      ///Bắt đầu đăng ký
-     while(checkID(id.toString(),displayName,phoneNumber,password,context)){
+     while(checkID(id.toString(),displayName, email, phoneNumber,password,context)){
       id = random.nextInt(100000) + 100000;
-      checkID(id.toString(),displayName,phoneNumber,password,context);
+      checkID(id.toString(),displayName,email, phoneNumber,password,context);
      }
      ///Đăng ký thành công
      success();
@@ -154,12 +144,12 @@ Future<void> registerAccount({String displayName, String phoneNumber, String pas
    }
 
 }
-  Future<bool> loginWithGoogle(
-      BuildContext context, GlobalKey<ScaffoldState> _key) async {
+
+
+///---------------Đăng nhập bằng tài khoản google-------------------
+Future<void> loginWithGoogle({BuildContext context, Function success}) async {
     try {
-      loginGoogle = true;
-      notifyListeners();
-      _status = Status.Authenticating;
+      _status = Status.Loading;
       notifyListeners();
       account = await googleSignIn.signIn();
       notifyListeners();
@@ -169,69 +159,99 @@ Future<void> registerAccount({String displayName, String phoneNumber, String pas
         accessToken: (await account.authentication).accessToken,
       ))
           .then((user) {
-            print("run here: login");
-        // FirebaseFirestore.instance
-        //     .collection('users')
-        //     .where("account", isEqualTo: account.email)
-        //     .snapshots()
-        //     .listen((data) => data.docs.forEach((doc) {
-        //           _userData = UserData.formSnapShot(doc);
-        //           notifyListeners();
-        //           _isMailExist = true;
-        //           notifyListeners();
-        //         }));
-        Navigator.pushNamed(context, '/home');
+
+        FirebaseFirestore.instance
+            .collection('Users')
+            .where("email", isEqualTo: account.email)
+            .snapshots()
+            .listen((data){
+              if(data.docs.isEmpty){
+
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            RegisterPage(
+                              kindLogin: "google",
+                              email: account.email,
+                            )));
+                _status = Status.Loaded;
+                notifyListeners();
+              }else{
+
+                _userData = UserData.formSnapShot(data.docs.first);
+                notifyListeners();
+                success(context, _userData);
+                _status = Status.Loaded;
+                notifyListeners();
+              }
+        });
       }).catchError((e){
         print("Error: $e");
       });
-
-      // FirebaseFirestore.instance
-      //     .collection('users')
-      //     .where("account", isEqualTo: account.email)
-      //     .snapshots()
-      //     .listen((data) async {
-      //   if (data.docs.length == 0) {
-      //     await _auth
-      //         .signInWithCredential(GoogleAuthProvider.credential(
-      //       idToken: (await account.authentication).idToken,
-      //       accessToken: (await account.authentication).accessToken,
-      //     ))
-      //         .then((user) {
-      //       _isMailExist = false;
-      //       notifyListeners();
-      //       Navigator.push(context,
-      //           MaterialPageRoute(builder: (context) => LoginWithGoogle()));
-      //       _status = Status.Unauthenticated;
-      //       notifyListeners();
-      //     });
-      //   } else {
-      //     await _auth
-      //         .signInWithCredential(GoogleAuthProvider.credential(
-      //       idToken: (await account.authentication).idToken,
-      //       accessToken: (await account.authentication).accessToken,
-      //     ))
-      //         .then((user) {
-      //       FirebaseFirestore.instance
-      //           .collection('users')
-      //           .where("account", isEqualTo: account.email)
-      //           .snapshots()
-      //           .listen((data) => data.docs.forEach((doc) {
-      //                 _userData = UserData.formSnapShot(doc);
-      //                 notifyListeners();
-      //                 _isMailExist = true;
-      //                 notifyListeners();
-      //               }));
-      //       Navigator.pushNamed(context, '/home');
-      //     });
-      //   }
-      // });
-      return true;
     } catch (e) {
       _status = Status.Unauthenticated;
       notifyListeners();
-      return false;
     }
   }
+
+
+  ///------------------Đăng nhập bằng tài khoản facebook----------------
+  FacebookLogin facebookLogin = FacebookLogin();
+  Future<void>loginWithFacebook({BuildContext context, Function success})async{
+
+   try{
+     _status = Status.Loading;
+     notifyListeners();
+     final FacebookLoginResult result = await facebookLogin.logIn(['email', 'public_profile']);
+
+     switch (result.status) {
+       case FacebookLoginStatus.cancelledByUser:
+         break;
+       case FacebookLoginStatus.error:
+         break;
+       case FacebookLoginStatus.loggedIn:
+         try {
+           final FacebookAccessToken accessToken = result.accessToken;
+           AuthCredential credential =
+           FacebookAuthProvider.credential(accessToken.token);
+           print("run here: }");
+           await _auth.signInWithCredential(credential).then((value) {
+             FirebaseFirestore.instance
+                 .collection('Users')
+                 .where("email", isEqualTo: value.user.email)
+                 .snapshots()
+                 .listen((data){
+               if(data.docs.isEmpty){
+                 Navigator.push(
+                     context,
+                     MaterialPageRoute(
+                         builder: (context) =>
+                             RegisterPage(
+                               kindLogin: "facebook",
+                               email: value.user.email,
+                             )));
+                 _status = Status.Loaded;
+                 notifyListeners();
+               }else{
+                 // _userData = UserData.formSnapShot(data.docs.first);
+                 // notifyListeners();
+                 // success(context, _userData);
+                 // _status = Status.Loaded;
+                 // notifyListeners();
+               }
+             });
+           });
+         } catch (e) {
+           print(e);
+         }
+         break;
+     }
+   }catch(e){}
+
+  }
+
+
 
   Future<Map<String, dynamic>> getNameById(String id) async {
     try{

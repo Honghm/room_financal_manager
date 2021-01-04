@@ -2,15 +2,18 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class BarChartSample2 extends StatefulWidget {
+class BarChartThongKeThang extends StatefulWidget {
+  List<double> thongKeKhoanChi;
+  List<double> thongKeKhoanThu;
+  BarChartThongKeThang({this.thongKeKhoanThu, this.thongKeKhoanChi});
   @override
-  State<StatefulWidget> createState() => BarChartSample2State();
+  State<StatefulWidget> createState() => BarChartThongKeThangState();
 }
 
-class BarChartSample2State extends State<BarChartSample2> {
-  final Color leftBarColor = Colors.green;
-  final Color rightBarColor = const Color(0xffff5182);
-  final double width = 7;
+class BarChartThongKeThangState extends State<BarChartThongKeThang> {
+  // final Color leftBarColor = Colors.green;
+  // final Color rightBarColor = const Color(0xffff5182);
+  // final double width = 7;
 
   List<BarChartGroupData> rawBarGroups;
   List<BarChartGroupData> showingBarGroups;
@@ -20,26 +23,11 @@ class BarChartSample2State extends State<BarChartSample2> {
   @override
   void initState() {
     super.initState();
-    final barGroup1 = makeGroupData(0, 5, 12);
-    final barGroup2 = makeGroupData(1, 16, 12);
-    final barGroup3 = makeGroupData(2, 18, 5);
-    final barGroup4 = makeGroupData(3, 20, 16);
-    final barGroup5 = makeGroupData(4, 17, 6);
-    final barGroup6 = makeGroupData(5, 19, 1.5);
-    final barGroup7 = makeGroupData(6, 10, 1.5);
-
-    final items = [
-      barGroup1,
-      barGroup2,
-      barGroup3,
-      barGroup4,
-      barGroup5,
-      barGroup6,
-      barGroup7,
-    ];
-
+    List<BarChartGroupData> items = [];
+    for(int i = 0; i<widget.thongKeKhoanChi.length;i++){
+      items.add(makeGroupData(i, widget.thongKeKhoanThu[i]/500, widget.thongKeKhoanChi[i]/500));
+    }
     rawBarGroups = items;
-
     showingBarGroups = rawBarGroups;
   }
 
@@ -52,7 +40,7 @@ class BarChartSample2State extends State<BarChartSample2> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -77,75 +65,44 @@ class BarChartSample2State extends State<BarChartSample2> {
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: const EdgeInsets.only(left: 10),
                   child: BarChart(
                     BarChartData(
-                      maxY: 20,
-                      barTouchData: BarTouchData(
-                          touchTooltipData: BarTouchTooltipData(
-                            tooltipBgColor: Colors.grey,
-                            getTooltipItem: (_a, _b, _c, _d) => null,
-                          ),
-                          touchCallback: (response) {
-                            if (response.spot == null) {
-                              setState(() {
-                                touchedGroupIndex = -1;
-                                showingBarGroups = List.of(rawBarGroups);
-                              });
-                              return;
-                            }
-
-                            touchedGroupIndex = response.spot.touchedBarGroupIndex;
-
-                            setState(() {
-                              if (response.touchInput is FlLongPressEnd ||
-                                  response.touchInput is FlPanEnd) {
-                                touchedGroupIndex = -1;
-                                showingBarGroups = List.of(rawBarGroups);
-                              } else {
-                                showingBarGroups = List.of(rawBarGroups);
-                                if (touchedGroupIndex != -1) {
-                                  double sum = 0;
-                                  for (BarChartRodData rod
-                                  in showingBarGroups[touchedGroupIndex].barRods) {
-                                    sum += rod.y;
-                                  }
-                                  final avg =
-                                      sum / showingBarGroups[touchedGroupIndex].barRods.length;
-
-                                  showingBarGroups[touchedGroupIndex] =
-                                      showingBarGroups[touchedGroupIndex].copyWith(
-                                        barRods: showingBarGroups[touchedGroupIndex].barRods.map((rod) {
-                                          return rod.copyWith(y: avg);
-                                        }).toList(),
-                                      );
-                                }
-                              }
-                            });
-                          }),
+                      maxY: 50,
                       titlesData: FlTitlesData(
                         show: true,
                         bottomTitles: SideTitles(
                           showTitles: true,
                           getTextStyles: (value) => const TextStyle(
-                              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
-                          margin: 20,
+                              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12),
+                          margin: 10,
+
                           getTitles: (double value) {
                             switch (value.toInt()) {
                               case 0:
-                                return 'T2';
+                                return 'T1';
                               case 1:
-                                return 'T3';
+                                return 'T2';
                               case 2:
-                                return 'T4';
+                                return 'T3';
                               case 3:
-                                return 'T5';
+                                return 'T4';
                               case 4:
-                                return 'T6';
+                                return 'T5';
                               case 5:
-                                return 'T7';
+                                return 'T6';
                               case 6:
-                                return 'CN';
+                                return 'T7';
+                              case 7:
+                                return 'T8';
+                              case 8:
+                                return 'T9';
+                              case 9:
+                                return 'T10';
+                              case 10:
+                                return 'T11';
+                              case 11:
+                                return 'T12';
                               default:
                                 return '';
                             }
@@ -154,17 +111,34 @@ class BarChartSample2State extends State<BarChartSample2> {
                         leftTitles: SideTitles(
                           showTitles: true,
                           getTextStyles: (value) => const TextStyle(
-                              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
-                          margin: 32,
-                          reservedSize: 14,
+                              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12),
+                          margin: 10,
+                          reservedSize: 50,
                           getTitles: (value) {
                             if (value == 0) {
-                              return '100K';
-                            } else if (value == 10) {
-                              return '500K';
-                            } else if (value == 19) {
+                              return '';
+                            } else if (value == 4) {
+                              return '0.5TR';
+                            }  else if (value == 9) {
                               return '1TR';
-                            } else {
+                            } else if (value == 14) {
+                              return '1.5TR';
+                            }else if (value == 19) {
+                              return '2TR';
+                            }else if (value == 24) {
+                              return '2.5TR';
+                            }else if (value == 29) {
+                              return '3TR';
+                            }else if (value == 34) {
+                              return '3.5TR';
+                            }else if (value == 39) {
+                              return '4TR';
+                            } else if (value == 44) {
+                              return '4.5TR';
+                            } else if (value == 49) {
+                              return '5TR';
+                            }
+                            else {
                               return '';
                             }
                           },
@@ -174,6 +148,7 @@ class BarChartSample2State extends State<BarChartSample2> {
                         show: false,
                       ),
                       barGroups: showingBarGroups,
+
                     ),
                   ),
                 ),
@@ -188,66 +163,68 @@ class BarChartSample2State extends State<BarChartSample2> {
     );
   }
 
+
   BarChartGroupData makeGroupData(int x, double y1, double y2) {
-    return BarChartGroupData(barsSpace: 4, x: x, barRods: [
+    return BarChartGroupData(barsSpace: 1, x: x,  barRods: [
       BarChartRodData(
         y: y1,
-        colors: [leftBarColor],
-        width: width,
+        colors: [Colors.green],
+        width: 7,
       ),
       BarChartRodData(
         y: y2,
-        colors: [rightBarColor],
-        width: width,
+        colors: [Color(0xffff5182)],
+        width: 7,
       ),
+
     ]);
   }
 
-  Widget makeTransactionsIcon() {
-    const double width = 4.5;
-    const double space = 3.5;
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Container(
-          width: width,
-          height: 10,
-          color: Colors.white.withOpacity(0.4),
-        ),
-        const SizedBox(
-          width: space,
-        ),
-        Container(
-          width: width,
-          height: 28,
-          color: Colors.white.withOpacity(0.8),
-        ),
-        const SizedBox(
-          width: space,
-        ),
-        Container(
-          width: width,
-          height: 42,
-          color: Colors.white.withOpacity(1),
-        ),
-        const SizedBox(
-          width: space,
-        ),
-        Container(
-          width: width,
-          height: 28,
-          color: Colors.white.withOpacity(0.8),
-        ),
-        const SizedBox(
-          width: space,
-        ),
-        Container(
-          width: width,
-          height: 10,
-          color: Colors.white.withOpacity(0.4),
-        ),
-      ],
-    );
-  }
+  // Widget makeTransactionsIcon() {
+  //   const double width = 4.5;
+  //   const double space = 3.5;
+  //   return Row(
+  //     mainAxisSize: MainAxisSize.min,
+  //     crossAxisAlignment: CrossAxisAlignment.center,
+  //     children: <Widget>[
+  //       Container(
+  //         width: width,
+  //         height: 10,
+  //         color: Colors.white.withOpacity(0.4),
+  //       ),
+  //       const SizedBox(
+  //         width: space,
+  //       ),
+  //       Container(
+  //         width: width,
+  //         height: 28,
+  //         color: Colors.white.withOpacity(0.8),
+  //       ),
+  //       const SizedBox(
+  //         width: space,
+  //       ),
+  //       Container(
+  //         width: width,
+  //         height: 42,
+  //         color: Colors.white.withOpacity(1),
+  //       ),
+  //       const SizedBox(
+  //         width: space,
+  //       ),
+  //       Container(
+  //         width: width,
+  //         height: 28,
+  //         color: Colors.white.withOpacity(0.8),
+  //       ),
+  //       const SizedBox(
+  //         width: space,
+  //       ),
+  //       Container(
+  //         width: width,
+  //         height: 10,
+  //         color: Colors.white.withOpacity(0.4),
+  //       ),
+  //     ],
+  //   );
+  // }
 }

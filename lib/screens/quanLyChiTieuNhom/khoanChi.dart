@@ -5,14 +5,12 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:room_financal_manager/config/initialization.dart';
 import 'package:room_financal_manager/models/KhoanChiNhom.dart';
 import 'package:room_financal_manager/providers/group_providers.dart';
-import 'file:///D:/My%20Code/Code%20Android/DoAn2/room_financal_manager/lib/widgets/Nhom/item_expenses_group.dart';
+import 'file:///D:/My%20Code/Code%20Android/DoAn2/room_financal_manager/lib/widgets/Nhom/item_KhoanChi_Nhom.dart';
 
 class KhoanChi extends StatefulWidget {
-  Function onRefresh;
-  Function onLoading;
-  RefreshController refreshController;
+
   List<KhoanChiNhom> dsKhoanChi;
-  KhoanChi({this.dsKhoanChi, this.refreshController, this.onRefresh, this.onLoading});
+  KhoanChi({this.dsKhoanChi, });
   @override
   _KhoanChiState createState() => _KhoanChiState();
 }
@@ -53,8 +51,9 @@ class _KhoanChiState extends State<KhoanChi> {
     GroupProviders _groups = Provider.of<GroupProviders>(context);
     return  Padding(
       padding: const EdgeInsets.only(top: 50),
-      child: _groups.status==Status.Loading?CircularProgressIndicator(
-        backgroundColor: Colors.white,
+      child: _groups.status==Status.Loading?Center(
+        child: CircularProgressIndicator(
+        ),
       ):SmartRefresher(
         controller: _refreshController,
         onRefresh: _onRefresh,
@@ -75,16 +74,13 @@ class _KhoanChiState extends State<KhoanChi> {
         ),
         enablePullUp: false,
         enablePullDown: true,
-        child: Column(
-          children: [
-            ListView.builder(
-                shrinkWrap: true,
-                itemCount: (widget.dsKhoanChi != null)?widget.dsKhoanChi.length : 0,
-                itemBuilder: (value, index){
-                  return ItemExpensesGroup(dsItem: widget.dsKhoanChi[index].listItemKhoanChi,ngayMua: widget.dsKhoanChi[index].ngayMua,);
-                }
-            ),
-          ],
+        child:  ListView.builder(
+          padding: EdgeInsets.only(bottom: 40),
+            shrinkWrap: true,
+            itemCount: (widget.dsKhoanChi != null)?widget.dsKhoanChi.length : 0,
+            itemBuilder: (value, index){
+              return ItemExpensesGroup(dsItem: widget.dsKhoanChi[index].listItemKhoanChi,ngayMua: widget.dsKhoanChi[index].ngayMua,);
+            }
         ),
       ),
     );

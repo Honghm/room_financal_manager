@@ -11,31 +11,30 @@ import 'package:room_financal_manager/providers/caNhan_providers.dart';
 import 'package:room_financal_manager/providers/home_provider.dart';
 import 'package:intl/intl.dart';
 
-class ThemKhoanChiCaNhan extends StatefulWidget {
+class ThemKhoanThuCaNhan extends StatefulWidget {
 
   final SlidingUpPanelController panelController;
   final UserData user;
-  ThemKhoanChiCaNhan({this.panelController, this.user});
+  ThemKhoanThuCaNhan({this.panelController, this.user});
   @override
-  _ThemKhoanChiCaNhanState createState() => _ThemKhoanChiCaNhanState();
+  _ThemKhoanThuCaNhanState createState() => _ThemKhoanThuCaNhanState();
 }
 
-class _ThemKhoanChiCaNhanState extends State<ThemKhoanChiCaNhan> {
+class _ThemKhoanThuCaNhanState extends State<ThemKhoanThuCaNhan> {
   final _formKey = GlobalKey<FormState>();
   final _key = GlobalKey<ScaffoldState>();
-  ItemLoaiKhoanChi selectedItem;
+
 
   final _noiDungController = TextEditingController();
-  final _giaTienController = TextEditingController();
+  final _soTienController = TextEditingController();
   final _ghiChuController = TextEditingController();
   final format = DateFormat("yyyy_MM_dd");
   DateTime dateTime;
   Duration duration;
-  String ngayMua;
+  String ngayLap;
   String dd;
   String mm;
   String yyyy;
-  File _image;
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -44,57 +43,50 @@ class _ThemKhoanChiCaNhanState extends State<ThemKhoanChiCaNhan> {
     mm = dateTime.month<10?"0${dateTime.month.toString()}":dateTime.month.toString();
     yyyy = dateTime.year.toString();
     duration = Duration(minutes: 10);
-    ngayMua = dd+"_"+mm+"_"+yyyy;
+    ngayLap = dd+"_"+mm+"_"+yyyy;
     // if(widget.idGroup!="")
-    loadData();
+    //loadData();
   }
-  Future<void> loadData() async {
-    Provider.of<HomeProviders>(context,listen: false).getListLoaiKhoanChi();
-  }
+  // Future<void> loadData() async {
+  //   Provider.of<HomeProviders>(context,listen: false).getListLoaiKhoanChi();
+  // }
 
-  bool themKhoanChi(idUser, selectedItem, noiDung, giaTien, ngayMua, ghiChu, GlobalKey<ScaffoldState> _key){
-    if(selectedItem==null){
-      _key.currentState.showSnackBar(SnackBar(
-          backgroundColor: Colors.white,
-          content: Container(
-              height: 20,
-              margin: EdgeInsets.only(bottom: 20),
-              child: Center(child: Text("*Bạn chưa chọn loại khoản chi", style: TextStyle(color: Colors.red),)))));
-      return false;
-    }
+  bool themKhoanThu(idUser,  noiDung, soTien, ngayLap, ghiChu, GlobalKey<ScaffoldState> _key){
+
     if(noiDung==""){
       _key.currentState.showSnackBar(SnackBar(
           backgroundColor: Colors.white,
           content: Container(
               height: 20,
               margin: EdgeInsets.only(bottom: 20),
-              child: Center(child: Text("*Bạn chưa nhập nội dung khoản chi", style: TextStyle(color: Colors.red),)))));
+              child: Center(child: Text("*Bạn chưa nhập nội dung khoản thu", style: TextStyle(color: Colors.red),)))));
       return false;
     }
-    if(giaTien==""){
+    if(soTien==""){
       _key.currentState.showSnackBar(SnackBar(
           backgroundColor: Colors.white,
           content: Container(
               height: 20,
               margin: EdgeInsets.only(bottom: 20),
-              child: Center(child: Text("*Bạn chưa nhập giá tiền khoản chi", style: TextStyle(color: Colors.red),)))));
+              child: Center(child: Text("*Bạn chưa nhập số tiền khoản thu", style: TextStyle(color: Colors.red),)))));
       return false;
     }
-    if(ngayMua==""){
+    if(ngayLap==""){
       _key.currentState.showSnackBar(SnackBar(
           backgroundColor: Colors.white,
           content: Container(
               height: 20,
               margin: EdgeInsets.only(bottom: 20),
-              child: Center(child: Text("*Bạn chưa nhập ngày tạo khoản chi", style: TextStyle(color: Colors.red),)))));
+              child: Center(child: Text("*Bạn chưa nhập ngày tạo khoản thu", style: TextStyle(color: Colors.red),)))));
       return false;
     }
 
-    Provider.of<CaNhanProviders>(context,listen: false).themKhoanChi(idUser,selectedItem.icon, selectedItem.name, noiDung, giaTien, ngayMua, _image, ghiChu);
-    Provider.of<CaNhanProviders>(context,listen: false).danhSachKhoanChi(idUser);
+
+    Provider.of<CaNhanProviders>(context,listen: false).themKhoanThu(idUser,  noiDung, soTien, ngayLap, _image, ghiChu);
+    Provider.of<CaNhanProviders>(context,listen: false).danhSachKhoanThu(idUser);
     return true;
   }
-
+  File _image;
   getImageSuccess(File image){
     if(image!=null){
       setState(() {
@@ -119,7 +111,7 @@ class _ThemKhoanChiCaNhanState extends State<ThemKhoanChiCaNhan> {
           children: <Widget>[
             Container(
               alignment: Alignment.center,
-              child: Text("THÊM KHOẢN CHI TIÊU", style: TextStyle(fontSize: 28,fontWeight: FontWeight.bold, color: Colors.blue[900]),),
+              child: Text("THÊM KHOẢN THU TIÊU", style: TextStyle(fontSize: 28,fontWeight: FontWeight.bold, color: Colors.blue[900]),),
               height: 50.0,
             ),
 
@@ -130,59 +122,9 @@ class _ThemKhoanChiCaNhanState extends State<ThemKhoanChiCaNhan> {
                 padding: EdgeInsets.only(left: 10,right: 10),
                 child: ListView(
                   //controller: widget.scrollController,
+                  physics: ClampingScrollPhysics(),
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Loại chi", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                        Container(
-                          height: 40,
-                          width: 150,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1,
-                                color: Colors.black
-                            ),
-                          ),
-                          child: DropdownButton<ItemLoaiKhoanChi>(
-                            hint: Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: Text("Chọn loại", style: TextStyle(fontSize: 18),),
-                            ),
-                            isExpanded: true,
-                            elevation: 0,
-                            underline: Container(
-                              height: 1,
-                            ),
-                            value: selectedItem,
-                            onChanged: (ItemLoaiKhoanChi newValue) {
-                              setState(() {
-                                selectedItem = newValue;
-                              });
-                            },
-                            items: _homes.dsLoaiKhoanChi.map((ItemLoaiKhoanChi value){
-                              return DropdownMenuItem<ItemLoaiKhoanChi>(
-                                  value: value,
-                                  child: Container(
-                                    margin: EdgeInsets.only(left: 10),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          height: 25,
-                                          width: 25,
-                                          child: Image.network(value.icon),
-                                        ),
-                                        SizedBox(width: 10,),
-                                        Text(value.name, style: TextStyle(fontSize: 18)),
-                                      ],
-                                    ),
-                                  ));
-                            }).toList(),
-                          ),
-                        )
 
-                      ],),
-                    SizedBox(height: 10,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -198,6 +140,7 @@ class _ThemKhoanChiCaNhanState extends State<ThemKhoanChiCaNhan> {
 
                           ),
                           child: TextFormField(
+                            style: TextStyle(),
                             decoration: InputDecoration(
                                 hintText: "Nhập nội dung",
                                 hintStyle: TextStyle(fontSize: 18),
@@ -213,7 +156,7 @@ class _ThemKhoanChiCaNhanState extends State<ThemKhoanChiCaNhan> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Giá tiền", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                        Text("Số tiền", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                         Container(
                           height: 40,
                           width: 220,
@@ -226,13 +169,13 @@ class _ThemKhoanChiCaNhanState extends State<ThemKhoanChiCaNhan> {
                           ),
                           child: TextFormField(
                             decoration: InputDecoration(
-                                hintText: "Nhập giá tiền",
+                                hintText: "Nhập số tiền",
                                 hintStyle: TextStyle(fontSize: 18),
                                 labelStyle: TextStyle(fontSize: 18)
                             ),
                             keyboardType: TextInputType.number,
                             maxLines: 1,
-                            controller: _giaTienController,
+                            controller: _soTienController,
                           ),
                         )
 
@@ -241,7 +184,7 @@ class _ThemKhoanChiCaNhanState extends State<ThemKhoanChiCaNhan> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Ngày mua", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                        Text("Ngày lập", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                         Container(
                           height: 40,
                           width: 220,
@@ -255,7 +198,7 @@ class _ThemKhoanChiCaNhanState extends State<ThemKhoanChiCaNhan> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(ngayMua, style: TextStyle(color: Colors.grey[600], fontSize: 18),),
+                              Text(ngayLap, style: TextStyle(color: Colors.grey[600], fontSize: 18),),
                               IconButton(icon: Icon(Icons.date_range), onPressed: () async {
                                 DateTime newDateTime = await showRoundedDatePicker(
                                     context: context,
@@ -314,7 +257,7 @@ class _ThemKhoanChiCaNhanState extends State<ThemKhoanChiCaNhan> {
                                   String _yyyy = newDateTime.year.toString();
                                   setState(() {
                                     dateTime = newDateTime;
-                                    ngayMua = _dd+"_"+_mm+"_"+_yyyy;
+                                    ngayLap = _dd+"_"+_mm+"_"+_yyyy;
                                   });
 
                                 }
@@ -345,7 +288,10 @@ class _ThemKhoanChiCaNhanState extends State<ThemKhoanChiCaNhan> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Chụp hóa đơn", style: TextStyle(color: Colors.grey[600], fontSize: 18),),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text("Chụp hóa đơn", style: TextStyle(color: Colors.grey[600], fontSize: 18),),
+                                  ),
                                   IconButton(
                                       icon: Icon(Icons.camera_alt_outlined),
                                       onPressed: (){
@@ -384,7 +330,7 @@ class _ThemKhoanChiCaNhanState extends State<ThemKhoanChiCaNhan> {
                                 labelStyle: TextStyle(fontSize: 18)
                             ),
                             keyboardType: TextInputType.number,
-                            maxLines: 5,
+                            maxLines: 1,
                             controller: _ghiChuController,
                           ),
                         )
@@ -405,8 +351,8 @@ class _ThemKhoanChiCaNhanState extends State<ThemKhoanChiCaNhan> {
                               color: Color(0xFF1BAC98),
                               child: Text("THÊM", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
                               onPressed: () async {
-                                if(themKhoanChi(widget.user.id, selectedItem, _noiDungController.text, _giaTienController.text,
-                                    ngayMua, _ghiChuController.text, _key)){
+                                if(themKhoanThu(widget.user.id, _noiDungController.text, _soTienController.text,
+                                    ngayLap, _ghiChuController.text, _key)){
                                   _key.currentState.showSnackBar(SnackBar(
                                       backgroundColor: Colors.green,
                                       content: Container(
@@ -414,15 +360,16 @@ class _ThemKhoanChiCaNhanState extends State<ThemKhoanChiCaNhan> {
                                           margin: EdgeInsets.only(bottom: 20),
                                           child: Center(child: Text("Tạo khoản chi thành công", style: TextStyle(color: Colors.white),)))));
                                   setState(() {
-                                    selectedItem = null;
+
                                     _noiDungController.text = "";
-                                    _giaTienController.text = "";
+                                    _soTienController.text = "";
                                     dateTime = DateTime.now();
                                     dd = dateTime.day<10?"0${dateTime.day.toString()}":dateTime.day.toString();
                                     mm = dateTime.month<10?"0${dateTime.month.toString()}":dateTime.month.toString();
                                     yyyy = dateTime.year.toString();
                                     duration = Duration(minutes: 10);
-                                    ngayMua = dd+"_"+mm+"_"+yyyy;
+                                    ngayLap = dd+"_"+mm+"_"+yyyy;
+                                    _image = null;
                                   });
                                 }
 
@@ -440,18 +387,19 @@ class _ThemKhoanChiCaNhanState extends State<ThemKhoanChiCaNhan> {
                               child: Text("HỦY", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
                               onPressed: (){
                                 setState(() {
-                                  selectedItem = null;
+
                                   _noiDungController.text = "";
-                                  _giaTienController.text = "";
+                                  _soTienController.text = "";
                                   dateTime = DateTime.now();
                                   dd = dateTime.day<10?"0${dateTime.day.toString()}":dateTime.day.toString();
                                   mm = dateTime.month<10?"0${dateTime.month.toString()}":dateTime.month.toString();
                                   yyyy = dateTime.year.toString();
                                   duration = Duration(minutes: 10);
-                                  ngayMua = dd+"_"+mm+"_"+yyyy;
+                                  ngayLap = dd+"_"+mm+"_"+yyyy;
+                                  _image = null;
                                 });
-                                //widget.panelController.hide();
                                 Navigator.pop(context);
+                                //widget.panelController.hide();
                               },
                             ),
                           ),

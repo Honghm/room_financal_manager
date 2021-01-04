@@ -79,7 +79,7 @@ class _KhoanThuState extends State<KhoanThu> {
                 shrinkWrap: true,
                 itemCount: (widget.dsKhoanThu != null)?widget.dsKhoanThu.length : 0,
                 itemBuilder: (value, index){
-                  return ItemRevenuePerson(dsItem: widget.dsKhoanThu[index].listItemKhoanChi,ngayMua: widget.dsKhoanThu[index].ngayMua,);
+                  return ItemRevenuePerson(dsItem: widget.dsKhoanThu[index].listItemKhoanThu,ngayThu: widget.dsKhoanThu[index].ngayLap,);
                 }
             ),
           ],

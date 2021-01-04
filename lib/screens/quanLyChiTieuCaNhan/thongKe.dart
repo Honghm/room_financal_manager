@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +9,9 @@ import 'package:room_financal_manager/widgets/ThongKe/info_card.dart';
 
 class ThongKe extends StatefulWidget {
   final List<Widget> listInfoCard;
-  ThongKe(this.listInfoCard);
+  final List<double> thongKeKhoanChi;
+  final List<double> thongKeKhoanThu;
+  ThongKe({this.listInfoCard, this.thongKeKhoanThu, this.thongKeKhoanChi});
   @override
   _ThongKeState createState() => _ThongKeState();
 }
@@ -88,7 +91,11 @@ class _ThongKeState extends State<ThongKe> {
                     )
                 )
             ),
-            child: Text("Loại chi tiêu", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black54),),
+            child: Text("Loại chi tiêu", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.green),),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Text("Thống kê khoản chi trong tháng ${ DateTime.now().month} theo loại chi tiêu"),
           ),
           Container(
               padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 20),
@@ -119,10 +126,14 @@ class _ThongKeState extends State<ThongKe> {
                 )
               )
             ),
-            child: Text("Thống kê tuần", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black54),),
+            child: Text("Thống kê tuần", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.green),),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Text("Thống kê chi tiêu trong tháng ${ DateTime.now().month} theo tuần"),
           ),
           Container(
-              padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 20),
+              padding: EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 40),
               width: double.infinity,
               decoration: BoxDecoration(
                 // color: kPrimaryColor.withOpacity(0.03),
@@ -131,7 +142,7 @@ class _ThongKeState extends State<ThongKe> {
                   bottomRight: Radius.circular(50),
                 ),
               ),
-              child: BarChartSample2()
+              child: BarChartThongKeThang(thongKeKhoanChi: widget.thongKeKhoanChi, thongKeKhoanThu: widget.thongKeKhoanThu,)
 
           ),
 

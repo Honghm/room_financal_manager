@@ -1,12 +1,19 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sliding_up_panel/sliding_up_panel_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:room_financal_manager/models/user.dart';
 import 'package:room_financal_manager/providers/group_providers.dart';
+import 'package:room_financal_manager/providers/home_provider.dart';
 import 'package:room_financal_manager/providers/user_provider.dart';
 
 class CreateGroup extends StatefulWidget {
  final SlidingUpPanelController panelController;
-  CreateGroup({this.panelController});
+ UserData user;
+
+  CreateGroup({this.panelController, this.user});
   @override
   _CreateGroupState createState() => _CreateGroupState();
 }
@@ -21,15 +28,34 @@ class _CreateGroupState extends State<CreateGroup> {
   List<Map> listMember = [];
   List<String> listIdMember = [];
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //widget.fromPersonal = false;
+  }
+  File _image;
+  getImageSuccess(File image){
+    if(image!=null){
+      setState(() {
+        _image = image;
+      });
+    }
+
+  }
+  @override
   Widget build(BuildContext context) {
     UserProvider _user =  Provider.of<UserProvider>(context);
     GroupProviders _group =  Provider.of<GroupProviders>(context);
+    HomeProviders _home =  Provider.of<HomeProviders>(context);
     return Scaffold(
      key: _key,
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 20,),
+            SizedBox(height: 40,),
             Container(
                 alignment: Alignment.center,
                 child: Text("TẠO NHÓM CỦA BẠN", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold,color: Colors.black),)),
@@ -39,22 +65,29 @@ class _CreateGroupState extends State<CreateGroup> {
             Stack(
               alignment: Alignment.topRight,
               children: [
-                Container(
-                    height: 100,
-                    width: 100,
-                    margin: EdgeInsets.only(left: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      border: Border.all(color: Colors.black),
-                      color: Color(0xFFCDCCCC),
-                    ),
-                    child: Icon(Icons.people,size: 50,color: Colors.white,)
+                ClipOval(
+                  child: Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        border: Border.all(color: Colors.black),
+                        color: Color(0xFFCDCCCC),
+                      ),
+                      child: _image!=null?Image.file(_image, fit: BoxFit.fill,):widget.user.urlAvt==""?Icon(
+                        Icons.person,
+                        size: 50,
+                        color: Colors.white,
+                      ):Image.network(widget.user.urlAvt,fit: BoxFit.fill,)
+                  ),
                 ),
                 Container(
                   width: 30,
                   height: 30,
                   padding: EdgeInsets.only(left:15,),
-                  child: IconButton(icon: Icon(Icons.camera_alt),onPressed: (){},),
+                  child: IconButton(icon: Icon(Icons.camera_alt),onPressed: (){
+                    _home.showPicker(context:context,success: getImageSuccess );
+                  },),
                 )
               ],
             ),
@@ -186,13 +219,14 @@ class _CreateGroupState extends State<CreateGroup> {
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                       color: Color(0xFF1BAC98),
                       child: Text("THÊM", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
-                      onPressed: () async {
-
-                        _group.addNewGroup("", nameGroupController.text, listIdMember, _user.userData.id);
+                      onPressed: () {
+                        String idGroup =  FirebaseFirestore.instance.collection("Groups").doc().id;
+                        _group.addNewGroup(idGroup,_image, nameGroupController.text, listIdMember, widget.user);
+                        // _group.getListGroup(widget.user);
                         nameGroupController.clear();
                         listMember.clear();
                         listIdMember.clear();
-
+                       Navigator.pop(context);
                       },
                     ),
                   ),
@@ -210,7 +244,7 @@ class _CreateGroupState extends State<CreateGroup> {
                         fundGroupController.clear();
                         listMember.clear();
                         listIdMember.clear();
-                        widget.panelController.hide();
+                        Navigator.pop(context);
                       },
                     ),
                   ),

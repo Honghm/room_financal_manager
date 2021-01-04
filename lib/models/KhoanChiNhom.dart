@@ -7,6 +7,7 @@ class ItemKhoanChiNhom {
   String noiDung;
   String giaTien;
   String nguoiMua;
+  String hoaDon;
   List<String> nguoiThamGia;
   String ghiChu;
 
@@ -18,7 +19,7 @@ ItemKhoanChiNhom.fromJson(Map<String, dynamic> parsedJson){
     noiDung = parsedJson["noiDung"];
     nguoiMua = parsedJson["nguoiMua"];
     giaTien = parsedJson["giaTien"];
-
+    hoaDon = parsedJson["hoaDon"];
     List<String> list = [];
     if (parsedJson["nguoiThamGia"] != null) {
       for (var item in parsedJson["nguoiThamGia"]) {

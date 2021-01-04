@@ -1,10 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_widgets/responsive_widgets.dart';
 import 'package:room_financal_manager/config/initialization.dart';
+import 'package:room_financal_manager/models/user.dart';
+import 'package:room_financal_manager/providers/caNhan_providers.dart';
+import 'package:room_financal_manager/providers/home_provider.dart';
 import 'package:room_financal_manager/providers/user_provider.dart';
 import 'package:room_financal_manager/screens/register_page.dart';
 import 'package:room_financal_manager/services/authentication.dart';
@@ -20,23 +24,90 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  Authentication authentication = Authentication();
+  bool isSignIn = false;
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  User _user;
+  FacebookLogin facebookLogin = FacebookLogin();
 
   final _key = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
 
+   loginSuccess (BuildContext context, UserData user){
+    Provider.of<CaNhanProviders>(context,listen: false).danhSachKhoanChi(user.id);
+    Provider.of<CaNhanProviders>(context,listen: false).danhSachKhoanThu(user.id);
+    Provider.of<HomeProviders>(context, listen: false).getListLoaiKhoanChi();
+    Provider.of<GroupProviders>(context,listen: false).getListGroup(user);
+    Navigator.pushReplacement(context,   MaterialPageRoute(
+        builder: (context) => HomePage(user: user,)
+    ));
+  }
+  Future<void> handleLogin() async {
+    //facebookLogin.logOut();
+    final FacebookLoginResult result = await facebookLogin.logIn(['email']);
+
+    switch (result.status) {
+      case FacebookLoginStatus.cancelledByUser:
+        print("đăng nhập không thành công");
+        break;
+      case FacebookLoginStatus.error:
+        print("đăng nhập bị lỗi");
+        break;
+      case FacebookLoginStatus.loggedIn:
+        try {
+          print("đăng nhập thành công");
+          await loginWithfacebook(result);
+        } catch (e) {
+          print(e);
+        }
+        break;
+    }
+  }
+
+  Future loginWithfacebook(FacebookLoginResult result) async {
+    final FacebookAccessToken accessToken = result.accessToken;
+    AuthCredential credential =
+    FacebookAuthProvider.credential(accessToken.token);
+    var a = await _auth.signInWithCredential(credential);
+    setState(() {
+      isSignIn = true;
+      _user = a.user;
+    });
+  }
+
+  Future<void> gooleSignout() async {
+    await _auth.signOut().then((onValue) {
+      setState(() {
+        facebookLogin.logOut();
+        isSignIn = false;
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context);
-    final expenditures = Provider.of<GroupProviders>(context);
+
 
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       key: _key,
-      body: Container(
+      body: (user.status == Status.Loading) ? Container(
+        height: height,
+        width: width,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF42AF3B), Color(0xFF17B6A0)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            )),
+        child: Center(
+          child: CircularProgressIndicator(
+            backgroundColor: Colors.white,
+          ),
+        ),
+      ) :  (user.status == Status.Loaded)?Container():Container(
         height: height,
         decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -136,7 +207,12 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.all(Radius.circular(25))),
                     onPressed: () {
                      //user.signIn(_phoneNumberController.text, _passController.text, context, _key);
-                     user.signIn("0377846295", "123456789", context, _key);
+                     user.signIn(_key,
+                       phone: _phoneNumberController.text,
+                       password: _passController.text,
+                       context: context,
+                       success: loginSuccess,
+                     );
                     },
                     color: Colors.amberAccent,
                     child: Text(
@@ -161,7 +237,39 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FlatButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          // await user.loginWithFacebook();
+                          // panelController.expand();
+                          await showDialog(
+                              context: this.context,
+                              child: AlertDialog(
+                                backgroundColor: Colors.white,
+                                title:  Center(
+                                    child: Text("Thông báo!", style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),)),
+                                contentPadding: EdgeInsets.all(0),
+                                content: Container(
+                                    height: 100,
+                                    color: Colors.white,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text("Tính năng đang phát triển."),
+                                        Text("Chúng tôi sẽ cấp nhật chúng sớm thôi!")
+                                      ],)
+                                ),
+                                actions: <Widget>[
+                                  InkWell(
+                                    onTap: (){
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("Thoát", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                                  )
+
+
+                                ],
+                              )
+                          );
+                        },
                         child: Container(
                             width: 50,
                             height: 50,
@@ -171,16 +279,8 @@ class _LoginPageState extends State<LoginPage> {
                             ))),
                     FlatButton(
                         onPressed: () async {
-                          // user.googleSignIn.disconnect();
-                          await authentication.googleSignIn().whenComplete(() {
-                            print("run here");
-                            Navigator.pushReplacement(
-                                context,
-                                PageTransition(
-                                    child: HomePage(),
-                                    type: PageTransitionType.bottomToTop));
-                            
-                          });
+                          user.googleSignIn.disconnect();
+                          user.loginWithGoogle(context: context,success: loginSuccess);
                         },
                         child: Container(
                             height: 50,
@@ -208,7 +308,7 @@ class _LoginPageState extends State<LoginPage> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            RegisterPage()));
+                                            RegisterPage(kindLogin: "normal",email: "",)));
                               },
                             text: "Đăng ký tại đây!",
                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.blue[900]),
@@ -225,4 +325,5 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
 }

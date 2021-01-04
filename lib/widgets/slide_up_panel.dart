@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sliding_up_panel/sliding_up_panel_widget.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:room_financal_manager/models/user.dart';
 import 'package:room_financal_manager/providers/group_providers.dart';
 import 'package:room_financal_manager/providers/home_provider.dart';
+import 'package:room_financal_manager/widgets/CaNhan/them_KhoanThu_CaNhan.dart';
 import 'file:///D:/My%20Code/Code%20Android/DoAn2/room_financal_manager/lib/widgets/Nhom/create_group.dart';
 import 'file:///D:/My%20Code/Code%20Android/DoAn2/room_financal_manager/lib/widgets/Nhom/them_KhoanChi_Nhom.dart';
 import 'CaNhan/them_KhoanChi_CaNhan.dart';
 
 class SlideUpPanel extends StatefulWidget {
-  SlidingUpPanelController panelController;
-  int state;
-  SlideUpPanel(this.panelController, {this.state});
+  final SlidingUpPanelController panelController;
+  final int state;
+  final UserData user;
+  SlideUpPanel(this.panelController, {this.state, this.user});
   @override
   _SlideUpPanelState createState() => _SlideUpPanelState();
 }
@@ -20,15 +24,22 @@ class _SlideUpPanelState extends State<SlideUpPanel> {
   Widget changeScreen(){
 
     switch(widget.state){
-      case 4:
-        return ThemKhoanChiNhom(widget.panelController,);
       case 1:
-        return ThemKhoanChiCaNhan(widget.panelController);
-      case 7:
-        return CreateGroup(panelController: widget.panelController);
+        return ThemKhoanChiCaNhan(user: widget.user);
+      case 2:
+        return ThemKhoanThuCaNhan(user: widget.user);
+      case 4:
+        return ThemKhoanChiNhom(widget.panelController,widget.user);
+      // case 7:
+      //   {
+      //     Navigator.push(context,
+      //         PageTransition(child: CreateGroup(
+      //           panelController: widget.panelController, user: widget.user,),
+      //             type: PageTransitionType.bottomToTop));
+      //   }
       default: {
         widget.panelController.hide();
-       return null;
+       return Container();
       }
     }
     return null;

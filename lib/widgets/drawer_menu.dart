@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:room_financal_manager/models/user.dart';
+import 'package:room_financal_manager/providers/user_provider.dart';
+import 'package:room_financal_manager/screens/login_page.dart';
+import 'package:room_financal_manager/screens/personal_page.dart';
 
 class DrawerMenu extends StatefulWidget {
+  final UserData user;
+  DrawerMenu({this.user});
   @override
   _DrawerMenuState createState() => _DrawerMenuState();
 }
@@ -8,6 +15,7 @@ class DrawerMenu extends StatefulWidget {
 class _DrawerMenuState extends State<DrawerMenu> {
   @override
   Widget build(BuildContext context) {
+    UserProvider _user = Provider.of<UserProvider>(context);
     return Drawer(
       child: ListView(
         children: [
@@ -24,7 +32,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
                 Row(
                   children: [
                     Text(
-                      "Minh Hồng",
+                      _user.userData.displayName,
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -34,7 +42,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
                 ),
                 Row(
                   children: [
-                    Text("ID: 123456",
+                    Text("ID: ${_user.userData.id}",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,
@@ -47,7 +55,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
                       Icons.phone,
                       size: 16,
                     ),
-                    Text("0377846295",
+                    Text(_user.userData.phoneNumber,
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,
@@ -62,17 +70,23 @@ class _DrawerMenuState extends State<DrawerMenu> {
                       width: 100,
                       height: 100,
                       color: Color(0xFFCDCCCC),
-                      child: Icon(
+                      child: _user.userData.urlAvt==""?Icon(
                         Icons.person,
                         size: 50,
                         color: Colors.white,
-                      ))),
+                      ):Image.network(_user.userData.urlAvt,fit: BoxFit.fill,))
+              ),
             ),
           ),
-          //Trang cá nhân
+
+          ///Trang cá nhân
           InkWell(
             onTap: () {
-              Navigator.pushNamed(context, '/personal');
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          PersonalPage(user: widget.user,)));
             },
             child: ListTile(
               leading: Container(
@@ -111,7 +125,38 @@ class _DrawerMenuState extends State<DrawerMenu> {
 
           //Hỗ trợ
           InkWell(
-            onTap: () {},
+            onTap: () async {
+              await showDialog(
+                  context: this.context,
+                  child: AlertDialog(
+                  backgroundColor: Colors.white,
+                  title:  Center(
+                  child: Text("Hỗ trợ", style: TextStyle(color: Colors.blue[900], fontSize: 22, fontWeight: FontWeight.bold),)),
+              content: Container(
+              height: 100,
+              color: Colors.white,
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Bạn đang gặp sự cố?"),
+              Text(" Liên hệ ngay với chúng tôi!"),
+              SizedBox(height: 20,),
+              Text("Minh Hồng: 0377846295"),
+              Text("Trương Nam: 0973214133")
+              ],)
+              ),contentPadding: EdgeInsets.all(0),
+
+              actions: <Widget>[
+              InkWell(
+              onTap: (){
+              Navigator.pop(context);
+              },
+              child: Text("Thoát", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+              ),
+              ],
+              )
+              );
+            },
             child: ListTile(
               leading: Container(
                 height: 50,
@@ -130,7 +175,35 @@ class _DrawerMenuState extends State<DrawerMenu> {
 
           //Thông tin liên hệ
           InkWell(
-            onTap: () {},
+            onTap: () async {
+              await showDialog(
+                  context: this.context,
+                  child: AlertDialog(
+                  backgroundColor: Colors.white,
+                  title:  Center(
+                  child: Text("Thông tin liên hệ", style: TextStyle(color: Colors.blue[900], fontSize: 22, fontWeight: FontWeight.bold),)),
+                    content: Container(
+                        height: 100,
+                        color: Colors.white,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("17520526 - Hoàng Minh Hồng"),
+                            Text("17520785 - Trương Nguyễn Tuấn Nam")
+                          ],)
+                    ),contentPadding: EdgeInsets.all(0),
+
+                  actions: <Widget>[
+                    InkWell(
+                    onTap: (){
+                    Navigator.pop(context);
+                    },
+                    child: Text("Thoát", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                    ),
+                    ],
+                  )
+              );
+            },
             child: ListTile(
               leading: Container(
                 height: 50,
@@ -150,7 +223,13 @@ class _DrawerMenuState extends State<DrawerMenu> {
           //Đăng xuất
           InkWell(
             onTap: () {
-              Navigator.pushReplacementNamed(context, '/login');
+              _user.auth.signOut();
+              //_user.googleSignIn.disconnect();
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          LoginPage()));
             },
             child: ListTile(
               leading: Container(

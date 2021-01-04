@@ -1,17 +1,24 @@
 
 import 'package:flutter/material.dart';
+import 'package:room_financal_manager/models/KhoanChiCaNhan.dart';
 import 'package:room_financal_manager/widgets/ThongKe/line_chart.dart';
 
 class InfoCard extends StatelessWidget {
   final String title;
   final String icon;
-  final int effectedNum;
+  double TongChi;
+  List<double> dsTienChi;
+  // double TongThu;
+  // List<double> dsTienThu;
   final Function press;
-  const InfoCard({
+   InfoCard({
     Key key,
     this.title,
     this.icon,
-    this.effectedNum,
+    this.TongChi,
+     // this.TongThu,
+    this.dsTienChi,
+     // this.dsTienThu,
     this.press,
   }) : super(key: key);
 
@@ -64,18 +71,20 @@ class InfoCard extends StatelessWidget {
                             text: TextSpan(
                               style: TextStyle(color: Colors.black),
                               children: [
+                                // TextSpan(
+                                //   text: "$TongThu K",
+                                //   style:TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green)
+                                // ),
                                 TextSpan(
-                                  text: "$effectedNum K",
-                                  style:TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
-
+                                    text: "$TongChi K",
+                                    style:TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Colors.red)
                                 ),
-
                               ],
                             ),
                           ),
                         ),
                         Expanded(
-                          child: LineReportChart(),
+                          child: LineReportChart(dsTienChi: dsTienChi,),
                         ),
                       ],
                     ),

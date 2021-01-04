@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:room_financal_manager/models/info_group.dart';
+import 'package:room_financal_manager/models/user.dart';
 import 'package:room_financal_manager/providers/group_providers.dart';
 import 'package:room_financal_manager/screens/quanLyChiTieuNhom/updateTongQuan.dart';
 
 class TongQuan extends StatefulWidget {
+  final InformationGroup selectedGroup;
+  final UserData user;
+  TongQuan({this.selectedGroup, this.user});
   @override
   _TongQuanState createState() => _TongQuanState();
 }
@@ -17,11 +21,9 @@ class _TongQuanState extends State<TongQuan> {
   final _key = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
   RefreshController _refreshController;
-  Map<String, String> listName = {};
-  //bool isUpdate = false;
   List<TextEditingController> listMoney = [];
   List<String> member = [];
-  InformationGroup selectedGroup;
+
   final TextEditingController test = TextEditingController();
   @override
   void initState() {
@@ -34,12 +36,8 @@ class _TongQuanState extends State<TongQuan> {
     });
   }
   loadData() {
-
-     listName = Provider.of<GroupProviders>(context,listen: false).getListName();
-     selectedGroup = Provider.of<GroupProviders>(context,listen: false).selectedGroup;
-
-     selectedGroup.members.forEach((item) {
-        listMoney.add(new TextEditingController(text: selectedGroup.detailMoney[item]));
+     widget.selectedGroup.members.forEach((item) {
+        listMoney.add(new TextEditingController(text: widget.selectedGroup.detailMoney[item]));
       });
 
   }
@@ -171,7 +169,7 @@ class _TongQuanState extends State<TongQuan> {
                                       alignment: Alignment.centerLeft,
                                       child:  RichText(
                                         text: TextSpan(
-                                            text: "${listName[_groups.selectedGroup.members[index]]}: ",
+                                            text: "${_groups.listName[_groups.selectedGroup.members[index]]}: ",
                                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
                                             children: <TextSpan>[
                                               TextSpan(
@@ -195,15 +193,14 @@ class _TongQuanState extends State<TongQuan> {
                           child: ListView.builder(
                               itemCount: _groups.selectedGroup.members.length,
                               itemBuilder: (_,index) {
-                                /*  String name = _groups.getNameById(selectedGroup.nameGroup[index]);*/
-                                // print(name);
+
                                 return index%2!=0?Column(
                                   children: [
                                     Container(
                                       alignment: Alignment.centerLeft,
                                       child: RichText(
                                         text: TextSpan(
-                                            text: "${listName[_groups.selectedGroup.members[index]]}: ",
+                                            text: "${_groups.listName[_groups.selectedGroup.members[index]]}: ",
                                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
                                             children: <TextSpan>[
                                               TextSpan(
@@ -224,7 +221,7 @@ class _TongQuanState extends State<TongQuan> {
                 ),
 
                 ///Buttom điều hướng cho phép chỉnh sửa thông tin của nhóm
-                Container(
+                (widget.user.id==widget.selectedGroup.idCreator)?Container(
                   height: 50,
                   width: 200,
                   child: RaisedButton(
@@ -235,12 +232,12 @@ class _TongQuanState extends State<TongQuan> {
                       //   isUpdate = true;
                       // });
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => UpdateTongQuan(listMoney: listMoney,listName: listName,selectedGroup: selectedGroup,)));
+                          MaterialPageRoute(builder: (context) => UpdateTongQuan(listMoney: listMoney,listName: _groups.listName,selectedGroup: widget.selectedGroup,)));
                     },
                     color: Colors.green,
                     child: Text("Cập nhật",style: TextStyle(fontSize: 18,color: Colors.white,fontWeight: FontWeight.bold),),
                   ),
-                )
+                ):Container()
               ],
             ),
           ),

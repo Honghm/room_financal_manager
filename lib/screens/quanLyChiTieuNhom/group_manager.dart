@@ -9,11 +9,12 @@ import 'package:room_financal_manager/models/user.dart';
 import 'package:room_financal_manager/providers/group_providers.dart';
 import 'package:room_financal_manager/providers/home_provider.dart';
 import 'package:room_financal_manager/providers/user_provider.dart';
-import 'package:room_financal_manager/screens/quanLyChiTieuCaNhan/thongKe.dart';
 import 'package:room_financal_manager/screens/quanLyChiTieuNhom/khoanChi.dart';
+import 'package:room_financal_manager/screens/quanLyChiTieuNhom/thongKe.dart';
 import 'package:room_financal_manager/screens/quanLyChiTieuNhom/tongQuan.dart';
 import 'package:room_financal_manager/services/storage.dart';
-import 'file:///D:/My%20Code/Code%20Android/DoAn2/room_financal_manager/lib/widgets/Nhom/item_expenses_group.dart';
+import 'package:room_financal_manager/widgets/ThongKe/info_card.dart';
+
 import 'package:room_financal_manager/widgets/top_bar.dart';
 
 class GroupManager extends StatefulWidget {
@@ -25,36 +26,16 @@ class GroupManager extends StatefulWidget {
 
 class _GroupManagerState extends State<GroupManager> {
   RefreshController _refreshController;
-  int lengthData = 0;
-  Map<String, String> listId = {};
-  List<Map<String, dynamic>> listKhoanChi = [];
-  List<KhoanChiNhom> dsKhoanChi = [];
-  List<InformationGroup> dsNhom = [];
-  //int _page  = 2;
-  InformationGroup selectedGroup;
-  String idGroup;
-  final SecureStorage secureStorage = SecureStorage();
+  List<Widget> listInfoCard = List(); //ds thống kê theo loại chi tiêu
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
     _refreshController = RefreshController(initialRefresh: false);
-    if(Provider.of<GroupProviders>(context,listen: false).listGroupShow) {
-      loadListGroup();
-      setState(() {
-
-      });
+    if(Provider.of<GroupProviders>(context,listen: false).listGroupShow == false){
+      Provider.of<GroupProviders>(context,listen: false).danhSachKhoanChi(Provider.of<GroupProviders>(context,listen: false).selectedGroup.id);
     }
-    else
-      {
-        secureStorage.readSecureData("idGroup").then((value){
-
-          loadListKhoanChi(value);
-          setState(() {
-            idGroup = value;
-          });
-        });
-      }
   }
 
   @override
@@ -71,17 +52,18 @@ class _GroupManagerState extends State<GroupManager> {
 
     // _refreshController();
   }
+
   void _onRefresh() async{
-    print("Run here");
+
+    Provider.of<GroupProviders>(context,listen: false).dsNhom = [];
+    Provider.of<GroupProviders>(context,listen: false).getListGroup(widget.user);
+
+    await Future.delayed(Duration(milliseconds: 1000));
     if(mounted)
       setState(() {
-        dsKhoanChi = [];
+
       });
-
-    await loadListKhoanChi(idGroup).then((value){
-      _refreshController.refreshCompleted();
-    });
-
+    _refreshController.refreshCompleted();
   }
 
   void _onLoading() async{
@@ -97,160 +79,184 @@ class _GroupManagerState extends State<GroupManager> {
     _refreshController.loadComplete();
   }
 
-  @override
-  Future<void> loadListGroup() async {
-    if(dsNhom.isEmpty)
-     await Provider.of<GroupProviders>(context,listen: false).getListGroup(widget.user).then((value) {
-       dsNhom =  Provider.of<GroupProviders>(context,listen: false).dsNhom;
-     });
-    if(Provider.of<GroupProviders>(context,listen: false).haveNewGroup){
-      await Provider.of<GroupProviders>(context,listen: false).getListGroup(widget.user).then((value) {
-        dsNhom =  Provider.of<GroupProviders>(context,listen: false).dsNhom;
-      });
-      Provider.of<GroupProviders>(context,listen: false).haveNewGroup = false;
-    }
-  }
-  Future<void> loadListKhoanChi(idGroup) async {
-    if(dsKhoanChi.isEmpty){
-      Provider.of<GroupProviders>(context,listen: false).getListMember(idGroup);
-      await Provider.of<GroupProviders>(context, listen: false).danhSachKhoanChi(idGroup).then((value) {
-        dsKhoanChi = Provider.of<GroupProviders>(context, listen: false).dsKhoanChiNhom;
-      });
-    }
-  }
+
+
   Future<void> changeShowListGroup(bool change) async {
     Provider.of<GroupProviders>(context,listen: false).listGroupShow = change;
   }
-  Widget _changeScreen(status, listGroupShow, screen){
-    Future.delayed(Duration(milliseconds: 1000));
-    if(screen == 7){
-      secureStorage.deleteSecureData("idGroup");
-        loadListGroup();
-      return _listGroup(dsNhom);
-    }else{
-      if(idGroup!=""){
-        loadListKhoanChi(idGroup);
-        return _changePage(screen, status);
-      }
-        else
-          return Container();
-    }
-  }
 
 
-  Widget _listGroup(List<InformationGroup> data)  {
-    return Container(
-      height:  MediaQuery.of(context).size.height,
-      color: Color(0xFFCDCCCC),
-      child: Stack(
-        children: [
-          Container(
-            padding: EdgeInsets.only(left: 10,right: 10),
-            height: 50,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                //TextFormField(),
-                Container(height: 2,width:MediaQuery.of(context).size.width/2-100, color: Colors.black,),
-                Text("NHÓM CỦA BẠN", style: TextStyle(color: Colors.black, fontSize: 20,fontWeight: FontWeight.bold),),
-                Container(height: 2,width:MediaQuery.of(context).size.width/2-100, color: Colors.black,),
-              ],),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 50,left: 10,right: 10),
-            child: data.isEmpty?Center(child: Text("Hiện bạn không có nhóm nào!", style: TextStyle(fontSize:20 ),)):ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (_, index){
-                  // print("name group: ${data[index]["name"]}");
-                  return InkWell(
-                    onTap: (){
-                      Provider.of<HomeProviders>(context,listen: false).screen = 4;
-                      setState(() {
-                        idGroup = data[index].id;
-                        Provider.of<GroupProviders>(context,listen: false).idGroup = idGroup;
-                        secureStorage.writeSecureData("idGroup", idGroup);
-                        changeShowListGroup(false);
-                        Provider.of<GroupProviders>(context,listen: false).selectedGroup = data[index];
-                        selectedGroup = data[index];
-                      });
-                    },
-                    child: Container(
-                      height: 100,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white,
-                      ),
-                      margin: EdgeInsets.only(bottom: 10),
-                      child: Row(children: [
-                        Container(
-                          height: 80,
-                          width: 80,
-                          margin: EdgeInsets.only(left: 10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(40),
-                            border: Border.all(color: Colors.black),
-                            color: Color(0xFFCDCCCC),
-                          ),
-                          child: data[index].avatar ==""? Icon(Icons.people,size: 50,color: Colors.white,):ClipOval(
-                            child: SizedBox(
-                                height: 80,
-                                width: 80,
-                                child: Image.network(data[index].avatar, fit: BoxFit.fill,)),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 10, top: 10,bottom: 10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(data[index].nameGroup.toString(), style: TextStyle(color: Colors.red, fontSize: 25,fontWeight: FontWeight.bold),),
-                              Text("- Số thành viên: ${data[index].members.length.toString()}", style: TextStyle(color: Colors.black, fontSize: 18,fontWeight: FontWeight.bold),),
-                              Text("- Quỹ hiện có: ${data[index].groupFunds.toString()} vnđ", style: TextStyle(color: Colors.black, fontSize: 18,fontWeight: FontWeight.bold),),
-                            ],
-                          ),
-                        )
-                      ],),
-                    ),
-                  );
-                }
+
+  Widget _listGroup(GroupProviders _groups)  {
+
+    return SmartRefresher(
+      controller: _refreshController,
+      onRefresh: _onRefresh,
+      onLoading: _onLoading,
+      header: WaterDropMaterialHeader(
+        backgroundColor: Colors.green,
+      ),
+      footer: CustomFooter(
+        builder: (BuildContext context,LoadStatus mode){
+          Widget body ;
+          body =  CupertinoActivityIndicator();
+          return Container(
+
+            height: 55.0,
+            child: Center(child:body),
+          );
+        },
+      ),
+      enablePullUp: false,
+      enablePullDown: true,
+      child: Container(
+        height:  MediaQuery.of(context).size.height,
+        color: Color(0xFFCDCCCC),
+        child: Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.only(left: 10,right: 10),
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  //TextFormField(),
+                  Container(height: 2,width:MediaQuery.of(context).size.width/2-100, color: Colors.black,),
+                  Text("NHÓM CỦA BẠN", style: TextStyle(color: Colors.black, fontSize: 20,fontWeight: FontWeight.bold),),
+                  Container(height: 2,width:MediaQuery.of(context).size.width/2-100, color: Colors.black,),
+                ],),
             ),
-          ),
+            _groups.status == Status.Loading?Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.white,
+                ),
+              ),
+            ) :Padding(
+              padding: EdgeInsets.only(top: 50,left: 10,right: 10),
+              child: _groups.dsNhom.isEmpty?Center(child: Text("Hiện bạn không có nhóm nào!", style: TextStyle(fontSize:20 ),)):ListView.builder(
+                  itemCount: _groups.dsNhom.length,
+                  itemBuilder: (_, index){
+                    return InkWell(
+                      onTap: (){
+                        _groups.danhSachKhoanChi(_groups.dsNhom[index].id);
+                        Provider.of<GroupProviders>(context,listen: false).getListName(_groups.dsNhom[index]);
+                        Provider.of<GroupProviders>(context,listen: false).getListMember(_groups.dsNhom[index].id);
+                        setState(() {
+                        _groups.listGroupShow = false;
+                          _groups.selectedGroup = _groups.dsNhom[index];
+                        });
+                        Provider.of<HomeProviders>(context,listen: false).screen = 4;
+                      },
+                      child: Container(
+                        height: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white,
+                        ),
+                        margin: EdgeInsets.only(bottom: 10),
+                        child: Row(children: [
+                          Container(
+                            height: 80,
+                            width: 80,
+                            margin: EdgeInsets.only(left: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(40),
+                              border: Border.all(color: Colors.black),
+                              color: Color(0xFFCDCCCC),
+                            ),
+                            child: _groups.dsNhom[index].avatar ==""? Icon(Icons.people,size: 50,color: Colors.white,):ClipOval(
+                              child: SizedBox(
+                                  height: 80,
+                                  width: 80,
+                                  child: Image.network(_groups.dsNhom[index].avatar, fit: BoxFit.fill,)),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 10, top: 10,bottom: 10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(_groups.dsNhom[index].nameGroup.toString(), style: TextStyle(color: Colors.red, fontSize: 25,fontWeight: FontWeight.bold),),
+                                Text("- Số thành viên: ${_groups.dsNhom[index].members.length.toString()}", style: TextStyle(color: Colors.black, fontSize: 18,fontWeight: FontWeight.bold),),
+                                Text("- Quỹ hiện có: ${_groups.dsNhom[index].groupFunds.toString()}K", style: TextStyle(color: Colors.black, fontSize: 18,fontWeight: FontWeight.bold),),
+                              ],
+                            ),
+                          )
+                        ],),
+                      ),
+                    );
+                  }
+              ),
+            ),
 
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget _changePage(int screen, status){
+  Widget _changePage(int screen, GroupProviders _groups){
 
       switch(screen){
         case 5:
-          return TongQuan();
+          return TongQuan(
+            selectedGroup: _groups.selectedGroup,
+            user: widget.user,
+          );
         case 4:
          return KhoanChi(
-           dsKhoanChi: dsKhoanChi,
-           refreshController: _refreshController,
-           onLoading: _onLoading,
-           onRefresh: _onRefresh,
+           dsKhoanChi: _groups.dsKhoanChiNhom,
          );
         case 6:
-          return Container();
+          return ThongKe(
+            listInfoCard: listInfoCard,
+          );
       }
   }
+
+  loadDataThongKe({List<ItemLoaiKhoanChi> dsLoaiKhoanChi, List<KhoanChiNhom> dsKhoanChiNhom }){
+    loadListInfoCard(
+      dsKhoanChiNhom: dsKhoanChiNhom,
+      dsLoaiKhoanChi: dsLoaiKhoanChi,
+    );
+
+  }
+
+  loadListInfoCard({List<ItemLoaiKhoanChi> dsLoaiKhoanChi, List<KhoanChiNhom> dsKhoanChiNhom }) {
+    listInfoCard.clear();
+    dsLoaiKhoanChi.forEach((item) {
+      List<double> dsTienChi = [];
+      double TongChi = 0;
+      dsKhoanChiNhom.forEach((data) {
+        if(data.ngayMua.split("_")[1] == DateTime.now().month.toString()){
+          data.listItemKhoanChi.forEach((value) {
+            if(value.tenLoai == item.name){
+              dsTienChi.add(double.parse(value.giaTien));
+              TongChi += double.parse(value.giaTien);
+            }
+          });
+        }
+      });
+      listInfoCard.add(InfoCard(
+        title: item.name,
+        icon: item.icon,
+        dsTienChi: dsTienChi,
+        TongChi: TongChi,
+        press: () {},));
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
     final _key = GlobalKey<ScaffoldState>();
     GroupProviders _groups = Provider.of<GroupProviders>(context);
     HomeProviders _home = Provider.of<HomeProviders>(context);
-    if(_groups.haveNewGroup){
-      loadListGroup();
-     //  print("run here");
-     //  _groups.getListGroup(widget.user).then((value) {
-     //    dsNhom =  _groups.dsNhom;
-     //  });
-     // _groups.haveNewGroup = false;
-    }
+
     return Scaffold(
       key: _key,
       backgroundColor:   Color(0xFFCDCCCC),
@@ -273,8 +279,7 @@ class _GroupManagerState extends State<GroupManager> {
               color: Color(0xFFCDCCCC),
               child: Stack(
                 children: [
-
-                  _changeScreen(_groups.status, _groups.listGroupShow, _home.screen ),
+                  _groups.listGroupShow==true?_listGroup( _groups):_changePage(_home.screen, _groups),
                   _groups.listGroupShow?Container():TopBar("Tổng quan", "Khoản chi", "Thống kê",onButtonPressedCallback: onTopButtonPressed,initSelected: _home.screen,),
 
                 ],
@@ -301,7 +306,10 @@ class _GroupManagerState extends State<GroupManager> {
         break;
       case 3:
         Provider.of<HomeProviders>(context, listen: false).screen = 6;
-
+        loadDataThongKe(
+          dsLoaiKhoanChi: Provider.of<HomeProviders>(context, listen: false).dsLoaiKhoanChi,
+          dsKhoanChiNhom:  Provider.of<GroupProviders>(context, listen: false).dsKhoanChiNhom
+        );
         break;
     }
   }

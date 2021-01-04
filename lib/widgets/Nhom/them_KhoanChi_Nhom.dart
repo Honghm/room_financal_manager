@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
@@ -6,15 +8,16 @@ import 'package:intl/intl.dart';
 import 'package:flutter_rounded_date_picker/src/material_rounded_date_picker_style.dart';
 import 'package:flutter_rounded_date_picker/src/material_rounded_year_picker_style.dart';
 import 'package:provider/provider.dart';
+import 'package:room_financal_manager/models/user.dart';
 import 'package:room_financal_manager/providers/group_providers.dart';
 import 'package:room_financal_manager/providers/home_provider.dart';
 import 'package:smart_select/smart_select.dart';
 // import 'package:smart_select/smart_select.dart' as choices;
 import 'package:smart_select/smart_select.dart' show S2Choice;
 class ThemKhoanChiNhom extends StatefulWidget {
-  SlidingUpPanelController panelController;
-  String idGroup;
-  ThemKhoanChiNhom(this.panelController);
+  final SlidingUpPanelController panelController;
+  final UserData user;
+  ThemKhoanChiNhom(this.panelController, this.user);
 
   @override
   _ThemKhoanChiNhomState createState() => _ThemKhoanChiNhomState();
@@ -39,7 +42,7 @@ class _ThemKhoanChiNhomState extends State<ThemKhoanChiNhom> {
   String yyyy;
   // List<String> _framework = [];
   List<String> _listMember = [];
-  String nguoiMua = "Minh Hồng";
+  String nguoiMua = "";
   @override
   void initState() {
     // TODO: implement initState
@@ -49,14 +52,22 @@ class _ThemKhoanChiNhomState extends State<ThemKhoanChiNhom> {
     mm = dateTime.month<10?"0${dateTime.month.toString()}":dateTime.month.toString();
     yyyy = dateTime.year.toString();
     duration = Duration(minutes: 10);
+    nguoiMua = widget.user.displayName;
+    _listMember.add(widget.user.id);
     ngayMua = dd+"_"+mm+"_"+yyyy;
     // if(widget.idGroup!="")
        loadData();
   }
-  Future<void> loadData() async {
-    Provider.of<HomeProviders>(context,listen: false).getListLoaiKhoanChi();
-  
+  File _image;
+  getImageSuccess(File image){
+    if(image!=null){
+      setState(() {
+        _image = image;
+      });
+    }
 
+  }
+  Future<void> loadData() async {
   }
   bool themKhoanChi(idGroup,selectedItem, noiDung, giaTien, ngayMua, nguoiMua, nguoiThamGia, ghiChu, GlobalKey<ScaffoldState> _key){
      if(selectedItem==null){
@@ -114,7 +125,7 @@ class _ThemKhoanChiNhomState extends State<ThemKhoanChiNhom> {
        return false;
      }
 
-    Provider.of<GroupProviders>(context,listen: false).themKhoanChi(idGroup, selectedItem.icon, selectedItem.name, noiDung, giaTien, ngayMua, nguoiMua, nguoiThamGia, ghiChu);
+    Provider.of<GroupProviders>(context,listen: false).themKhoanChi(idGroup, selectedItem.icon, selectedItem.name, noiDung, giaTien, ngayMua, nguoiMua, nguoiThamGia,_image, ghiChu);
      Provider.of<GroupProviders>(context,listen: false).danhSachKhoanChi(idGroup);
      return true;
   }
@@ -124,6 +135,9 @@ class _ThemKhoanChiNhomState extends State<ThemKhoanChiNhom> {
     HomeProviders _homes =  Provider.of<HomeProviders>(context);
     return Scaffold(
       key: _key,
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+      ),
       body: Form(
         key: _formKey,
         child: Column(
@@ -344,7 +358,7 @@ class _ThemKhoanChiNhomState extends State<ThemKhoanChiNhom> {
                       children: [
                         Text("Hóa đơn", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                         Container(
-                          height: 40,
+                          height: _image==null?40:200,
                           width: 200,
                           padding: EdgeInsets.only(left: 10),
                           decoration: BoxDecoration(
@@ -353,14 +367,28 @@ class _ThemKhoanChiNhomState extends State<ThemKhoanChiNhom> {
                                 color: Colors.black
                             ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: Column(
                             children: [
-                              Text("Chụp hóa đơn", style: TextStyle(color: Colors.grey[600], fontSize: 18),),
-                              IconButton(icon: Icon(Icons.camera_alt_outlined), onPressed: (){})
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Chụp hóa đơn", style: TextStyle(color: Colors.grey[600], fontSize: 18),),
+                                  IconButton(
+                                      icon: Icon(Icons.camera_alt_outlined),
+                                      onPressed: (){
+                                       _homes.showPicker(context: context, success: getImageSuccess);
+                                      })
+                                ],
+                              ),
+                              _image!=null?Container(
+                                height: 120,
+                                width: 100,
+                                child: Image.file(_image, fit: BoxFit.fill,),
+                              ):Container()
                             ],
                           ),
-                        )
+                        ),
+
 
                       ],),
                     SizedBox(height: 10,),
@@ -376,8 +404,8 @@ class _ThemKhoanChiNhomState extends State<ThemKhoanChiNhom> {
                                 width: 1,
                                 color: Colors.black
                             ),
-
                           ),
+                          child: Text(nguoiMua, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                         )
 
                       ],),
@@ -442,7 +470,7 @@ class _ThemKhoanChiNhomState extends State<ThemKhoanChiNhom> {
                                 labelStyle: TextStyle(fontSize: 18)
                             ),
                             keyboardType: TextInputType.number,
-                            maxLines: 1,
+                            maxLines: 5,
                             controller: _ghiChuController,
                           ),
                         )
@@ -465,7 +493,7 @@ class _ThemKhoanChiNhomState extends State<ThemKhoanChiNhom> {
                               child: Text("THÊM", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
                               onPressed: () async {
 
-                                if(themKhoanChi(_groups.idGroup, selectedItem, _noiDungController.text, _giaTienController.text,
+                                if(themKhoanChi(_groups.selectedGroup.id, selectedItem, _noiDungController.text, _giaTienController.text,
                                     ngayMua, nguoiMua, _listMember, _ghiChuController.text, _key)){
                                   _key.currentState.showSnackBar(SnackBar(
                                       backgroundColor: Colors.green,
@@ -517,11 +545,13 @@ class _ThemKhoanChiNhomState extends State<ThemKhoanChiNhom> {
                           ),
                         ],),
                     ),
+                    SizedBox(height: 40,),
                   ],
                 ),
                 color: Colors.white,
               ),
             ),
+
           ],
           mainAxisSize: MainAxisSize.min,
         ),

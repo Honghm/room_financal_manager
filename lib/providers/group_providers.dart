@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:room_financal_manager/config/initialization.dart';
 import 'package:room_financal_manager/models/KhoanChiNhom.dart';
 import 'package:room_financal_manager/models/info_group.dart';
 import 'package:room_financal_manager/models/user.dart';
+import 'package:room_financal_manager/providers/user_provider.dart';
 import 'package:smart_select/smart_select.dart';
-
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class GroupProviders with ChangeNotifier {
 
@@ -21,7 +25,7 @@ class GroupProviders with ChangeNotifier {
   bool _listGroupShow = true;
   String _idGroup = "";
 
-  bool haveNewGroup = false;
+
   List<S2Choice<String>> listMembers = [];
 
   KhoanChiNhom khoanChiNhom;
@@ -104,7 +108,7 @@ class GroupProviders with ChangeNotifier {
   String name = "";
   try{
     await FirebaseFirestore.instance.collection("Users").doc(id).get().then((value) {
-      name = value.data()["name"];
+      name = value.data()["displayName"];
       return name;
     });
   }catch(e){
@@ -115,28 +119,26 @@ class GroupProviders with ChangeNotifier {
 
 
   Map<String, String> listName = {};
-  Map<String, String> getListName() {
+  void getListName( InformationGroup _selectedGroup) {
     Map<String, String> list = {};
    try{
-     selectedGroup.members.forEach((item)  {
+     _selectedGroup.members.forEach((item)  {
        FirebaseFirestore.instance.collection("Users").doc(item).get().then((value) {
-          list.putIfAbsent(item, () => value.data()["name"]);
+          list.putIfAbsent(item, () => value.data()["displayName"]);
           listName = list;
        });
-
      });
-      return listName;
    }catch(e){
 
    }
   }
-  Future<void> getListGroup(UserData user) async{
-    // List<Map<String, dynamic>> listGroup = [];
-    List<InformationGroup> _listGroup = [];
+  void getListGroup(UserData user) {
       try{
+        _status = Status.Loading;
         if(user.idGroup.isNotEmpty) {
-          user.idGroup.forEach((id) {
-            FirebaseFirestore.instance.collection("Groups").doc(id).get().then((data) {
+          List<InformationGroup> _listGroup = [];
+          user.idGroup.forEach((id)  {
+             FirebaseFirestore.instance.collection("Groups").doc(id).get().then((data) {
               if(data.data() != null) {
                 _listGroup.add(InformationGroup.fromJson(data.data()));
                 notifyListeners();
@@ -144,7 +146,9 @@ class GroupProviders with ChangeNotifier {
             });
           });
           dsNhom = _listGroup;
+          notifyListeners();
         }
+        _status = Status.Loaded;
       }catch(e){
         print("error: $e");
       }
@@ -171,11 +175,11 @@ class GroupProviders with ChangeNotifier {
   }
 
   Future<void> themKhoanChi(String idGroup,String iconLoai, String tenLoai, String noiDung, String giaTien,
-                            String ngayMua, String nguoiMua, List<String> nguoiThamGia, String ghiChu ) async {
+                            String ngayMua, String nguoiMua, List<String> nguoiThamGia,File image, String ghiChu ) async {
+
     try{
       double split_money = 0;
       split_money  = (double.parse(giaTien))/(nguoiThamGia.length);
-
       Map<String,dynamic> data = {
         "iconLoai":iconLoai,
         "tenLoai":tenLoai,
@@ -185,30 +189,36 @@ class GroupProviders with ChangeNotifier {
         "nguoiThamGia":FieldValue.arrayUnion(nguoiThamGia),
         "ghiChu":ghiChu
       };
-      print(nguoiThamGia);
+
       nguoiThamGia.forEach((item) {
-        print(selectedGroup.detailMoney[item]);
          double currentMoney = double.parse(selectedGroup.detailMoney[item]);
          double sumMoney = currentMoney - split_money;
          sumMoney = num.parse(sumMoney.toStringAsFixed(1));
         FirebaseFirestore.instance.collection("Groups").doc(idGroup).update({
           "detail_money.$item": sumMoney.toString(),
+          "group_funds":double.parse(selectedGroup.groupFunds) - double.parse(giaTien)
         });
       });
 
       await FirebaseFirestore.instance.collection("Groups/$idGroup/expenditures").doc(ngayMua).get().then((value){
-        print("run here:$data");
         if(value.data()==null){
           FirebaseFirestore.instance.collection("Groups/$idGroup/expenditures").doc(ngayMua).set({
             "id":ngayMua,
             "ngayMua":ngayMua,
 
           }).then((_) {
-            value.reference.collection("data").add(data);
+            String id = value.reference.collection("data").doc().id;
+            value.reference.collection("data").doc(id).set(data);
+            if(image!=null){
+              uploadImage(image, "Groups/$idGroup/expenditures/$ngayMua/data", id);
+            }
           });
         }else {
-           FirebaseFirestore.instance.collection("Groups/$idGroup/expenditures").doc(ngayMua).collection("data").add(data);
-
+          String id = FirebaseFirestore.instance.collection("Groups/$idGroup/expenditures/$ngayMua/data").doc().id;
+           FirebaseFirestore.instance.collection("Groups/$idGroup/expenditures/$ngayMua/data").doc(id).set(data);
+           if(image!=null){
+             uploadImage(image, "Groups/$idGroup/expenditures/$ngayMua/data", id);
+           }
         }
       });
 
@@ -216,24 +226,148 @@ class GroupProviders with ChangeNotifier {
       return false;
     }
   }
+  void uploadImage(File image,String path, String id){
+    firebase_storage.Reference firebaseStorageRef =
+    firebase_storage.FirebaseStorage.instance.ref().child(image.path);
+    firebase_storage.UploadTask uploadTask = firebaseStorageRef.putFile(
+        image);
+    uploadTask.whenComplete(() async {
+      String url = await uploadTask.snapshot.ref.getDownloadURL();
+      FirebaseFirestore.instance.collection(path).doc(id).update({
+        "hoaDon": url
+      });
+    });
+  }
+Future<void> addNewGroup(String idGroup, File avatar, String nameGroup, List<String> members, UserData creator )async {
 
-Future<void> addNewGroup(String avatar, String nameGroup, List<String> members, String idCreator )async {
-    String id =  FirebaseFirestore.instance.collection("Groups").doc().id;
-  await FirebaseFirestore.instance.collection("Groups").doc(id).set({
-    "id": id,
-    "avatar":avatar,
+try{
+  await FirebaseFirestore.instance.collection("Groups").doc(idGroup).set({
+    "id": idGroup,
+    "avatar":"",
     "name":nameGroup,
     "member":FieldValue.arrayUnion(members),
-    "idCreator": idCreator,
+    "idCreator": creator.id,
   }).then((value) {
-
-    FirebaseFirestore.instance.collection("Users").doc(idCreator).update({
-      "idGroup":FieldValue.arrayUnion([id]),
+    FirebaseFirestore.instance.collection("Users").doc(creator.id).update({
+      "idGroup":FieldValue.arrayUnion([idGroup]),
     });
-    haveNewGroup = true;
-    notifyListeners();
+    creator.idGroup.add(idGroup);
+   getListGroup(creator);
+   notifyListeners();
+    firebase_storage.Reference firebaseStorageRef =
+    firebase_storage.FirebaseStorage.instance.ref().child(avatar.path);
+    firebase_storage.UploadTask uploadTask = firebaseStorageRef.putFile(avatar);
+    uploadTask.whenComplete(() async {
+      String url = await uploadTask.snapshot.ref.getDownloadURL();
+      FirebaseFirestore.instance.collection("Groups").doc(idGroup).update({
+        "avatar": url
+      });
+    });
   });
+}catch(e){
+
 }
+}
+
+
+  List<double> thongKeKhoanChi_Thang(List<KhoanChiNhom> dsKhoanChiNhom) {
+    double priceMonth1 = 0;
+    double priceMonth2 = 0;
+    double priceMonth3 = 0;
+    double priceMonth4 = 0;
+    double priceMonth5 = 0;
+    double priceMonth6 = 0;
+    double priceMonth7 = 0;
+    double priceMonth8 = 0;
+    double priceMonth9 = 0;
+    double priceMonth10 = 0;
+    double priceMonth11 = 0;
+    double priceMonth12 = 0;
+
+    dsKhoanChiNhom.forEach((data) {
+      int mm = int.parse(data.ngayMua.split("_")[1]);
+
+      switch(mm){
+        case 1:
+          data.listItemKhoanChi.forEach((item) {
+            priceMonth1 += double.parse(item.giaTien);
+          });
+          break;
+        case 2:
+          data.listItemKhoanChi.forEach((item) {
+            priceMonth2 += double.parse(item.giaTien);
+          });
+          break;
+        case 3:
+          data.listItemKhoanChi.forEach((item) {
+            priceMonth3 += double.parse(item.giaTien);
+          });
+          break;
+        case 4:
+          data.listItemKhoanChi.forEach((item) {
+            priceMonth4 += double.parse(item.giaTien);
+          });
+          break;
+        case 5:
+          data.listItemKhoanChi.forEach((item) {
+            priceMonth5 += double.parse(item.giaTien);
+          });
+          break;
+        case 6:
+          data.listItemKhoanChi.forEach((item) {
+            priceMonth6 += double.parse(item.giaTien);
+          });
+          break;
+        case 7:
+          data.listItemKhoanChi.forEach((item) {
+            priceMonth7 += double.parse(item.giaTien);
+          });
+          break;
+        case 8:
+          data.listItemKhoanChi.forEach((item) {
+            priceMonth8 += double.parse(item.giaTien);
+          });
+          break;
+        case 9:
+          data.listItemKhoanChi.forEach((item) {
+            priceMonth9 += double.parse(item.giaTien);
+          });
+          break;
+        case 10:
+          data.listItemKhoanChi.forEach((item) {
+            priceMonth10 += double.parse(item.giaTien);
+          });
+          break;
+        case 11:
+          data.listItemKhoanChi.forEach((item) {
+            priceMonth11 += double.parse(item.giaTien);
+          });
+          break;
+        case 12:
+          data.listItemKhoanChi.forEach((item) {
+            priceMonth12 += double.parse(item.giaTien);
+          });
+          break;
+      }
+
+    });
+
+    return [
+      priceMonth1,
+      priceMonth2,
+      priceMonth3,
+      priceMonth4,
+      priceMonth5,
+      priceMonth6,
+      priceMonth7,
+      priceMonth8,
+      priceMonth9,
+      priceMonth10,
+      priceMonth11,
+      priceMonth12];
+  }
+
+
 
   void getDate(String date){
     List<String> dates = [];

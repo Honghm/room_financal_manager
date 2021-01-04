@@ -8,6 +8,9 @@ import 'package:room_financal_manager/screens/login_page.dart';
 import 'package:room_financal_manager/widgets/verity_number.dart';
 
 class RegisterPage extends StatefulWidget {
+  final String kindLogin;
+  final String email;
+  RegisterPage({this.kindLogin, this.email});
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
@@ -21,6 +24,12 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController rePasswordController = TextEditingController();
   final TextEditingController codeController = TextEditingController();
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("run here: ${widget.kindLogin}");
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -114,7 +123,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 SizedBox(
                   height: 10,
                 ),
-                TextFormField(
+                widget.kindLogin=="google"?Container():TextFormField(
                   controller: passwordController,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -135,7 +144,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 SizedBox(height: 10,),
-                TextFormField(
+                widget.kindLogin=="google"?Container():TextFormField(
                   controller: rePasswordController,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -173,6 +182,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       if(_formKey.currentState.validate()){
                         user.registerAccount(
                           displayName: displayNameController.text,
+                          email: widget.email,
                           phoneNumber: phoneController.text,
                           password: passwordController.text,
                           context: context,

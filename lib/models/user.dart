@@ -6,6 +6,14 @@ class UserData {
   String _phoneNumber;
   String _password;
   String _urlAvt;
+  String _money;
+
+  String get money => _money;
+
+  set money(String value) {
+    _money = value;
+  }
+
   List<String> _idGroup = [];
 
   List<String> get idGroup => _idGroup;
@@ -33,6 +41,7 @@ class UserData {
     _urlAvt = data["avatar"];
     _urlCover = data["cover"];
     _idGroup = List.castFrom(data["idGroup"]);
+    _money = data["money"];
 
   }
 

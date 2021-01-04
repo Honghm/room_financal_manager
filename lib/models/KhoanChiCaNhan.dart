@@ -6,6 +6,7 @@ class ItemKhoanChiCaNhan {
   String tenLoai;
   String noiDung;
   String giaTien;
+  String hoaDon;
   String ghiChu;
 
   ItemKhoanChiCaNhan.fromJson(Map<String, dynamic> parsedJson){
@@ -14,6 +15,7 @@ class ItemKhoanChiCaNhan {
       iconLoai = parsedJson["iconLoai"];
       tenLoai = parsedJson["tenLoai"];
       noiDung = parsedJson["noiDung"];
+      hoaDon = parsedJson["hoaDon"];
       ghiChu = parsedJson["ghiChu"];
       giaTien = parsedJson["giaTien"];
 

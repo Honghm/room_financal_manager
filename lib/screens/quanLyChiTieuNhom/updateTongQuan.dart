@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:room_financal_manager/models/info_group.dart';
 import 'package:room_financal_manager/providers/group_providers.dart';
+import 'package:room_financal_manager/providers/home_provider.dart';
 
 class UpdateTongQuan extends StatefulWidget {
 
@@ -19,11 +22,21 @@ class _UpdateTongQuanState extends State<UpdateTongQuan> {
   final _formKey = GlobalKey<FormState>();
   bool showThemThanhVien = false;
   final TextEditingController code = TextEditingController();
+  File _image;
+  getImageSuccess(File image){
+    if(image!=null){
+      setState(() {
+        _image = image;
+      });
+    }
+
+  }
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     GroupProviders _groups = Provider.of<GroupProviders>(context);
+    HomeProviders _home =  Provider.of<HomeProviders>(context);
     final TextEditingController nameGroup = TextEditingController(text: _groups.selectedGroup.nameGroup);
     return Scaffold(
       key: _key,
@@ -62,14 +75,20 @@ class _UpdateTongQuanState extends State<UpdateTongQuan> {
                                   child: SizedBox(
                                       height: 80,
                                       width: 80,
-                                      child: Image.network(_groups.selectedGroup.avatar, fit: BoxFit.fill,)),
+                                      child: _image!=null?Image.file(_image, fit: BoxFit.fill,):_groups.selectedGroup.avatar==""?Icon(
+                                        Icons.person,
+                                        size: 50,
+                                        color: Colors.white,
+                                      ):Image.network(_groups.selectedGroup.avatar,fit: BoxFit.fill,)),
                                 ),
                               ),
                               Container(
                                 width: 30,
                                 height: 30,
                                 padding: EdgeInsets.only(left:15,),
-                                child: IconButton(icon: Icon(Icons.camera_alt),onPressed: (){},),
+                                child: IconButton(icon: Icon(Icons.camera_alt),onPressed: (){
+                                  _home.showPicker(context:context,success: getImageSuccess );
+                                },),
                               )
                             ],
                           ),
@@ -212,13 +231,13 @@ class _UpdateTongQuanState extends State<UpdateTongQuan> {
           await showDialog(
               context: this.context,
               child: AlertDialog(
-                backgroundColor: Colors.green,
+                backgroundColor: Colors.white,
                 title:  Center(
-                    child: Text("Nhập mã của thành viên", style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),)),
+                    child: Text("Nhập mã của thành viên", style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),)),
                 contentPadding: EdgeInsets.all(0),
                content: Container(
                  height: 120,
-                   color: Colors.green,
+                   color: Colors.white,
                    child: Column(
                      children: [
                        SizedBox(height: 20,),
