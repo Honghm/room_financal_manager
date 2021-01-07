@@ -134,11 +134,7 @@ class _UpdateTongQuanState extends State<UpdateTongQuan> {
                                         child: TextFormField(
                                           keyboardType: TextInputType.number,
                                           controller: widget.listMoney[index],
-                                          onChanged: (value){
-                                            widget.listMoney[index].text = value;
-                                          },
-                                          onSaved: (String value) {
-                                          },
+
                                           //readOnly: !isUpdate,
                                         ),
                                       ),
@@ -165,9 +161,6 @@ class _UpdateTongQuanState extends State<UpdateTongQuan> {
                                         child: TextFormField(
                                           keyboardType: TextInputType.number,
                                           controller: widget.listMoney[index],
-                                          onChanged: (value){
-                                            widget.listMoney[index].text = value;
-                                          },
 
                                           //readOnly: !isUpdate,
                                         ),
@@ -180,43 +173,7 @@ class _UpdateTongQuanState extends State<UpdateTongQuan> {
 
                   SizedBox(height: 20,),
                   ///Buttom điều hướng cho phép chỉnh sửa thông tin của nhóm
-                  // Container(
-                  //   height: 50,
-                  //   padding: EdgeInsets.only(left: 20,right: 20),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: [
-                  //       Container(
-                  //         height: 50,
-                  //         width: 120,
-                  //         child: RaisedButton(
-                  //           shape: RoundedRectangleBorder(
-                  //               borderRadius: BorderRadius.all(Radius.circular(25))),
-                  //           onPressed: (){
-                  //
-                  //
-                  //           },
-                  //           color: Colors.green,
-                  //           child: Text("Xong",style: TextStyle(fontSize: 18,color: Colors.white,fontWeight: FontWeight.bold),),
-                  //         ),
-                  //       ),
-                  //       SizedBox(width: 10,),
-                  //       Container(
-                  //         height: 50,
-                  //         width: 120,
-                  //         child: RaisedButton(
-                  //           shape: RoundedRectangleBorder(
-                  //               borderRadius: BorderRadius.all(Radius.circular(25))),
-                  //           onPressed: (){
-                  //
-                  //           },
-                  //           color: Colors.red,
-                  //           child: Text("Hủy",style: TextStyle(fontSize: 18,color: Colors.white,fontWeight: FontWeight.bold),),
-                  //         ),
-                  //       )
-                  //     ],
-                  //   ),
-                  // )
+
                 ],
               ),
             ),

@@ -156,6 +156,7 @@ class _ThemKhoanChiNhomState extends State<ThemKhoanChiNhom> {
                 child: ListView(
                   //physics: ClampingScrollPhysics(),
                   children: [
+                    ///----------Chọn loại chi------------------///
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -209,6 +210,7 @@ class _ThemKhoanChiNhomState extends State<ThemKhoanChiNhom> {
 
                       ],),
                     SizedBox(height: 10,),
+                    ///--------Nhập nội dung---------------
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -236,6 +238,8 @@ class _ThemKhoanChiNhomState extends State<ThemKhoanChiNhom> {
 
                       ],),
                     SizedBox(height: 10,),
+
+                    ///-------------Nhập giá tiền----------------
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -264,134 +268,150 @@ class _ThemKhoanChiNhomState extends State<ThemKhoanChiNhom> {
 
                       ],),
                     SizedBox(height: 10,),
+
+                    ///-------------Chọn ngày mua -------------------
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("Ngày mua", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                        Container(
-                          height: 40,
-                          width: 200,
-                          padding: EdgeInsets.only(left: 10),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1,
-                                color: Colors.black
+                        InkWell(
+                          onTap: () async {
+                            DateTime newDateTime = await showRoundedDatePicker(
+                                context: context,
+                                //height: MediaQuery.of(context).size.height,
+                                theme: ThemeData(primarySwatch: Colors.green),
+                                styleDatePicker: MaterialRoundedDatePickerStyle(
+                                  textStyleDayButton: TextStyle(fontSize: 20, color: Colors.white),
+                                  textStyleYearButton: TextStyle(
+                                    fontSize: 30,
+                                    color: Colors.white,
+                                  ),
+                                  textStyleDayHeader: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  ),
+                                  textStyleCurrentDayOnCalendar:
+                                  TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                                  textStyleDayOnCalendar: TextStyle(fontSize: 18, color: Colors.white),
+                                  textStyleDayOnCalendarSelected:
+                                  TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                                  textStyleDayOnCalendarDisabled: TextStyle(fontSize: 18, color: Colors.white.withOpacity(0.1)),
+                                  textStyleMonthYearHeader:
+                                  TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                                  paddingDatePicker: EdgeInsets.all(0),
+                                  paddingMonthHeader: EdgeInsets.only(top: 20,bottom: 10),
+                                  paddingActionBar: EdgeInsets.all(0),
+                                  paddingDateYearHeader: EdgeInsets.all(10),
+                                  sizeArrow: 20,
+                                  colorArrowNext: Colors.white,
+                                  colorArrowPrevious: Colors.white,
+                                  marginLeftArrowPrevious: 10,
+                                  marginTopArrowPrevious: 10,
+                                  marginTopArrowNext: 10,
+                                  marginRightArrowNext: 20,
+                                  textStyleButtonAction: TextStyle(fontSize: 20, color: Colors.white),
+                                  textStyleButtonPositive:
+                                  TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                                  textStyleButtonNegative: TextStyle(fontSize: 20, color: Colors.white.withOpacity(0.5)),
+                                  decorationDateSelected: BoxDecoration(color: Colors.orange[600], shape: BoxShape.circle),
+                                  backgroundPicker: Colors.green[400],
+                                  backgroundActionBar: Colors.green[300],
+                                  backgroundHeaderMonth: Colors.green[300],
+                                ),
+
+                                styleYearPicker: MaterialRoundedYearPickerStyle(
+                                  textStyleYear: TextStyle(fontSize: 40, color: Colors.white),
+                                  textStyleYearSelected:
+                                  TextStyle(fontSize: 56, color: Colors.white, fontWeight: FontWeight.bold),
+                                  heightYearRow: 100,
+                                  backgroundPicker: Colors.green[400],
+                                ));
+
+                            if (newDateTime != null) {
+                              String _dd = newDateTime.day<10?"0${newDateTime.day.toString()}":newDateTime.day.toString();
+                              String _mm = newDateTime.month<10?"0${newDateTime.month.toString()}":newDateTime.month.toString();
+                              String _yyyy = newDateTime.year.toString();
+                              setState(() {
+                                dateTime = newDateTime;
+                                ngayMua = _dd+"_"+_mm+"_"+_yyyy;
+                              });
+
+                            }
+                          },
+                          child: Container(
+                            height: 40,
+                            width: 200,
+                            padding: EdgeInsets.only(left: 10),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 1,
+                                  color: Colors.black
+                              ),
                             ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(ngayMua, style: TextStyle(color: Colors.grey[600], fontSize: 18),),
-                              IconButton(icon: Icon(Icons.date_range), onPressed: () async {
-                                DateTime newDateTime = await showRoundedDatePicker(
-                                    context: context,
-                                    //height: MediaQuery.of(context).size.height,
-                                    theme: ThemeData(primarySwatch: Colors.green),
-                                    styleDatePicker: MaterialRoundedDatePickerStyle(
-                                      textStyleDayButton: TextStyle(fontSize: 20, color: Colors.white),
-                                      textStyleYearButton: TextStyle(
-                                        fontSize: 30,
-                                        color: Colors.white,
-                                      ),
-                                      textStyleDayHeader: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.white,
-                                      ),
-                                      textStyleCurrentDayOnCalendar:
-                                      TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-                                      textStyleDayOnCalendar: TextStyle(fontSize: 18, color: Colors.white),
-                                      textStyleDayOnCalendarSelected:
-                                      TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-                                      textStyleDayOnCalendarDisabled: TextStyle(fontSize: 18, color: Colors.white.withOpacity(0.1)),
-                                      textStyleMonthYearHeader:
-                                      TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-                                      paddingDatePicker: EdgeInsets.all(0),
-                                      paddingMonthHeader: EdgeInsets.only(top: 20,bottom: 10),
-                                      paddingActionBar: EdgeInsets.all(0),
-                                      paddingDateYearHeader: EdgeInsets.all(10),
-                                      sizeArrow: 20,
-                                      colorArrowNext: Colors.white,
-                                      colorArrowPrevious: Colors.white,
-                                      marginLeftArrowPrevious: 10,
-                                      marginTopArrowPrevious: 10,
-                                      marginTopArrowNext: 10,
-                                      marginRightArrowNext: 20,
-                                      textStyleButtonAction: TextStyle(fontSize: 20, color: Colors.white),
-                                      textStyleButtonPositive:
-                                      TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-                                      textStyleButtonNegative: TextStyle(fontSize: 20, color: Colors.white.withOpacity(0.5)),
-                                      decorationDateSelected: BoxDecoration(color: Colors.orange[600], shape: BoxShape.circle),
-                                      backgroundPicker: Colors.green[400],
-                                      backgroundActionBar: Colors.green[300],
-                                      backgroundHeaderMonth: Colors.green[300],
-                                    ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(ngayMua, style: TextStyle(color: Colors.grey[600], fontSize: 18),),
+                                IconButton(icon: Icon(Icons.date_range), onPressed: () async {
 
-                                    styleYearPicker: MaterialRoundedYearPickerStyle(
-                                      textStyleYear: TextStyle(fontSize: 40, color: Colors.white),
-                                      textStyleYearSelected:
-                                      TextStyle(fontSize: 56, color: Colors.white, fontWeight: FontWeight.bold),
-                                      heightYearRow: 100,
-                                      backgroundPicker: Colors.green[400],
-                                    ));
+                                }),
 
-                                if (newDateTime != null) {
-                                  String _dd = newDateTime.day<10?"0${newDateTime.day.toString()}":newDateTime.day.toString();
-                                  String _mm = newDateTime.month<10?"0${newDateTime.month.toString()}":newDateTime.month.toString();
-                                  String _yyyy = newDateTime.year.toString();
-                                  setState(() {
-                                    dateTime = newDateTime;
-                                    ngayMua = _dd+"_"+_mm+"_"+_yyyy;
-                                  });
-
-                                }
-                              }),
-
-                            ],
+                              ],
+                            ),
                           ),
                         )
 
                       ],),
 
                     SizedBox(height: 10,),
+
+                    ///--------------Chụp hóa đơn------------------
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("Hóa đơn", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                        Container(
-                          height: _image==null?40:200,
-                          width: 200,
-                          padding: EdgeInsets.only(left: 10),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1,
-                                color: Colors.black
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Chụp hóa đơn", style: TextStyle(color: Colors.grey[600], fontSize: 18),),
-                                  IconButton(
-                                      icon: Icon(Icons.camera_alt_outlined),
-                                      onPressed: (){
-                                       _homes.showPicker(context: context, success: getImageSuccess);
-                                      })
-                                ],
+                        InkWell(
+                          onTap: (){
+                            _homes.showPicker(context: context, success: getImageSuccess);
+                          },
+                          child: Container(
+                            height: _image==null?50:200,
+                            width: 200,
+                            padding: EdgeInsets.only(left: 10),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 1,
+                                  color: Colors.black
                               ),
-                              _image!=null?Container(
-                                height: 120,
-                                width: 100,
-                                child: Image.file(_image, fit: BoxFit.fill,),
-                              ):Container()
-                            ],
+                            ),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Chụp hóa đơn", style: TextStyle(color: Colors.grey[600], fontSize: 18),),
+                                    IconButton(
+                                        icon: Icon(Icons.camera_alt_outlined),
+                                        onPressed: (){
+
+                                        })
+                                  ],
+                                ),
+                                _image!=null?Container(
+                                  height: 120,
+                                  width: 100,
+                                  child: Image.file(_image, fit: BoxFit.fill,),
+                                ):Container()
+                              ],
+                            ),
                           ),
                         ),
 
 
                       ],),
                     SizedBox(height: 10,),
+
+                    ///-----------------Người tạo-------------------
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -399,6 +419,7 @@ class _ThemKhoanChiNhomState extends State<ThemKhoanChiNhom> {
                         Container(
                           height: 40,
                           width: 200,
+                          alignment: Alignment.center,
                           decoration: BoxDecoration(
                             border: Border.all(
                                 width: 1,

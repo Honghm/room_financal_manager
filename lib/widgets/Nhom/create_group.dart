@@ -86,6 +86,7 @@ class _CreateGroupState extends State<CreateGroup> {
                   height: 30,
                   padding: EdgeInsets.only(left:15,),
                   child: IconButton(icon: Icon(Icons.camera_alt),onPressed: (){
+                    print("alooo");
                     _home.showPicker(context:context,success: getImageSuccess );
                   },),
                 )
@@ -156,6 +157,7 @@ class _CreateGroupState extends State<CreateGroup> {
                               Container(
                                 width: MediaQuery.of(context).size.width - 200,
                                   child: TextFormField(
+                                    keyboardType: TextInputType.number,
                                     controller: addMemberController,
                                   )),
                                 InkWell(
@@ -169,7 +171,11 @@ class _CreateGroupState extends State<CreateGroup> {
 
                                     addMemberController.clear();
                                   },
-                                  child: Text("ADD", style: TextStyle(fontWeight: FontWeight.bold),),
+                                  child: Container(
+                                    height: 40,
+                                      width: 40,
+                                      alignment: Alignment.center,
+                                      child: Text("ADD", style: TextStyle(fontWeight: FontWeight.bold),)),
                                 ),
                                 SizedBox(width: 5,)
                                 //IconButton(icon: Icon(Icons.search), onPressed: (){})
@@ -221,7 +227,7 @@ class _CreateGroupState extends State<CreateGroup> {
                       child: Text("THÊM", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
                       onPressed: () {
                         String idGroup =  FirebaseFirestore.instance.collection("Groups").doc().id;
-                        _group.addNewGroup(idGroup,_image, nameGroupController.text, listIdMember, widget.user);
+                        _group.addNewGroup(idGroup,_image, nameGroupController.text,fundGroupController.text, listIdMember, widget.user);
                         // _group.getListGroup(widget.user);
                         nameGroupController.clear();
                         listMember.clear();

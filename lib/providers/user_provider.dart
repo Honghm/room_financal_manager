@@ -74,8 +74,9 @@ class UserProvider with ChangeNotifier {
       for(int i = 0; i<data.size;i++){
         if( data.docs[i].data()["phoneNumber"]==phone&& data.docs[i].data()["password"]==password){
           _userData = UserData.formSnapShot(data.docs[i]);
-          notifyListeners();
+
           success(context, _userData);
+          notifyListeners();
         }
       }
     }).then((value) {

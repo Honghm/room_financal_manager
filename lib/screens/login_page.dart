@@ -107,220 +107,230 @@ class _LoginPageState extends State<LoginPage> {
             backgroundColor: Colors.white,
           ),
         ),
-      ) :  (user.status == Status.Loaded)?Container():Container(
-        height: height,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-          colors: [Color(0xFF42AF3B), Color(0xFF17B6A0)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        )),
-        child: ListView(
-          children: [
-            Column(
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      height: height / 2 - 30,
-                      width: width,
-                      color: Colors.transparent,
-                      child: Image.asset(
-                        "assets/intro1.png",
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      child: Text(
-                        "Phần mềm hỗ trợ quản lý chi tiêu \n cá nhân, gia đình, phòng trọ...",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: Column(
+      ) :  (user.status == Status.Loaded)?Container():Form(
+        key: _formKey,
+        child: Container(
+          height: height,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+            colors: [Color(0xFF42AF3B), Color(0xFF17B6A0)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          )),
+          child: ListView(
+            children: [
+              Column(
+                children: [
+                  Column(
                     children: [
-                      SizedBox(
-                        height: 10,
-                      ),
-                      TextFormField(
-                        controller: _phoneNumberController,
-                        keyboardType: TextInputType.phone,
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Yêu cầu nhập tài khoản';
-                          }
-                          return null;
-                        },
-                        style: TextStyle(fontSize: 16, color: Colors.black),
-                        decoration: InputDecoration(
-                          labelText: "Số điện thoại",
-                          prefixIcon: Container(
-                              width: 50, child: Icon(Icons.phone)),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red, width: 2),
-                            borderRadius: BorderRadius.all(Radius.circular(6)),
-                          ),
+                      Container(
+                        height: height / 2 - 30,
+                        width: width,
+                        color: Colors.transparent,
+                        child: Image.asset(
+                          "assets/intro1.png",
+                          fit: BoxFit.fill,
                         ),
                       ),
                       SizedBox(
-                        height: 5,
+                        height: 10,
                       ),
-                      TextFormField(
-                        controller: _passController,
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return "Yêu cầu nhập mật khẩu";
-                          } else if (value.length < 6) {
-                            return "mật khẩu phải lớn hơn 6 ký tự";
-                          }
-                          return null;
-                        },
-                        obscureText: true,
-                        decoration: InputDecoration(
-                            labelText: "Mật khẩu",
-                            prefixIcon: Container(
-                                width: 50, child: Icon(Icons.vpn_key)),
-                            border: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.orange, width: 2),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(6)))),
+                      Container(
+                        child: Text(
+                          "Phần mềm hỗ trợ quản lý chi tiêu \n cá nhân, gia đình, phòng trọ...",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width,
-                  child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25))),
-                    onPressed: () {
-                     //user.signIn(_phoneNumberController.text, _passController.text, context, _key);
-                     user.signIn(_key,
-                       phone: _phoneNumberController.text,
-                       password: _passController.text,
-                       context: context,
-                       success: loginSuccess,
-                     );
-                    },
-                    color: Colors.amberAccent,
-                    child: Text(
-                      "Đăng nhập",
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        TextFormField(
+                          controller: _phoneNumberController,
+                          keyboardType: TextInputType.phone,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Yêu cầu nhập tài khoản';
+                            }
+                            return null;
+                          },
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                          decoration: InputDecoration(
+                            labelText: "Số điện thoại",
+                            prefixIcon: Container(
+                                width: 50, child: Icon(Icons.phone)),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red, width: 2),
+                              borderRadius: BorderRadius.all(Radius.circular(6)),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        TextFormField(
+                          controller: _passController,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return "Yêu cầu nhập mật khẩu";
+                            } else if (value.length < 6) {
+                              return "mật khẩu phải lớn hơn 6 ký tự";
+                            }
+                            return null;
+                          },
+                          obscureText: true,
+                          decoration: InputDecoration(
+                              labelText: "Mật khẩu",
+                              prefixIcon: Container(
+                                  width: 50, child: Icon(Icons.vpn_key)),
+                              border: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.orange, width: 2),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(6)))),
+                        ),
+                      ],
                     ),
                   ),
-                ), //Normal Login
-                SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  "Hoặc",
-                  style: TextStyle(
-                    fontSize: 18,
+                  SizedBox(
+                    height: 10,
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FlatButton(
-                        onPressed: () async {
-                          // await user.loginWithFacebook();
-                          // panelController.expand();
-                          await showDialog(
-                              context: this.context,
-                              child: AlertDialog(
-                                backgroundColor: Colors.white,
-                                title:  Center(
-                                    child: Text("Thông báo!", style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),)),
-                                contentPadding: EdgeInsets.all(0),
-                                content: Container(
-                                    height: 100,
-                                    color: Colors.white,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text("Tính năng đang phát triển."),
-                                        Text("Chúng tôi sẽ cấp nhật chúng sớm thôi!")
-                                      ],)
-                                ),
-                                actions: <Widget>[
-                                  InkWell(
-                                    onTap: (){
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text("Thoát", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                                  )
-
-
-                                ],
-                              )
-                          );
-                        },
-                        child: Container(
-                            width: 50,
-                            height: 50,
-                            child: Image.asset(
-                              "assets/iconfb.png",
-                              fit: BoxFit.fill,
-                            ))),
-                    FlatButton(
-                        onPressed: () async {
-                          user.googleSignIn.disconnect();
-                          user.loginWithGoogle(context: context,success: loginSuccess);
-                        },
-                        child: Container(
-                            height: 50,
-                            width: 50,
-                            child: Image.asset(
-                              "assets/icongoogle.png",
-                              fit: BoxFit.fill,
-                            ))),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  child:  RichText(
-                    text: TextSpan(
-                        text: "Bạn chưa có tài khoản? ",
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black),
-                        children: <TextSpan>[
-                          TextSpan(
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            RegisterPage(kindLogin: "normal",email: "",)));
-                              },
-                            text: "Đăng ký tại đây!",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.blue[900]),
-                          )
-                        ]
+                  Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(25))),
+                      onPressed: () {
+                        user.signIn(_key,
+                          phone: "0377846295",
+                          password:"123456789",
+                          context: context,
+                          success: loginSuccess,
+                        );
+                        if(_formKey.currentState.validate()){
+                          // user.signIn(_key,
+                          //   phone: _phoneNumberController.text,
+                          //   password: _passController.text,
+                          //   context: context,
+                          //   success: loginSuccess,
+                          // );
+                        }
+                      },
+                      color: Colors.amberAccent,
+                      child: Text(
+                        "Đăng nhập",
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ), //Normal Login
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    "Hoặc",
+                    style: TextStyle(
+                      fontSize: 18,
                     ),
                   ),
-                ),
-                //Text("Bạn chưa có tài khoản? Đăng ký tại đây!"),
-              ],
-            ),
-          ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FlatButton(
+                          onPressed: () async {
+                            // await user.loginWithFacebook();
+                            // panelController.expand();
+                            await showDialog(
+                                context: this.context,
+                                child: AlertDialog(
+                                  backgroundColor: Colors.white,
+                                  title:  Center(
+                                      child: Text("Thông báo!", style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),)),
+                                  contentPadding: EdgeInsets.all(0),
+                                  content: Container(
+                                      height: 100,
+                                      color: Colors.white,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text("Tính năng đang phát triển."),
+                                          Text("Chúng tôi sẽ cấp nhật chúng sớm thôi!")
+                                        ],)
+                                  ),
+                                  actions: <Widget>[
+                                    InkWell(
+                                      onTap: (){
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("Thoát", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                                    )
+
+
+                                  ],
+                                )
+                            );
+                          },
+                          child: Container(
+                              width: 50,
+                              height: 50,
+                              child: Image.asset(
+                                "assets/iconfb.png",
+                                fit: BoxFit.fill,
+                              ))),
+                      FlatButton(
+                          onPressed: () async {
+                            user.googleSignIn.disconnect();
+                            user.loginWithGoogle(context: context,success: loginSuccess);
+                          },
+                          child: Container(
+                              height: 50,
+                              width: 50,
+                              child: Image.asset(
+                                "assets/icongoogle.png",
+                                fit: BoxFit.fill,
+                              ))),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    child:  RichText(
+                      text: TextSpan(
+                          text: "Bạn chưa có tài khoản? ",
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black),
+                          children: <TextSpan>[
+                            TextSpan(
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              RegisterPage(kindLogin: "normal",email: "",)));
+                                },
+                              text: "Đăng ký tại đây!",
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.blue[900]),
+                            )
+                          ]
+                      ),
+                    ),
+                  ),
+                  //Text("Bạn chưa có tài khoản? Đăng ký tại đây!"),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

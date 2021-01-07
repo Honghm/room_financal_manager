@@ -17,14 +17,18 @@ class KhoanChi extends StatefulWidget {
 
 class _KhoanChiState extends State<KhoanChi> {
   RefreshController _refreshController;
+  List<KhoanChiNhom> dsKhoanChi;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    dsKhoanChi = widget.dsKhoanChi;
     _refreshController = RefreshController(initialRefresh: false);
   }
   void _onRefresh() async{
-    await Future.delayed(Duration(milliseconds: 1000));
+    Provider.of<GroupProviders>(context,listen: false).danhSachKhoanChi(Provider.of<GroupProviders>(context,listen: false).selectedGroup.id);
+    dsKhoanChi =  Provider.of<GroupProviders>(context,listen: false).dsKhoanChiNhom;
+
     _refreshController.refreshCompleted();
   }
 
@@ -74,12 +78,12 @@ class _KhoanChiState extends State<KhoanChi> {
         ),
         enablePullUp: false,
         enablePullDown: true,
-        child:  ListView.builder(
+        child:  dsKhoanChi.length<=0?Center(child: Text("Không có dữ liệu!",style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,color: Colors.black),),):ListView.builder(
           padding: EdgeInsets.only(bottom: 40),
             shrinkWrap: true,
-            itemCount: (widget.dsKhoanChi != null)?widget.dsKhoanChi.length : 0,
+            itemCount: (dsKhoanChi != null)?dsKhoanChi.length : 0,
             itemBuilder: (value, index){
-              return ItemExpensesGroup(dsItem: widget.dsKhoanChi[index].listItemKhoanChi,ngayMua: widget.dsKhoanChi[index].ngayMua,);
+              return ItemExpensesGroup(dsItem: dsKhoanChi[index].listItemKhoanChi,ngayMua: dsKhoanChi[index].ngayMua,);
             }
         ),
       ),

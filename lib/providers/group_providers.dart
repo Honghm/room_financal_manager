@@ -153,6 +153,20 @@ class GroupProviders with ChangeNotifier {
         print("error: $e");
       }
   }
+  void getDataGroup(String idGroup) {
+    try{
+      InformationGroup dataGroup;
+      FirebaseFirestore.instance.collection("Groups").doc(idGroup).get().then((data) {
+        if(data.data() != null) {
+          dataGroup = InformationGroup.fromJson(data.data());
+          notifyListeners();
+          _selectedGroup = dataGroup;
+        }
+      });
+    }catch(e){
+      print("error: $e");
+    }
+  }
   Future<void> getListMember(String idGroup) async{
     List<S2Choice<String>> members = [];
     try {
@@ -238,22 +252,31 @@ class GroupProviders with ChangeNotifier {
       });
     });
   }
-Future<void> addNewGroup(String idGroup, File avatar, String nameGroup, List<String> members, UserData creator )async {
+Future<void> addNewGroup(String idGroup, File avatar, String nameGroup,String fundGroup, List<String> members, UserData creator )async {
 
 try{
+  Map<String, String> detailMoney = Map.fromIterable(
+      members,
+      key: (k) => k.toString(),
+      value: (v) =>"0");
+  members.forEach((item) {
+    FirebaseFirestore.instance.collection("Users").doc(item).update({
+      "idGroup":FieldValue.arrayUnion([idGroup]),
+    });
+  });
   await FirebaseFirestore.instance.collection("Groups").doc(idGroup).set({
     "id": idGroup,
     "avatar":"",
     "name":nameGroup,
+    "group_funds": fundGroup,
+    "detail_money":detailMoney,
     "member":FieldValue.arrayUnion(members),
     "idCreator": creator.id,
   }).then((value) {
-    FirebaseFirestore.instance.collection("Users").doc(creator.id).update({
-      "idGroup":FieldValue.arrayUnion([idGroup]),
-    });
+
+
     creator.idGroup.add(idGroup);
-   getListGroup(creator);
-   notifyListeners();
+
     firebase_storage.Reference firebaseStorageRef =
     firebase_storage.FirebaseStorage.instance.ref().child(avatar.path);
     firebase_storage.UploadTask uploadTask = firebaseStorageRef.putFile(avatar);
@@ -263,6 +286,8 @@ try{
         "avatar": url
       });
     });
+    getListGroup(creator);
+    notifyListeners();
   });
 }catch(e){
 
@@ -270,101 +295,51 @@ try{
 }
 
 
-  List<double> thongKeKhoanChi_Thang(List<KhoanChiNhom> dsKhoanChiNhom) {
-    double priceMonth1 = 0;
-    double priceMonth2 = 0;
-    double priceMonth3 = 0;
-    double priceMonth4 = 0;
-    double priceMonth5 = 0;
-    double priceMonth6 = 0;
-    double priceMonth7 = 0;
-    double priceMonth8 = 0;
-    double priceMonth9 = 0;
-    double priceMonth10 = 0;
-    double priceMonth11 = 0;
-    double priceMonth12 = 0;
+  List<Map<String, String>> thongKeKhoanChi_Thang(InformationGroup dataGroup, List<KhoanChiNhom> dsKhoanChiNhom) {
+  Map<String, String> map = {};
+  Map<String, String> map1 = {};
+    dataGroup.members.forEach((idMember) {
+      double thongKe = 0;
+      double thongKe1 = 0;
+      dsKhoanChiNhom.forEach((data) {
+       if((DateTime.now().month - 1) == 0){
+         if(data.ngayMua.split("_")[1] == "12"){
+           data.listItemKhoanChi.forEach((item) {
+             item.nguoiThamGia.forEach((element) {
+               if(element == idMember){
+                 thongKe += double.parse( item.giaTien)/item.nguoiThamGia.length;
+               }
+             });
+           });
+         }
+         if(data.ngayMua.split("_")[1] == "01"){
+           data.listItemKhoanChi.forEach((item) {
+             item.nguoiThamGia.forEach((element) {
+               if(element == idMember){
+                 thongKe1 += double.parse( item.giaTien)/item.nguoiThamGia.length;
+               }
+             });
+           });
+         }
+       }else{
+         if(data.ngayMua.split("_")[1] == (DateTime.now().month - 1).toString()){
+           data.listItemKhoanChi.forEach((item) {
+             item.nguoiThamGia.forEach((element) {
+               if(element == idMember){
+                 thongKe += double.parse( item.giaTien)/item.nguoiThamGia.length;
+               }
+             });
+           });
+         }
+       }
 
-    dsKhoanChiNhom.forEach((data) {
-      int mm = int.parse(data.ngayMua.split("_")[1]);
-
-      switch(mm){
-        case 1:
-          data.listItemKhoanChi.forEach((item) {
-            priceMonth1 += double.parse(item.giaTien);
-          });
-          break;
-        case 2:
-          data.listItemKhoanChi.forEach((item) {
-            priceMonth2 += double.parse(item.giaTien);
-          });
-          break;
-        case 3:
-          data.listItemKhoanChi.forEach((item) {
-            priceMonth3 += double.parse(item.giaTien);
-          });
-          break;
-        case 4:
-          data.listItemKhoanChi.forEach((item) {
-            priceMonth4 += double.parse(item.giaTien);
-          });
-          break;
-        case 5:
-          data.listItemKhoanChi.forEach((item) {
-            priceMonth5 += double.parse(item.giaTien);
-          });
-          break;
-        case 6:
-          data.listItemKhoanChi.forEach((item) {
-            priceMonth6 += double.parse(item.giaTien);
-          });
-          break;
-        case 7:
-          data.listItemKhoanChi.forEach((item) {
-            priceMonth7 += double.parse(item.giaTien);
-          });
-          break;
-        case 8:
-          data.listItemKhoanChi.forEach((item) {
-            priceMonth8 += double.parse(item.giaTien);
-          });
-          break;
-        case 9:
-          data.listItemKhoanChi.forEach((item) {
-            priceMonth9 += double.parse(item.giaTien);
-          });
-          break;
-        case 10:
-          data.listItemKhoanChi.forEach((item) {
-            priceMonth10 += double.parse(item.giaTien);
-          });
-          break;
-        case 11:
-          data.listItemKhoanChi.forEach((item) {
-            priceMonth11 += double.parse(item.giaTien);
-          });
-          break;
-        case 12:
-          data.listItemKhoanChi.forEach((item) {
-            priceMonth12 += double.parse(item.giaTien);
-          });
-          break;
-      }
-
+      });
+      thongKe = num.parse(thongKe.toStringAsFixed(1));
+      thongKe1 = num.parse(thongKe1.toStringAsFixed(1));
+    map[idMember] = thongKe.toString();
+    map1[idMember] = thongKe1.toString();
     });
-
-    return [
-      priceMonth1,
-      priceMonth2,
-      priceMonth3,
-      priceMonth4,
-      priceMonth5,
-      priceMonth6,
-      priceMonth7,
-      priceMonth8,
-      priceMonth9,
-      priceMonth10,
-      priceMonth11,
-      priceMonth12];
+  return [map,map1];
   }
 
 

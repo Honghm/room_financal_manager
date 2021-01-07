@@ -27,6 +27,8 @@ class GroupManager extends StatefulWidget {
 class _GroupManagerState extends State<GroupManager> {
   RefreshController _refreshController;
   List<Widget> listInfoCard = List(); //ds thống kê theo loại chi tiêu
+  InformationGroup selectGroup;
+  List<Map<String, String>> thongKe;
   @override
   void initState() {
     // TODO: implement initState
@@ -34,6 +36,7 @@ class _GroupManagerState extends State<GroupManager> {
 
     _refreshController = RefreshController(initialRefresh: false);
     if(Provider.of<GroupProviders>(context,listen: false).listGroupShow == false){
+      selectGroup = Provider.of<GroupProviders>(context,listen: false).selectedGroup;
       Provider.of<GroupProviders>(context,listen: false).danhSachKhoanChi(Provider.of<GroupProviders>(context,listen: false).selectedGroup.id);
     }
   }
@@ -145,8 +148,10 @@ class _GroupManagerState extends State<GroupManager> {
                         Provider.of<GroupProviders>(context,listen: false).getListName(_groups.dsNhom[index]);
                         Provider.of<GroupProviders>(context,listen: false).getListMember(_groups.dsNhom[index].id);
                         setState(() {
-                        _groups.listGroupShow = false;
                           _groups.selectedGroup = _groups.dsNhom[index];
+                          thongKe = Provider.of<GroupProviders>(context,listen: false).thongKeKhoanChi_Thang(_groups.dsNhom[index],_groups.dsKhoanChiNhom);
+                         _groups.listGroupShow = false;
+
                         });
                         Provider.of<HomeProviders>(context,listen: false).screen = 4;
                       },
@@ -204,27 +209,24 @@ class _GroupManagerState extends State<GroupManager> {
       switch(screen){
         case 5:
           return TongQuan(
-            selectedGroup: _groups.selectedGroup,
-            user: widget.user,
+
           );
         case 4:
          return KhoanChi(
            dsKhoanChi: _groups.dsKhoanChiNhom,
          );
         case 6:
-          return ThongKe(
-            listInfoCard: listInfoCard,
-          );
+          return ThongKe(thongKe);
       }
   }
 
-  loadDataThongKe({List<ItemLoaiKhoanChi> dsLoaiKhoanChi, List<KhoanChiNhom> dsKhoanChiNhom }){
-    loadListInfoCard(
-      dsKhoanChiNhom: dsKhoanChiNhom,
-      dsLoaiKhoanChi: dsLoaiKhoanChi,
-    );
-
-  }
+  // loadDataThongKe({List<ItemLoaiKhoanChi> dsLoaiKhoanChi, List<KhoanChiNhom> dsKhoanChiNhom }){
+  //   loadListInfoCard(
+  //     dsKhoanChiNhom: dsKhoanChiNhom,
+  //     dsLoaiKhoanChi: dsLoaiKhoanChi,
+  //   );
+  //
+  // }
 
   loadListInfoCard({List<ItemLoaiKhoanChi> dsLoaiKhoanChi, List<KhoanChiNhom> dsKhoanChiNhom }) {
     listInfoCard.clear();
@@ -306,10 +308,10 @@ class _GroupManagerState extends State<GroupManager> {
         break;
       case 3:
         Provider.of<HomeProviders>(context, listen: false).screen = 6;
-        loadDataThongKe(
-          dsLoaiKhoanChi: Provider.of<HomeProviders>(context, listen: false).dsLoaiKhoanChi,
-          dsKhoanChiNhom:  Provider.of<GroupProviders>(context, listen: false).dsKhoanChiNhom
-        );
+        // loadDataThongKe(
+        //   dsLoaiKhoanChi: Provider.of<HomeProviders>(context, listen: false).dsLoaiKhoanChi,
+        //   dsKhoanChiNhom:  Provider.of<GroupProviders>(context, listen: false).dsKhoanChiNhom
+        // );
         break;
     }
   }
