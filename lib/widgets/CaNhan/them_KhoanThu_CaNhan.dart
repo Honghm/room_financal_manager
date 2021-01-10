@@ -111,7 +111,7 @@ class _ThemKhoanThuCaNhanState extends State<ThemKhoanThuCaNhan> {
           children: <Widget>[
             Container(
               alignment: Alignment.center,
-              child: Text("THÊM KHOẢN THU TIÊU", style: TextStyle(fontSize: 28,fontWeight: FontWeight.bold, color: Colors.blue[900]),),
+              child: Text("THÊM KHOẢN THU", style: TextStyle(fontSize: 28,fontWeight: FontWeight.bold, color: Colors.blue[900]),),
               height: 50.0,
             ),
 
@@ -358,7 +358,7 @@ class _ThemKhoanThuCaNhanState extends State<ThemKhoanThuCaNhan> {
                                       content: Container(
                                           height: 20,
                                           margin: EdgeInsets.only(bottom: 20),
-                                          child: Center(child: Text("Tạo khoản chi thành công", style: TextStyle(color: Colors.white),)))));
+                                          child: Center(child: Text("Tạo khoản thu thành công", style: TextStyle(color: Colors.white),)))));
                                   setState(() {
 
                                     _noiDungController.text = "";

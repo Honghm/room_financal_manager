@@ -208,19 +208,19 @@ class _LoginPageState extends State<LoginPage> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(25))),
                       onPressed: () {
-                        user.signIn(_key,
-                          phone: "0377846295",
-                          password:"123456789",
-                          context: context,
-                          success: loginSuccess,
-                        );
+                        // user.signIn(_key,
+                        //   phone: "0377846295",
+                        //   password:"123456789",
+                        //   context: context,
+                        //   success: loginSuccess,
+                        // );
                         if(_formKey.currentState.validate()){
-                          // user.signIn(_key,
-                          //   phone: _phoneNumberController.text,
-                          //   password: _passController.text,
-                          //   context: context,
-                          //   success: loginSuccess,
-                          // );
+                          user.signIn(_key,
+                            phone: _phoneNumberController.text,
+                            password: _passController.text,
+                            context: context,
+                            success: loginSuccess,
+                          );
                         }
                       },
                       color: Colors.amberAccent,

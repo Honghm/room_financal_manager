@@ -119,7 +119,7 @@ class _ThemKhoanChiCaNhanState extends State<ThemKhoanChiCaNhan> {
           children: <Widget>[
             Container(
               alignment: Alignment.center,
-              child: Text("THÊM KHOẢN CHI TIÊU", style: TextStyle(fontSize: 28,fontWeight: FontWeight.bold, color: Colors.blue[900]),),
+              child: Text("THÊM KHOẢN CHI", style: TextStyle(fontSize: 28,fontWeight: FontWeight.bold, color: Colors.blue[900]),),
               height: 50.0,
             ),
 
