@@ -50,12 +50,12 @@ class _ItemExpensesPersonState extends State<ItemExpensesPerson> {
                                     text: "2",
                                     style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: 22,fontWeight: FontWeight.bold))
+                                        fontSize: 21,fontWeight: FontWeight.bold))
                               ]),
                         ),
                       ),
-                      Text("3/8",style: TextStyle(fontSize: 14),),
-                      Text("2020",style: TextStyle(fontSize: 14),)
+                      Text("3/8",style: TextStyle(fontSize: 13),),
+                      Text("2020",style: TextStyle(fontSize: 13),)
                     ],),
                   ),
                 ),

@@ -173,26 +173,6 @@ class _LoginPageState extends State<LoginPage> {
                             ))),
                     FlatButton(
                         onPressed: () async {
-<<<<<<< HEAD
-                          // user.googleSignIn.disconnect();
-                          await authentication.googleSignIn().whenComplete(() {
-                            print("run here");
-                            // Navigator.pushReplacement(
-                            //     context,
-                            //     PageTransition(
-                            //         child: LoginPage(),
-                            //         type: PageTransitionType.bottomToTop));
-                            Navigator.pushNamed(context, '/home');
-=======
-                          await authentication.googleSignIn().whenComplete(() {
-                            print("run here");
-                            Navigator.pushReplacement(
-                                context,
-                                PageTransition(
-                                    child: HomePage(),
-                                    type: PageTransitionType.bottomToTop));
->>>>>>> TruongNam
-                          });
                         },
                         child: Container(
                             height: 50,
