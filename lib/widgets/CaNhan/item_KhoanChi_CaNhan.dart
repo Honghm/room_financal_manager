@@ -1,35 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:room_financal_manager/models/expendituresGroup.dart';
-import 'package:room_financal_manager/providers/group_providers.dart';
+import 'package:room_financal_manager/models/KhoanChiCaNhan.dart';
+import 'file:///D:/My%20Code/Code%20Android/DoAn2/room_financal_manager/lib/screens/quanLyChiTieuCaNhan/xemChiTiet_KhoanChiCaNhan.dart';
 
-class ItemExpensesGroup extends StatefulWidget {
-  // String idKhoanChi;
-  Map<String, dynamic> khoanChi;
-  ItemExpensesGroup(this.khoanChi );
+class ItemExpensesPerson extends StatefulWidget {
+
+  final List<ItemKhoanChiCaNhan> dsItem;
+  final String ngayMua;
+  ItemExpensesPerson({this.dsItem, this.ngayMua });
   @override
-  _ItemExpensesGroupState createState() => _ItemExpensesGroupState();
+  _ItemExpensesPersonState createState() => _ItemExpensesPersonState();
 }
 
-class _ItemExpensesGroupState extends State<ItemExpensesGroup> {
+
+class _ItemExpensesPersonState extends State<ItemExpensesPerson> {
   List<Widget> _rowItemKhoanChi = List();
-  List<ExpendituresGroup> listItem = [];
-  int tongTien = 0;
+  double tongTien = 0;
   String ngayThang = "";
   String nam = "";
   String thu = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadData();
+  }
   void _loadData() async {
-     _rowItemKhoanChi.clear();
-    widget.khoanChi["data"].forEach((id,item){
-      _rowItemKhoanChi.add(rowImformations(item["iconLoai"], item["tenLoai"], item["noiDung"],
-          item["giaTien"], item["nguoiMua"]));
-      tongTien += int.parse(item["giaTien"]);
+    _rowItemKhoanChi.clear();
+    widget.dsItem.forEach((item) {
+      _rowItemKhoanChi.add(rowImformations(item.iconLoai, item.tenLoai, item.noiDung, item.giaTien));
+      tongTien += double.parse(item.giaTien);
     });
-    getDate(widget.khoanChi["ngayMua"]);
+    getDate(widget.ngayMua);
+
+    setState(() {
+
+    });
   }
   void getDate(String date){
     List<String> dates = [];
-    dates = date.split("/");
+    dates = date.split("_");
 
     ngayThang = dates[0]+"/"+dates[1];
     nam = dates[2];
@@ -42,43 +52,36 @@ class _ItemExpensesGroupState extends State<ItemExpensesGroup> {
         ((yyyy + 4800 - ((14 - mm) / 12)) / 100) +
         ((yyyy + 4800 - ((14 - mm) / 12)) / 400)  - 32045) % 7).toInt();
     switch (JMD) {
-      case 0:
+      case 6:
         thu = "CN";
         break;
-      case 1:
+      case 0:
         thu = "2";
         break;
-      case 2:
+      case 1:
         thu = "3";
         break;
-      case 3:
+      case 2:
         thu = "4";
         break;
-      case 4:
+      case 3:
         thu = "5";
         break;
-      case 5:
+      case 4:
         thu = "6";
         break;
-      case 6:
+      case 5:
         thu = "7";
         break;
     }
   }
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _loadData();
-  }
-  @override
   Widget build(BuildContext context) {
     double height = (_rowItemKhoanChi.length*30+70).toDouble();
     final width = MediaQuery.of(context).size.width;
-
-    return  Container(
+    return Container(
       child:   Padding(
-          padding: const EdgeInsets.only(left: 10,right: 10,top: 20),
+          padding: const EdgeInsets.only(left: 10,right: 10, top: 20),
           child: Container(
             height: height,
             width: width,
@@ -93,37 +96,34 @@ class _ItemExpensesGroupState extends State<ItemExpensesGroup> {
                 //Ngày tháng
                 Container(
                   width: width/6,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 0),
-                    child: Container(
-                      height: width/6,
-                      width: width/6,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(width/12),
-                          color: Colors.white,
-                          border: Border.all(color: Colors.black)
-                      ),
-                      child: Column(children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 2),
-                          child: RichText(
-                            text: TextSpan(
-                                text: thu!="CN"?"Thứ":"",
-                                style: TextStyle(
-                                    color:Colors.black, fontSize: 14),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text: thu,
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 22,fontWeight: FontWeight.bold))
-                                ]),
-                          ),
-                        ),
-                        Text(ngayThang,style: TextStyle(fontSize: 14),),
-                        Text(nam,style: TextStyle(fontSize: 14),)
-                      ],),
+                  child:Container(
+                    height: width/6,
+                    width: width/6,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(width/12),
+                        color: Colors.white,
+                        border: Border.all(color: Colors.black)
                     ),
+                    child: Column(children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: RichText(
+                          text: TextSpan(
+                              text: thu!="CN"?"Thứ":"",
+                              style: TextStyle(
+                                  color:Colors.black, fontSize: 14),
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text: thu,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 22,fontWeight: FontWeight.bold))
+                              ]),
+                        ),
+                      ),
+                      Text(ngayThang,style: TextStyle(fontSize: 14),),
+                      Text(nam,style: TextStyle(fontSize: 14),)
+                    ],),
                   ),
                 ),
                 Container(
@@ -143,26 +143,21 @@ class _ItemExpensesGroupState extends State<ItemExpensesGroup> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
-                                      width:width/7,
+                                      width:width/5,
                                       alignment: Alignment.center,
-                                      child: Text("Loại", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
+                                      child: Text("Loại", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),)),
                                   Container(
-                                      width: width/7,
+                                      width: width/5,
                                       alignment: Alignment.center,
-                                      child: Text("Nội dung", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
+                                      child: Text("Nội dung", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),)),
                                   Container(
-                                      width: width/7,
+                                      width: width/5,
                                       alignment: Alignment.center,
-                                      child: Text("Giá tiền", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
-                                  Container(
-                                      width: width/7,
-                                      alignment: Alignment.center,
-                                      child: Text("Người mua", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),)),
+                                      child: Text("Giá tiền", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),)),
                                 ],),
                             ),
 
                             Column( children: _rowItemKhoanChi,),
-
                           ],),
                       ),
                       Container(
@@ -172,13 +167,17 @@ class _ItemExpensesGroupState extends State<ItemExpensesGroup> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("TÔNG CHI: ${tongTien.toString()}K",style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 16),),
+                            Text(tongTien>=1000?"TÔNG CHI: ${(tongTien/1000).toString()}TR":"TÔNG CHI: ${tongTien.toString()}K",
+                              style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 16),),
                             Container(
                                 decoration: BoxDecoration(
                                     border: Border(bottom: BorderSide(width: 1, color: Colors.blue))
                                 ),
                                 child: InkWell(
                                     onTap: (){
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) => XemChiTietKhoanChiCaNhan(dateTime: widget.ngayMua,dsItem: widget.dsItem,tongTien: tongTien,)));
+
                                     },
                                     child: Text("Xem chi tiết",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,decorationStyle: TextDecorationStyle.dashed,color: Colors.blue),)))
                           ],),
@@ -190,40 +189,42 @@ class _ItemExpensesGroupState extends State<ItemExpensesGroup> {
           )
       ),
     );
+
   }
-  Widget rowImformations(icon, nameIcon, content, price, personBuy) {
+
+  Widget rowImformations(icon, nameIcon, content, price) {
+
+
     return Container(
       height: 30,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            width: 65,
+            width: 75,
             child: Row(children: [
               Container(
                   height: 20,
                   width: 20,
-                  child: Image.network(icon,fit: BoxFit.fill,)),
-              Text(nameIcon.toString(),style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),),
+                  child: icon!=null?Image.network(icon,fit: BoxFit.fill,):Container()),
+              Text(nameIcon,style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),
             ],),
           ),
 
           Container(
-            width: 60,
+            width: 70,
             alignment: Alignment.center,
-            child: Text(content.toString(), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),),
+            child: Text(content, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),
           ),
           Container(
-            width: 60,
+            width: 70,
             alignment: Alignment.center,
-            child: Text("${price.toString()}K", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold,color: Colors.red),),
+            child: Text(double.parse(price.toString())>=1000?"${(double.parse(price.toString())/1000).toString()}TR":"${price}K",
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold,color: Colors.red),),
           ),
-          Container(
-              width: 60,
-              alignment: Alignment.center,
 
-              child: Text(personBuy.toString(), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold,color: Colors.black),))
         ],),
     );
   }
+
 }

@@ -1,25 +1,66 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserData {
-  static const ID = 'uid';
-  static const NAME = 'name';
-  static const ACCOUNT = 'account';
-  static const PHONE = 'phone';
-  static const PASS = 'pass';
-  static const URL_AVT = 'url_avt';
-  static const URL_COVER = 'url_cover';
   String _id;
-  String _name;
-  String _account;
-  String _phone;
-  String _pass;
+  String _displayName;
+  String _phoneNumber;
+  String _password;
   String _urlAvt;
+  String _money;
+
+  String get money => _money;
+
+  set money(String value) {
+    _money = value;
+  }
+
+  List<String> _idGroup = [];
+
+  List<String> get idGroup => _idGroup;
+
+  set idGroup(List<String> value) {
+    _idGroup = value;
+  }
+
+  String get id => _id;
+
+  set id(String value) {
+    _id = value;
+  }
+
   String _urlCover;
 
-  String get urlCover => _urlCover;
 
-  set urlCover(String value) {
-    _urlCover = value;
+
+
+  UserData.formSnapShot(DocumentSnapshot snapshot) {
+    Map data = snapshot.data();
+    _id = data["uid"];
+    _displayName = data["displayName"];
+    _phoneNumber = data["phoneNumber"];
+    _urlAvt = data["avatar"];
+    _urlCover = data["cover"];
+    _idGroup = List.castFrom(data["idGroup"]);
+    _money = data["money"];
+
+  }
+
+  String get displayName => _displayName;
+
+  set displayName(String value) {
+    _displayName = value;
+  }
+
+  String get phoneNumber => _phoneNumber;
+
+  set phoneNumber(String value) {
+    _phoneNumber = value;
+  }
+
+  String get password => _password;
+
+  set password(String value) {
+    _password = value;
   }
 
   String get urlAvt => _urlAvt;
@@ -28,41 +69,9 @@ class UserData {
     _urlAvt = value;
   }
 
-  String get pass => _pass;
+  String get urlCover => _urlCover;
 
-  set name(String value) {
-    _name = value;
+  set urlCover(String value) {
+    _urlCover = value;
   }
-
-  String get id => _id;
-
-  String get name => _name;
-
-  String get phone => _phone;
-
-
-  UserData.formSnapShot(DocumentSnapshot snapshot) {
-    Map data = snapshot.data();
-    _id = data[ID];
-    _name = data[NAME];
-    _account = data[ACCOUNT];
-    _phone = data[PHONE];
-    _urlAvt = data[URL_AVT];
-    _urlCover = data[URL_COVER];
-  }
-
-  String get account => _account;
-
-  set account(String value) {
-    _account = value;
-  }
-
-  set phone(String value) {
-    _phone = value;
-  }
-
-  set pass(String value) {
-    _pass = value;
-  }
-
 }
